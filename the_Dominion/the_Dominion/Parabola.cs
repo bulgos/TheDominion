@@ -10,7 +10,14 @@ namespace the_Dominion
 {
     public class Parabola : ConicSection
     {
-        public Parabola(double a, double b, double c, Interval domain)
+        public Parabola()
+            : this(1, new Interval(-10, 10)) { }
+
+        public Parabola(double a, Interval domain)
+            : this(Plane.WorldXY, a, 0, 0, domain) { }
+
+        public Parabola(Plane plane, double a, double b, double c, Interval domain)
+            : base(plane)
         {
             A = a;
             B = b;
@@ -18,16 +25,15 @@ namespace the_Dominion
             Domain = domain;
 
             ConstructParabola();
+            TransformShape();
         }
 
         public Parabola(Plane plane, Point3d p1, Point3d p2, Point3d p3)
+            : base(plane)
         {
-            Transform xform = Transform.PlaneToPlane(Plane.WorldXY, plane);
-            xform.TryGetInverse(out Transform xformInverse);
-
-            p1.Transform(xformInverse);
-            p2.Transform(xformInverse);
-            p3.Transform(xformInverse);
+            p1.Transform(InverseTransform);
+            p2.Transform(InverseTransform);
+            p3.Transform(InverseTransform);
 
             Tuple<double, double, double> quadratic = ComputeQuadraticParametersFrom3Points(p1, p2, p3);
 
@@ -36,26 +42,14 @@ namespace the_Dominion
             C = quadratic.Item3;
 
             double[] xValues = { p1.X, p2.X, p3.X };
-            
+
             Domain = new Interval(xValues.Min(), xValues.Max());
 
             ConstructParabola();
-
-            TransformShape(xform);
+            TransformShape();
         }
 
-        public Parabola()
-            : this(1, new Interval(-1, 1)) { }
-
-        public Parabola(double a, Interval domain)
-        {
-            A = a;
-            Domain = domain;
-
-            ConstructParabola();
-        }
-
-        private double A { get; }
+        public double A { get; }
 
         public double B { get; }
 

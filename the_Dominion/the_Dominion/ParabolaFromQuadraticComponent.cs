@@ -18,10 +18,11 @@ namespace the_Dominion
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
+            pManager.AddPlaneParameter("Plane", "P", "Plane in which to create Parabola", GH_ParamAccess.item, Plane.WorldXY);
             pManager.AddNumberParameter("A", "A", "A", GH_ParamAccess.item, 1);
             pManager.AddNumberParameter("B", "B", "B", GH_ParamAccess.item, 0);
             pManager.AddNumberParameter("C", "C", "C", GH_ParamAccess.item, 0);
-            pManager.AddIntervalParameter("Domain", "D", "The Domain to calculate the function in", GH_ParamAccess.item, new Interval(-1, 1));
+            pManager.AddIntervalParameter("Domain", "D", "The Domain to calculate the function in", GH_ParamAccess.item, new Interval(-10, 10));
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -33,17 +34,19 @@ namespace the_Dominion
 
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            Plane plane = Plane.Unset;
             double a = double.NaN;
             double b = double.NaN;
             double c = double.NaN;
             Interval interval = Interval.Unset;
 
-            DA.GetData(0, ref a);
-            DA.GetData(1, ref b);
-            DA.GetData(2, ref c);
-            DA.GetData(3, ref interval);
+            DA.GetData(0, ref plane);
+            DA.GetData(1, ref a);
+            DA.GetData(2, ref b);
+            DA.GetData(3, ref c);
+            DA.GetData(4, ref interval);
 
-            Parabola parabola = new Parabola(a, b, c, interval);
+            Parabola parabola = new Parabola(plane, a, b, c, interval);
 
             DA.SetData(0, parabola.Section);
             DA.SetData(1, parabola.Focus);

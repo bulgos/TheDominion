@@ -12,16 +12,14 @@ namespace the_Dominion
     /// </summary>
     public class Hyperbola : ConicSection
     {
-        public Hyperbola(Plane plane, double a, double b, double h)
-            : this(a, b, h)
-        {
-            TransformShape(Plane.WorldXY, plane);
-        }
-
         public Hyperbola()
             : this(1, 1, 10) { }
 
         public Hyperbola(double a, double b, double h)
+            : this(Plane.WorldXY, a, b, h) { }
+
+        public Hyperbola(Plane plane, double a, double b, double h)
+            : base(plane)
         {
             A = a;
             B = b;
@@ -29,13 +27,15 @@ namespace the_Dominion
 
             Section = ComputeHyperbola();
             ComputeFocus();
+
+            TransformShape();
         }
 
-        private double A { get; }
+        public double A { get; }
 
-        private double B { get; }
+        public double B { get; }
 
-        private double H { get; }
+        public double H { get; }
 
         /// <summary>
         /// Draws a hyperbola on the XY plane, centred at 0,0,0
@@ -105,7 +105,7 @@ namespace the_Dominion
         protected override void ComputeFocus()
         {
             double focusDist = Math.Sqrt(A * A + B * B);
-            
+
             Focus = new Point3d(focusDist, 0, 0);
         }
     }

@@ -7,8 +7,26 @@ using System.Threading.Tasks;
 
 namespace the_Dominion
 {
-    public abstract class ConicSection 
+    public abstract class ConicSection
     {
+        private Transform _inverseTransform = Transform.Unset;
+
+        protected ConicSection()
+            : this(Plane.WorldXY) { }
+
+        protected ConicSection(Plane plane)
+        {
+            if (plane == Plane.WorldXY)
+            {
+                Transform = Transform.Identity;
+            }
+            else
+            {
+                BasePlane = plane;
+                Transform = GetTransform(plane);
+            }
+        }
+
         public Plane BasePlane { get; protected set; } = Plane.WorldXY;
 
         public NurbsCurve Section { get; protected set; }
@@ -17,24 +35,40 @@ namespace the_Dominion
 
         public ConicSectionType ConicSectionType => Section.GetConicSectionType();
 
+        protected Transform Transform { get; }
+
+        protected Transform InverseTransform
+        {
+            get
+            {
+                if (_inverseTransform == Transform.Unset)
+                {
+                    _inverseTransform = Transform.Transpose();
+                }
+
+                return _inverseTransform;
+            }
+        }
         protected abstract void ComputeFocus();
 
-        public void TransformShape(Plane source, Plane target)
+        private Transform GetTransform(Plane targetPlane)
         {
-            Transform xform = Transform.PlaneToPlane(source, target);
-            TransformShape(xform);
+            return Transform.PlaneToPlane(Plane.WorldXY, targetPlane);
         }
 
-        public void TransformShape(Transform xform)
+        public void TransformShape()
         {
-            Section.Transform(xform);
-            
+            if (Transform == Transform.Identity)
+                return;
+
+            Section.Transform(Transform);
+
             Point3d focus = Focus;
-            focus.Transform(xform);
+            focus.Transform(Transform);
             Focus = focus;
 
             Plane basePlane = BasePlane;
-            basePlane.Transform(xform);
+            basePlane.Transform(Transform);
             BasePlane = basePlane;
         }
     }
