@@ -56,11 +56,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConicSection.cs" />
     <Compile Include="ConicTypeComponent.cs" />
     <Compile Include="Hyperbola.cs" />
     <Compile Include="Parabola.cs" />
     <Compile Include="HyperbolaComponent.cs" />
     <Compile Include="ParabolaComponent.cs" />
+    <Compile Include="ParabolaFromQuadraticComponent.cs" />
+    <Compile Include="ParabolaFromVertexComponent.cs" />
     <Compile Include="the_DominionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

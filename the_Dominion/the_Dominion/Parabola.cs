@@ -8,52 +8,68 @@ using System.Threading.Tasks;
 
 namespace the_Dominion
 {
-    public class Parabola
+    public class Parabola : ConicSection
     {
-        public static NurbsCurve ConstructParabola(double a)
+        public Parabola(double a, double b, double c, Interval domain)
         {
-            Interval interval = new Interval(-1, 1);
+            A = a;
+            B = b;
+            C = c;
+            Domain = domain;
 
-            return ConstructParabola(a, interval);
+            ConstructParabola();
         }
 
-        public static NurbsCurve ConstructParabola(double a, Interval interval)
+        public Parabola(Plane plane, Point3d p1, Point3d p2, Point3d p3)
         {
-            double y0 = a * Math.Pow(interval.Min, 2);
-            double y2 = a * Math.Pow(interval.Max, 2);
+            Transform xform = Transform.PlaneToPlane(Plane.WorldXY, plane);
+            xform.TryGetInverse(out Transform xformInverse);
 
-            Point3d p0 = new Point3d(interval.Min, y0, 0);
-            Point3d p1 = new Point3d();
-            Point3d p2 = new Point3d(interval.Max, y2, 0);
+            p1.Transform(xformInverse);
+            p2.Transform(xformInverse);
+            p3.Transform(xformInverse);
 
-            return NurbsCurve.CreateParabolaFromVertex(p1, p0, p2);
+            Tuple<double, double, double> quadratic = ComputeParabolaParametersFrom3Points(p1, p2, p3);
+
+            A = quadratic.Item1;
+            B = quadratic.Item2;
+            C = quadratic.Item3;
+
+            double[] xValues = { p1.X, p2.X, p3.X };
+            
+            Domain = new Interval(xValues.Min(), xValues.Max());
+
+            ConstructParabola();
+
+            TransformShape(xform);
         }
 
-        public static NurbsCurve ConstructParabolaFromFocus(double a, Interval interval)
+        public Parabola()
+            : this(1, new Interval(-1, 1)) { }
+
+        public Parabola(double a, Interval domain)
         {
-            Point3d focus = ComputeParabolaFocus(a);
+            A = a;
+            Domain = domain;
 
-            double y0 = a * Math.Pow(interval.Min, 2);
-            double y1 = a * Math.Pow(interval.Max, 2);
-
-            Point3d p0 = new Point3d(interval.Min, y0, 0);
-            Point3d p1 = new Point3d(interval.Max, y1, 0);
-
-            return NurbsCurve.CreateParabolaFromFocus(focus, p0, p1);
+            ConstructParabola();
         }
 
-        public static Curve ConstructCustomParabola(double a, Interval interval)
+        private double A { get; }
+
+        public double B { get; }
+
+        public double C { get; }
+
+        public Interval Domain { get; } = new Interval(-1, 1);
+
+        public void ConstructParabola()
         {
-            double derivate = 2 * a;
+            Point3d p1 = ComputeParabolaPoint(Domain.Min);
+            Point3d p2 = ComputeParabolaPoint(Domain.Max);
 
-            double y1 = a * Math.Pow(interval.Min, 2);
-            double y2 = a * Math.Pow(interval.Max, 2);
-
-            Point3d p1 = new Point3d(interval.Min, y1, 0);
-            Point3d p2 = new Point3d(interval.Max, y2, 0);
-
-            Vector3d t1 = new Vector3d(1, derivate * interval.Min, 0);
-            Vector3d t2 = new Vector3d(1, derivate * interval.Max, 0);
+            Vector3d t1 = ComputeParabolaTangent(Domain.Min);
+            Vector3d t2 = ComputeParabolaTangent(Domain.Max);
 
             Line tLine1 = new Line(p1, p1 + t1);
             Line tLine2 = new Line(p2, p2 + t2);
@@ -64,12 +80,79 @@ namespace the_Dominion
 
             Point3d[] points = { p1, p0, p2 };
 
-            return Curve.CreateControlPointCurve(points, 2);
+            Section = Curve.CreateControlPointCurve(points, 2) as NurbsCurve;
+        }
+
+        private Tuple<double, double, double> ComputeParabolaParametersFrom3Points(Point3d p1, Point3d p2, Point3d p3)
+        {
+            /// http://stackoverflow.com/questions/717762/how-to-calculate-the-vertex-of-a-parabola-given-three-points
+
+            double denom = (p1.X - p2.X) * (p1.X - p3.X) * (p2.X - p3.X);
+            double a = (p3.X * (p2.Y - p1.Y) + p2.X * (p1.Y - p3.Y) + p1.X * (p3.Y - p2.Y)) / denom;
+            double b = (p3.X * p3.X * (p1.Y - p2.Y) + p2.X * p2.X * (p3.Y - p1.Y) + p1.X * p1.X * (p2.Y - p3.Y)) / denom;
+            double c = (p2.X * p3.X * (p2.X - p3.X) * p1.Y + p3.X * p1.X * (p3.X - p1.X) * p2.Y + p1.X * p2.X * (p1.X - p2.X) * p3.Y) / denom;
+
+            return new Tuple<double, double, double>(a, b, c);
+        }
+
+        /// <summary>
+        /// Finds the line through which the Parabola mirrors
+        /// </summary>
+        /// <returns></returns>
+        private Point3d ComputeParabolaVertex()
+        {
+            double x = -B / (2 * A);
+
+            return ComputeParabolaPoint(x);
+        }
+
+        private Point3d ComputeParabolaPoint(double x)
+        {
+            double y = A * x * x + B * x + C;
+
+            return new Point3d(x, y, 0);
+        }
+
+        private Vector3d ComputeParabolaTangent(double x)
+        {
+            double derivative = 2 * A * x + B;
+
+            return new Vector3d(1, derivative, 0);
+        }
+
+        public void ConstructParabolaFromFocus(double a, Interval interval)
+        {
+            ComputeFocus();
+
+            double y0 = a * Math.Pow(interval.Min, 2);
+            double y1 = a * Math.Pow(interval.Max, 2);
+
+            Point3d p0 = new Point3d(interval.Min, y0, 0);
+            Point3d p1 = new Point3d(interval.Max, y1, 0);
+
+            Section = NurbsCurve.CreateParabolaFromFocus(Focus, p0, p1);
+        }
+
+        public void ConstructRhinocommonParabola()
+        {
+            double y0 = A * Math.Pow(Domain.Min, 2);
+            double y2 = A * Math.Pow(Domain.Max, 2);
+
+            Point3d p0 = new Point3d(Domain.Min, y0, 0);
+            Point3d p1 = new Point3d();
+            Point3d p2 = new Point3d(Domain.Max, y2, 0);
+
+            Section = NurbsCurve.CreateParabolaFromVertex(p1, p0, p2);
         }
 
         public static Point3d ComputeParabolaFocus(double a)
         {
             return new Point3d(0, a / 4, 0);
+        }
+
+        protected override void ComputeFocus()
+        {
+            Focus = new Point3d(0, A / 4, 0);
         }
     }
 }

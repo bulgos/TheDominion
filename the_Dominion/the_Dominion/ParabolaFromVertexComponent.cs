@@ -2,15 +2,13 @@
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
-
-// In order to load the result of this wizard, you will also need to
-// add the output bin/ folder of this project to the list of loaded
-// folder in Grasshopper.
-// You can use the _GrasshopperDeveloperSettings Rhino command for that.
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace the_Dominion
 {
-    public class ParabolaComponent : GH_Component
+    public class ParabolaFromPointsComponent : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -19,9 +17,9 @@ namespace the_Dominion
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public ParabolaComponent()
-          : base("ConstructParabola", "CPrb",
-              "Constructs a Parabola in the form y = ax^2",
+        public ParabolaFromPointsComponent()
+          : base("ConstructParabolaFrom3Points", "CPrb3Pt",
+              "Constructs a Parabola from 3 Points",
               "Dominion", "Math")
         { }
 
@@ -30,8 +28,10 @@ namespace the_Dominion
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("a", "a", "a", GH_ParamAccess.item, 1);
-            pManager.AddIntervalParameter("Domain", "D", "The Domain to calculate the function in", GH_ParamAccess.item, new Interval(-1, 1));
+            pManager.AddPlaneParameter("Plane", "P", "Plane in which to create Parabola", GH_ParamAccess.item, Plane.WorldXY);
+            pManager.AddPointParameter("P1", "p1", "First point on the Parabola", GH_ParamAccess.item);
+            pManager.AddPointParameter("P2", "p2", "Second point on the Parabola", GH_ParamAccess.item);
+            pManager.AddPointParameter("P3", "p3", "Third point on the Parabola", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -40,7 +40,6 @@ namespace the_Dominion
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddCurveParameter("Parabola", "P", "The resulting Parabola", GH_ParamAccess.item);
-            pManager.AddPointParameter("Focus", "F", "The Focal Point of the Parabola", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -50,16 +49,19 @@ namespace the_Dominion
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            double a = double.NaN;
-            Interval interval = Interval.Unset;
+            Plane plane = Plane.Unset;
+            Point3d p1 = Point3d.Unset;
+            Point3d p2 = Point3d.Unset;
+            Point3d p3 = Point3d.Unset;
 
-            DA.GetData(0, ref a);
-            DA.GetData(1, ref interval);
+            DA.GetData(0, ref plane);
+            DA.GetData(1, ref p1);
+            DA.GetData(2, ref p2);
+            DA.GetData(3, ref p3);
 
-            Parabola parabola = new Parabola(a, interval);
+            var parabola = new Parabola(plane, p1, p2, p3);
 
             DA.SetData(0, parabola.Section);
-            DA.SetData(1, parabola.Focus);
         }
 
         /// <summary>
@@ -81,6 +83,6 @@ namespace the_Dominion
         /// It is vital this Guid doesn't change otherwise old ghx files 
         /// that use the old ID will partially fail during loading.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("de9bbb6d-cb79-4db8-94ee-48d9045f34b0");
+        public override Guid ComponentGuid => new Guid("f9593814-9e59-4c86-b508-4c0d27510b69");
     }
 }
