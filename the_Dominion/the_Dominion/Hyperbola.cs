@@ -13,7 +13,7 @@ namespace the_Dominion
     public class Hyperbola
     {
         /// <summary>
-        /// Draws a hyperbola on the XZ plane, centred at 0,0,0
+        /// Draws a hyperbola on the XY plane, centred at 0,0,0
         /// </summary>
         /// <param name=""></param>
         /// <param name=""></param>
@@ -34,9 +34,9 @@ namespace the_Dominion
             // x^2 = a^2 * (1 + (z^2 / b^2)) 
 
             double x0 = Math.Sqrt((a * a) * (1 + ((h * h) / (b * b))));
-            Point3d p0 = new Point3d(x0, 0, h);
+            Point3d p0 = new Point3d(x0, h, 0);
 
-            Point3d p2 = new Point3d(x0, 0, -h);
+            Point3d p2 = new Point3d(x0, -h, 0);
 
             // p1 is harder to calculate.
             // It lies on the x-axis, at the intersection of the tangents from p0 & 02
