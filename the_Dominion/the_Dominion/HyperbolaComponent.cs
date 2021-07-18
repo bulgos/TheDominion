@@ -42,6 +42,7 @@ namespace the_Dominion
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddCurveParameter("Hyperbola", "H", "The resulting Hyperbola", GH_ParamAccess.item);
+            pManager.AddPointParameter("Focus", "F", "The Focal Point of the Parabola", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -61,12 +62,10 @@ namespace the_Dominion
             DA.GetData(2, ref b);
             DA.GetData(3, ref h);
 
-            NurbsCurve hyperbola = Hyperbola.ComputeHyperbola(a, b, h);
-            
-            Transform xform = Transform.PlaneToPlane(Plane.WorldXY, plane);
-            hyperbola.Transform(xform);
+            Hyperbola hyperbola = new Hyperbola(plane, a, b, h);
 
-            DA.SetData(0, hyperbola);
+            DA.SetData(0, hyperbola.Section);
+            DA.SetData(1, hyperbola.Focus);
         }
 
         /// <summary>
