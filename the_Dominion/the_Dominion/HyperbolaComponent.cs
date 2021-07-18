@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace the_Dominion
 {
-    public class ParabolaComponent : GH_Component
+    public class HyperbolaComponent : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -19,9 +19,9 @@ namespace the_Dominion
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public ParabolaComponent()
-          : base("ConstructParabola", "CPrb",
-              "Constructs a Parabola",
+        public HyperbolaComponent()
+          : base("ConstructHyperbola", "CHyprb",
+              "Constructs a Hyperbola",
               "Dominion", "Math")
         { }
 
@@ -49,20 +49,6 @@ namespace the_Dominion
         protected override void SolveInstance(IGH_DataAccess DA)
         {
 
-        }
-
-        /// <summary>
-        /// Provides an Icon for every component that will be visible in the User Interface.
-        /// Icons need to be 24x24 pixels.
-        /// </summary>
-        protected override System.Drawing.Bitmap Icon
-        {
-            get
-            {
-                // You can add image files to your project resources and access them like this:
-                //return Resources.IconForThisComponent;
-                return null;
-            }
         }
 
         /// <summary>

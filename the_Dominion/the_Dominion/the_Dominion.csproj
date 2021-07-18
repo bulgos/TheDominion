@@ -56,6 +56,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hyperbola.cs" />
+    <Compile Include="Parabola.cs" />
+    <Compile Include="HyperbolaComponent.cs" />
     <Compile Include="ParabolaComponent.cs" />
     <Compile Include="the_DominionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
