@@ -65,20 +65,9 @@ namespace the_Dominion
 
         public void ConstructParabola()
         {
-            Point3d p1 = ComputeParabolaPoint(Domain.Min);
-            Point3d p2 = ComputeParabolaPoint(Domain.Max);
+            Point3d p0 = ComputeTangentIntersections(Domain.Min, Domain.Max, out Line tangent1, out Line tangent2);
 
-            Vector3d t1 = ComputeParabolaTangent(Domain.Min);
-            Vector3d t2 = ComputeParabolaTangent(Domain.Max);
-
-            Line tLine1 = new Line(p1, p1 + t1);
-            Line tLine2 = new Line(p2, p2 + t2);
-
-            Intersection.LineLine(tLine1, tLine2, out double param1, out double param2);
-
-            Point3d p0 = tLine1.PointAt(param1);
-
-            Point3d[] points = { p1, p0, p2 };
+            Point3d[] points = { tangent1.From, p0, tangent2.From };
 
             Section = Curve.CreateControlPointCurve(points, 2) as NurbsCurve;
 
@@ -98,29 +87,43 @@ namespace the_Dominion
             return new Tuple<double, double, double>(a, b, c);
         }
 
-        /// <summary>
-        /// Finds the line through which the Parabola mirrors
-        /// </summary>
-        /// <returns></returns>
-        private Point3d ComputeParabolaVertex()
+        public Point3d ComputeParabolaVertex()
         {
             double x = -B / (2 * A);
 
             return ComputeParabolaPoint(x);
         }
 
-        private Point3d ComputeParabolaPoint(double x)
+        public Point3d ComputeParabolaPoint(double x)
         {
             double y = A * x * x + B * x + C;
 
             return new Point3d(x, y, 0);
         }
 
-        private Vector3d ComputeParabolaTangent(double x)
+        public Vector3d ComputeParabolaTangentVector(double x)
         {
             double derivative = 2 * A * x + B;
 
             return new Vector3d(1, derivative, 0);
+        }
+
+        public Line ComputeParabolaTangent(double x)
+        {
+            Point3d pt = ComputeParabolaPoint(x);
+            Vector3d tangent = ComputeParabolaTangentVector(x);
+
+            return new Line(pt, tangent);
+        }
+
+        public Point3d ComputeTangentIntersections(double x1, double x2, out Line tangent1, out Line tangent2)
+        {
+            tangent1 = ComputeParabolaTangent(x1);
+            tangent2 = ComputeParabolaTangent(x2);
+
+            Intersection.LineLine(tangent1, tangent2, out double param1, out double param2);
+
+            return tangent1.PointAt(param1);
         }
 
         protected override void ComputeFocus()
