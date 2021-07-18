@@ -23,21 +23,22 @@ namespace the_Dominion
           : base("ConstructParabola", "CPrb",
               "Constructs a Parabola",
               "Dominion", "Math")
-        {
-        }
+        { }
 
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
-        protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
+        protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
+
         }
 
         /// <summary>
         /// Registers all the output parameters for this component.
         /// </summary>
-        protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
+        protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
+
         }
 
         /// <summary>
@@ -47,6 +48,7 @@ namespace the_Dominion
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+
         }
 
         /// <summary>
@@ -68,9 +70,7 @@ namespace the_Dominion
         /// It is vital this Guid doesn't change otherwise old ghx files 
         /// that use the old ID will partially fail during loading.
         /// </summary>
-        public override Guid ComponentGuid
-        {
-            get { return new Guid("73235e01-8fe6-4996-9074-50cc509ba68e"); }
-        }
+        public override Guid ComponentGuid => new Guid("73235e01-8fe6-4996-9074-50cc509ba68e");
     }
+}
 }
