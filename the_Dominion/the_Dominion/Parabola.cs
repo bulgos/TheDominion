@@ -29,7 +29,7 @@ namespace the_Dominion
             p2.Transform(xformInverse);
             p3.Transform(xformInverse);
 
-            Tuple<double, double, double> quadratic = ComputeParabolaParametersFrom3Points(p1, p2, p3);
+            Tuple<double, double, double> quadratic = ComputeQuadraticParametersFrom3Points(p1, p2, p3);
 
             A = quadratic.Item1;
             B = quadratic.Item2;
@@ -86,7 +86,7 @@ namespace the_Dominion
             ComputeFocus();
         }
 
-        private Tuple<double, double, double> ComputeParabolaParametersFrom3Points(Point3d p1, Point3d p2, Point3d p3)
+        private Tuple<double, double, double> ComputeQuadraticParametersFrom3Points(Point3d p1, Point3d p2, Point3d p3)
         {
             /// http://stackoverflow.com/questions/717762/how-to-calculate-the-vertex-of-a-parabola-given-three-points
 
