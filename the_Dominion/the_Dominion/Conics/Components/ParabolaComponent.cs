@@ -8,7 +8,7 @@ using System.Collections.Generic;
 // folder in Grasshopper.
 // You can use the _GrasshopperDeveloperSettings Rhino command for that.
 
-namespace the_Dominion
+namespace the_Dominion.Conics.Components
 {
     public class ParabolaComponent : GH_Component
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace the_Dominion
+namespace the_Dominion.Conics.Components
 {
     public class ParabolaFromPointsComponent : GH_Component
     {

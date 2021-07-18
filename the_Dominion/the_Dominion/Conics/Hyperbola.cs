@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rhino.Geometry;
 
-namespace the_Dominion
+namespace the_Dominion.Conics
 {
     /// <summary>
     /// see https://www.danieldavis.com/how-to-draw-a-hyperboloid/
