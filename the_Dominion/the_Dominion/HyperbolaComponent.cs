@@ -30,6 +30,7 @@ namespace the_Dominion
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
+            pManager.AddPlaneParameter("Plane", "P", "Plane in which to create Hyperbola", GH_ParamAccess.item, Plane.WorldXY);
             pManager.AddNumberParameter("a", "a", "a", GH_ParamAccess.item, 1);
             pManager.AddNumberParameter("b", "b", "b", GH_ParamAccess.item, 1);
             pManager.AddNumberParameter("h", "h", "height", GH_ParamAccess.item, 10);
@@ -50,15 +51,20 @@ namespace the_Dominion
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            Plane plane = Plane.Unset;
             double a = double.NaN;
             double b = double.NaN;
             double h = double.NaN;
 
-            DA.GetData(0, ref a);
-            DA.GetData(1, ref b);
-            DA.GetData(2, ref h);
+            DA.GetData(0, ref plane);
+            DA.GetData(1, ref a);
+            DA.GetData(2, ref b);
+            DA.GetData(3, ref h);
 
-            var hyperbola = Hyperbola.ComputeHyperbola(a, b, h);
+            NurbsCurve hyperbola = Hyperbola.ComputeHyperbola(a, b, h);
+            
+            Transform xform = Transform.PlaneToPlane(Plane.WorldXY, plane);
+            hyperbola.Transform(xform);
 
             DA.SetData(0, hyperbola);
         }
