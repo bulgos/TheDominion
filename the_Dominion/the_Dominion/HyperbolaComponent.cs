@@ -21,7 +21,7 @@ namespace the_Dominion
         /// </summary>
         public HyperbolaComponent()
           : base("ConstructHyperbola", "CHyprb",
-              "Constructs a Hyperbola",
+              "Constructs a Hyperbola in the form x^2 / a^2 - y^2 / b^2 = 1",
               "Dominion", "Math")
         { }
 
@@ -30,7 +30,9 @@ namespace the_Dominion
         /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-
+            pManager.AddNumberParameter("a", "a", "a", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("b", "b", "b", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("h", "h", "height", GH_ParamAccess.item, 10);
         }
 
         /// <summary>
@@ -38,7 +40,7 @@ namespace the_Dominion
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-
+            pManager.AddCurveParameter("Hyperbola", "H", "The resulting Hyperbola", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -48,7 +50,17 @@ namespace the_Dominion
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            double a = double.NaN;
+            double b = double.NaN;
+            double h = double.NaN;
 
+            DA.GetData(0, ref a);
+            DA.GetData(1, ref b);
+            DA.GetData(2, ref h);
+
+            var hyperbola = Hyperbola.ComputeHyperbola(a, b, h);
+
+            DA.SetData(0, hyperbola);
         }
 
         /// <summary>
@@ -56,6 +68,6 @@ namespace the_Dominion
         /// It is vital this Guid doesn't change otherwise old ghx files 
         /// that use the old ID will partially fail during loading.
         /// </summary>
-        public override Guid ComponentGuid => new Guid("73235e01-8fe6-4996-9074-50cc509ba68e");
+        public override Guid ComponentGuid => new Guid("1c5e49a6-1290-4366-9216-2f1a9139fc0b");
     }
 }
