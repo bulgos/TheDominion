@@ -55,7 +55,7 @@ namespace the_Dominion
             DA.GetData(0, ref a);
             DA.GetData(1, ref interval);
 
-            NurbsCurve parabola = Parabola.ConstructParabolaFromFocus(a, interval);
+            Curve parabola = Parabola.ConstructCustomParabola(a, interval);
 
             DA.SetData(0, parabola);
         }
