@@ -28,6 +28,7 @@ namespace the_Dominion
         {
             pManager.AddCurveParameter("Parabola", "P", "The resulting Parabola", GH_ParamAccess.item);
             pManager.AddPointParameter("Focus", "F", "The Focal Point of the Parabola", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Plane", "Pl", "The calculated Base Plane of the Parabola", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -45,7 +46,8 @@ namespace the_Dominion
             Parabola parabola = new Parabola(a, b, c, interval);
 
             DA.SetData(0, parabola.Section);
-            DA.SetData(1, Point3d.Unset);
+            DA.SetData(1, parabola.Focus);
+            DA.SetData(2, parabola.BasePlane);
         }
 
         public override Guid ComponentGuid => new Guid("2df015c3-0faa-462e-b7e3-a6f4adcd5604");

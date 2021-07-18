@@ -81,6 +81,9 @@ namespace the_Dominion
             Point3d[] points = { p1, p0, p2 };
 
             Section = Curve.CreateControlPointCurve(points, 2) as NurbsCurve;
+
+            ComputeBasePlane();
+            ComputeFocus();
         }
 
         private Tuple<double, double, double> ComputeParabolaParametersFrom3Points(Point3d p1, Point3d p2, Point3d p3)
@@ -120,6 +123,26 @@ namespace the_Dominion
             return new Vector3d(1, derivative, 0);
         }
 
+        protected override void ComputeFocus()
+        {
+            Focus = BasePlane.Origin + new Point3d(0, A / 4, 0);
+        }
+
+        private void ComputeBasePlane()
+        {
+            var vertex = ComputeParabolaVertex();
+
+            var basePlane = Plane.WorldXY;
+            basePlane.Origin = vertex;
+
+            if (A < 0)
+            {
+                basePlane.Rotate(Math.PI, basePlane.ZAxis);
+            }
+
+            BasePlane = basePlane;
+        }
+
         public void ConstructParabolaFromFocus(double a, Interval interval)
         {
             ComputeFocus();
@@ -131,28 +154,6 @@ namespace the_Dominion
             Point3d p1 = new Point3d(interval.Max, y1, 0);
 
             Section = NurbsCurve.CreateParabolaFromFocus(Focus, p0, p1);
-        }
-
-        public void ConstructRhinocommonParabola()
-        {
-            double y0 = A * Math.Pow(Domain.Min, 2);
-            double y2 = A * Math.Pow(Domain.Max, 2);
-
-            Point3d p0 = new Point3d(Domain.Min, y0, 0);
-            Point3d p1 = new Point3d();
-            Point3d p2 = new Point3d(Domain.Max, y2, 0);
-
-            Section = NurbsCurve.CreateParabolaFromVertex(p1, p0, p2);
-        }
-
-        public static Point3d ComputeParabolaFocus(double a)
-        {
-            return new Point3d(0, a / 4, 0);
-        }
-
-        protected override void ComputeFocus()
-        {
-            Focus = new Point3d(0, A / 4, 0);
         }
     }
 }

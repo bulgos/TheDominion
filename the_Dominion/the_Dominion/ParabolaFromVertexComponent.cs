@@ -40,6 +40,8 @@ namespace the_Dominion
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddCurveParameter("Parabola", "P", "The resulting Parabola", GH_ParamAccess.item);
+            pManager.AddPointParameter("Focus", "F", "The Focal Point of the Parabola", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Plane", "Pl", "The calculated Base Plane of the Parabola", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -62,6 +64,8 @@ namespace the_Dominion
             var parabola = new Parabola(plane, p1, p2, p3);
 
             DA.SetData(0, parabola.Section);
+            DA.SetData(1, parabola.Focus);
+            DA.SetData(2, parabola.BasePlane);
         }
 
         /// <summary>

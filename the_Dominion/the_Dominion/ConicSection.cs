@@ -9,6 +9,8 @@ namespace the_Dominion
 {
     public abstract class ConicSection 
     {
+        public Plane BasePlane { get; protected set; } = Plane.WorldXY;
+
         public NurbsCurve Section { get; protected set; }
 
         public Point3d Focus { get; protected set; }
@@ -29,8 +31,11 @@ namespace the_Dominion
             
             Point3d focus = Focus;
             focus.Transform(xform);
-
             Focus = focus;
+
+            Plane basePlane = BasePlane;
+            basePlane.Transform(xform);
+            BasePlane = basePlane;
         }
     }
 }
