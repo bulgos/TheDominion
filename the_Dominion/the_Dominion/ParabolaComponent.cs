@@ -40,6 +40,7 @@ namespace the_Dominion
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddCurveParameter("Parabola", "P", "The resulting Parabola", GH_ParamAccess.item);
+            pManager.AddPointParameter("Focus", "F", "The Focal Point of the Parabola", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -56,8 +57,11 @@ namespace the_Dominion
             DA.GetData(1, ref interval);
 
             Curve parabola = Parabola.ConstructCustomParabola(a, interval);
+            Point3d focus = Parabola.ComputeParabolaFocus(a);
 
             DA.SetData(0, parabola);
+            DA.SetData(1, focus);
+
         }
 
         /// <summary>
@@ -92,7 +96,7 @@ namespace the_Dominion
         /// new tabs/panels will automatically be created.
         /// </summary>
         public ParabolaFromFocusComponent()
-          : base("ConstructParabola", "CPrbF",
+          : base("ConstructParabolaFromFocus", "CPrbF",
               "Constructs a Parabola from Focus",
               "Dominion", "Math")
         { }
@@ -167,7 +171,7 @@ namespace the_Dominion
         /// new tabs/panels will automatically be created.
         /// </summary>
         public ParabolaFromVertexComponent()
-          : base("ConstructParabola", "CPrbV",
+          : base("ConstructParabolaFromVertex", "CPrbV",
               "Constructs a Parabola from Vertex",
               "Dominion", "Math")
         { }
