@@ -56,20 +56,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CircleMath.cs" />
-    <Compile Include="ConicSection.cs" />
-    <Compile Include="ConicTypeComponent.cs" />
-    <Compile Include="GetInnerTangents.cs" />
-    <Compile Include="GetOuterTangents.cs" />
-    <Compile Include="Hyperbola.cs" />
-    <Compile Include="Parabola.cs" />
-    <Compile Include="HyperbolaComponent.cs" />
-    <Compile Include="ParabolaComponent.cs" />
-    <Compile Include="ParabolaFromQuadraticComponent.cs" />
-    <Compile Include="ParabolaFromVertexComponent.cs" />
+    <Compile Include="Conics\CircleMath.cs" />
+    <Compile Include="Conics\Components\ConicTypeComponent.cs" />
+    <Compile Include="Conics\Components\GetInnerTangents.cs" />
+    <Compile Include="Conics\Components\GetOuterTangents.cs" />
+    <Compile Include="Conics\Components\HyperbolaComponent.cs" />
+    <Compile Include="Conics\Components\ParabolaComponent.cs" />
+    <Compile Include="Conics\Components\ParabolaFromQuadraticComponent.cs" />
+    <Compile Include="Conics\Components\ParabolaFromVertexComponent.cs" />
+    <Compile Include="Conics\ConicSection.cs" />
+    <Compile Include="Conics\Hyperbola.cs" />
+    <Compile Include="Conics\Parabola.cs" />
     <Compile Include="the_DominionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
