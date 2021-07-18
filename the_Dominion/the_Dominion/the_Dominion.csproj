@@ -56,8 +56,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CircleMath.cs" />
     <Compile Include="ConicSection.cs" />
     <Compile Include="ConicTypeComponent.cs" />
+    <Compile Include="GetInnerTangents.cs" />
+    <Compile Include="GetOuterTangents.cs" />
     <Compile Include="Hyperbola.cs" />
     <Compile Include="Parabola.cs" />
     <Compile Include="HyperbolaComponent.cs" />
