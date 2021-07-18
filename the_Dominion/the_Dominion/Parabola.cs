@@ -27,5 +27,18 @@ namespace the_Dominion
 
             return NurbsCurve.CreateParabolaFromVertex(p1, p0, p2);
         }
+
+        public static NurbsCurve ConstructParabolaFromFocus(double a, Interval interval)
+        {
+            Point3d focus = new Point3d(0, a / 4, 0);
+
+            double y0 = a * Math.Pow(interval.Min, 2);
+            double y1 = a * Math.Pow(interval.Max, 2);
+
+            Point3d p0 = new Point3d(interval.Min, y0, 0);
+            Point3d p1 = new Point3d(interval.Max, y1, 0);
+
+            return NurbsCurve.CreateParabolaFromFocus(focus, p0, p1);
+        }
     }
 }
