@@ -41,6 +41,13 @@ namespace the_Dominion.Conics.Wrappers
 
         public override bool CastTo<Q>(out Q target)
         {
+            if (typeof(Q).IsAssignableFrom(typeof(ConicSection)))
+            {
+                object conic = Value;
+                target = (Q)conic;
+                return true;
+            }
+
             if (typeof(Q).IsAssignableFrom(typeof(GH_Curve)))
             {
                 object crv = new GH_Curve(Value.Section);

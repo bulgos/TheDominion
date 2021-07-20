@@ -22,7 +22,7 @@ namespace the_Dominion.Conics.Components
         public HyperbolaComponent()
           : base("ConstructHyperbola", "CHyprb",
               "Constructs a Hyperbola in the form x^2 / a^2 - y^2 / b^2 = 1",
-              "Dominion", "Math")
+              "Dominion", "Conics")
         { }
 
         /// <summary>

@@ -17,7 +17,7 @@ namespace the_Dominion.Conics.Components
         public ParabolaFromPointsComponent()
           : base("ConstructParabolaFrom3Points", "CPrb3Pt",
               "Constructs a Parabola from 3 Points",
-              "Dominion", "Math")
+              "Dominion", "Conics")
         { }
 
         /// <summary>

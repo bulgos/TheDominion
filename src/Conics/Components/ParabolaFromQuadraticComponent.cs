@@ -10,7 +10,7 @@ namespace the_Dominion.Conics.Components
         public ParabolaFromQuadraticComponent()
           : base("ConstructParabolaFromQuadratic", "CPrbQ",
               "Constructs a Parabola of the form y = ax^2 + bx+ c",
-              "Dominion", "Math")
+              "Dominion", "Conics")
         { }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)

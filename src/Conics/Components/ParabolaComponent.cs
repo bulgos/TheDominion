@@ -22,7 +22,7 @@ namespace the_Dominion.Conics.Components
         public ParabolaComponent()
           : base("ConstructParabola", "CPrb",
               "Constructs a Parabola in the form y = ax^2",
-              "Dominion", "Math")
+              "Dominion", "Conics")
         { }
 
         /// <summary>
