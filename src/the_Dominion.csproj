@@ -64,6 +64,7 @@
     <Compile Include="Conics\Components\GetOuterTangents.cs" />
     <Compile Include="Conics\Components\HyperbolaComponent.cs" />
     <Compile Include="Conics\Components\ParabolaComponent.cs" />
+    <Compile Include="Conics\Components\ParabolaFromFourPointsComponent.cs" />
     <Compile Include="Conics\Components\ParabolaFromQuadraticComponent.cs" />
     <Compile Include="Conics\Components\ParabolaFromThreePointsComponent.cs" />
     <Compile Include="Conics\ConicSection.cs" />

@@ -32,6 +32,10 @@ namespace the_Dominion.Conics
             p2.Transform(InverseTransform);
             p3.Transform(InverseTransform);
 
+            //p1.Transform(Transform);
+            //p2.Transform(Transform);
+            //p3.Transform(Transform);
+
             Tuple<double, double, double> quadratic = ComputeQuadraticParametersFrom3Points(p1, p2, p3);
 
             A = quadratic.Item1;
@@ -163,6 +167,69 @@ namespace the_Dominion.Conics
         public override ConicSection Duplicate()
         {
             return new Parabola(this);
+        }
+
+        public static Parabola[] ComputeParabolasThroughFourPoints(Point3d p1, Point3d p2, Point3d p3, Point3d p4)
+        {
+            // https://www.mathpages.com/home/kmath037/kmath037.htm
+            // https://math.stackexchange.com/a/3224627
+
+            var ray1 = new Line(p1, p3);
+            var ray2 = new Line(p2, p3);
+            var ray4 = new Line(p4, p3);
+
+            var ray1Flipped = new Line(p3, p1);
+            var ray2Flipped = new Line(p3, p2);
+            var ray4Flipped = new Line(p3, p4);
+
+            var t1 = AngleBetweenLines(ray1Flipped, ray2Flipped);
+            var t2 = AngleBetweenLines(ray2Flipped, ray4Flipped);
+
+            var s1 = Math.Sin(t1);
+            var s2 = Math.Sin(t2);
+            var c1 = Math.Sin(t1);
+            var c2 = Math.Sin(t2);
+
+            var a = s1 * s2 * (s2 * ray2.Length - s1 * ray1.Length);
+            var b = 2 * s2 * s1 * (c1 * ray1.Length - c2 * ray2.Length);
+            var c = s2 * c1 * (ray4.Length - c1 * ray1.Length) - s1 * c2 * (ray4.Length - c2 * ray2.Length);
+
+            var roots = ComputeQuadraticRoots(a, b, c);
+
+            var basePlane = Plane.WorldXY;
+            //basePlane.Rotate(t2, basePlane.ZAxis);
+
+            Parabola parabola = new Parabola(basePlane, p1, p2, p4);
+
+            return new Parabola[] { parabola, parabola };
+        }
+
+        private static double AngleBetweenLines(Line l1, Line l2)
+        {
+            return AngleBetweenVectors(l1.Direction, l2.Direction);
+        }
+
+        private static double AngleBetweenVectors(Vector3d v1, Vector3d v2)
+        {
+            double t1 = VectorAngle(v1);
+            double t2 = VectorAngle(v2);
+
+            return t2 - t1;
+        }
+
+        public static double VectorAngle(Vector3d vector)
+        {
+            return Math.Atan2(vector.Y, vector.X);
+        }
+
+        private static Tuple<double, double> ComputeQuadraticRoots(double a, double b, double c)
+        {
+            var discriminant = b * b - 4 * a * c;
+
+            var root1 = (-b + Math.Sqrt(discriminant)) / (2 * a);
+            var root2 = (-b - Math.Sqrt(discriminant)) / (2 * a);
+
+            return new Tuple<double, double>(root1, root2);
         }
 
         public void ConstructParabolaFromFocus()
