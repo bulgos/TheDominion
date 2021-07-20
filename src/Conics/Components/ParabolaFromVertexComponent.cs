@@ -1,10 +1,7 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using the_Dominion.Conics.Wrappers;
 
 namespace the_Dominion.Conics.Components
 {
@@ -39,7 +36,7 @@ namespace the_Dominion.Conics.Components
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("Parabola", "P", "The resulting Parabola", GH_ParamAccess.item);
+            pManager.AddParameter(new Conic_Param(), "Parabola", "P", "The resulting Parabola", GH_ParamAccess.item);
             pManager.AddPointParameter("Focus", "F", "The Focal Point of the Parabola", GH_ParamAccess.item);
             pManager.AddPlaneParameter("Plane", "Pl", "The calculated Base Plane of the Parabola", GH_ParamAccess.item);
         }
@@ -63,9 +60,7 @@ namespace the_Dominion.Conics.Components
 
             var parabola = new Parabola(plane, p1, p2, p3);
 
-            DA.SetData(0, parabola.Section);
-            DA.SetData(1, parabola.Focus);
-            DA.SetData(2, parabola.BasePlane);
+            DA.SetData(0, parabola);
         }
 
         /// <summary>

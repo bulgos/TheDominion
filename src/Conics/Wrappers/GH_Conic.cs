@@ -1,11 +1,6 @@
 ﻿using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace the_Dominion.Conics.Wrappers
 {
@@ -44,6 +39,26 @@ namespace the_Dominion.Conics.Wrappers
             return false;
         }
 
+        public override bool CastTo<Q>(out Q target)
+        {
+            if (typeof(Q).IsAssignableFrom(typeof(GH_Curve)))
+            {
+                object crv = new GH_Curve(Value.Section);
+                target = (Q)crv;
+                return true;
+            }
+
+            if (typeof(Q).IsAssignableFrom(typeof(Curve)))
+            {
+                object crv = Value.Section;
+                target = (Q)crv;
+                return true;
+            }
+
+            target = default(Q);
+            return false;
+        }
+
         public void DrawViewportMeshes(GH_PreviewMeshArgs args) { }
 
         public void DrawViewportWires(GH_PreviewWireArgs args)
@@ -52,6 +67,7 @@ namespace the_Dominion.Conics.Wrappers
                 return;
 
             args.Pipeline.DrawCurve(Value.Section, args.Color);
+            args.Pipeline.DrawPoint(Value.Focus, Rhino.Display.PointStyle.RoundControlPoint, 5, args.Color);
         }
 
         public override IGH_GeometricGoo DuplicateGeometry()

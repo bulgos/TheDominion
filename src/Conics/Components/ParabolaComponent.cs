@@ -1,7 +1,6 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
-using System.Collections.Generic;
 using the_Dominion.Conics.Wrappers;
 
 // In order to load the result of this wizard, you will also need to

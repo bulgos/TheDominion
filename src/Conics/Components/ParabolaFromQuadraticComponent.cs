@@ -1,10 +1,7 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using the_Dominion.Conics.Wrappers;
 
 namespace the_Dominion.Conics.Components
 {
@@ -27,9 +24,7 @@ namespace the_Dominion.Conics.Components
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("Parabola", "P", "The resulting Parabola", GH_ParamAccess.item);
-            pManager.AddPointParameter("Focus", "F", "The Focal Point of the Parabola", GH_ParamAccess.item);
-            pManager.AddPlaneParameter("Plane", "Pl", "The calculated Base Plane of the Parabola", GH_ParamAccess.item);
+            pManager.AddParameter(new Conic_Param(), "Parabola", "P", "The resulting Parabola", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -48,9 +43,7 @@ namespace the_Dominion.Conics.Components
 
             Parabola parabola = new Parabola(plane, a, b, c, interval);
 
-            DA.SetData(0, parabola.Section);
-            DA.SetData(1, parabola.Focus);
-            DA.SetData(2, parabola.BasePlane);
+            DA.SetData(0, parabola);
         }
 
         public override Guid ComponentGuid => new Guid("2df015c3-0faa-462e-b7e3-a6f4adcd5604");

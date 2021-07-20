@@ -1,7 +1,7 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
-using System.Collections.Generic;
+using the_Dominion.Conics.Wrappers;
 
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
@@ -41,8 +41,7 @@ namespace the_Dominion.Conics.Components
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("Hyperbola", "H", "The resulting Hyperbola", GH_ParamAccess.item);
-            pManager.AddPointParameter("Focus", "F", "The Focal Point of the Parabola", GH_ParamAccess.item);
+            pManager.AddParameter(new Conic_Param(), "Hyperbola", "H", "The resulting Hyperbola", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -64,8 +63,7 @@ namespace the_Dominion.Conics.Components
 
             Hyperbola hyperbola = new Hyperbola(plane, a, b, h);
 
-            DA.SetData(0, hyperbola.Section);
-            DA.SetData(1, hyperbola.Focus);
+            DA.SetData(0, hyperbola);
         }
 
         public override Guid ComponentGuid => new Guid("1c5e49a6-1290-4366-9216-2f1a9139fc0b");
