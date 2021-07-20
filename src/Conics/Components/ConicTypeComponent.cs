@@ -1,10 +1,6 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace the_Dominion.Conics.Components
 {
@@ -30,6 +26,12 @@ namespace the_Dominion.Conics.Components
         {
             Curve curve = null;
             DA.GetData(0, ref curve);
+
+            if (curve == null)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Input C is not valid");
+                return;
+            }
 
             ConicSectionType conicType = curve.GetConicSectionType();
 

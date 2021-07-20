@@ -92,13 +92,6 @@ namespace the_Dominion.Conics
             return new Tuple<double, double, double>(a, b, c);
         }
 
-        public Point3d ComputeParabolaVertex()
-        {
-            double x = -B / (2 * A);
-
-            return ComputeParabolaPoint(x);
-        }
-
         public Point3d ComputeParabolaPoint(double x)
         {
             double y = A * x * x + B * x + C;
@@ -131,9 +124,11 @@ namespace the_Dominion.Conics
             return tangent1.PointAt(param1);
         }
 
-        protected override void ComputeFocus()
+        public Point3d ComputeParabolaVertex()
         {
-            Focus = VertexPlane.Origin + new Point3d(0, A / 4, 0);
+            double x = -B / (2 * A);
+
+            return ComputeParabolaPoint(x);
         }
 
         private void ComputeVertexPlane()
@@ -151,6 +146,11 @@ namespace the_Dominion.Conics
             VertexPlane = vertexPlane;
         }
 
+        protected override void ComputeFocus()
+        {
+            Focus = VertexPlane.Origin + new Point3d(0, A / 4, 0);
+        }
+
         public override void TransformShape()
         {
             base.TransformShape();
@@ -160,22 +160,14 @@ namespace the_Dominion.Conics
             VertexPlane = vertexPlane;
         }
 
-        public void ConstructParabolaFromFocus(double a, Interval interval)
-        {
-            ComputeFocus();
-
-            double y0 = a * Math.Pow(interval.Min, 2);
-            double y1 = a * Math.Pow(interval.Max, 2);
-
-            Point3d p0 = new Point3d(interval.Min, y0, 0);
-            Point3d p1 = new Point3d(interval.Max, y1, 0);
-
-            Section = NurbsCurve.CreateParabolaFromFocus(Focus, p0, p1);
-        }
-
         public override ConicSection Duplicate()
         {
             return new Parabola(this);
+        }
+
+        public void ConstructParabolaFromFocus()
+        {
+            throw new NotImplementedException();
         }
     }
 }
