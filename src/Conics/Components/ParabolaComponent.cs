@@ -2,6 +2,7 @@
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
+using the_Dominion.Conics.Wrappers;
 
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
@@ -39,8 +40,7 @@ namespace the_Dominion.Conics.Components
         /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("Parabola", "P", "The resulting Parabola", GH_ParamAccess.item);
-            pManager.AddPointParameter("Focus", "F", "The Focal Point of the Parabola", GH_ParamAccess.item);
+            pManager.AddParameter(new Conic_Param(), "Parabola", "P", "The resulting Parabola", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -58,8 +58,7 @@ namespace the_Dominion.Conics.Components
 
             Parabola parabola = new Parabola(a, interval);
 
-            DA.SetData(0, parabola.Section);
-            DA.SetData(1, parabola.Focus);
+            DA.SetData(0, parabola);
         }
 
         public override Guid ComponentGuid => new Guid("de9bbb6d-cb79-4db8-94ee-48d9045f34b0");

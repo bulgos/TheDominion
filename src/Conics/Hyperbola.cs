@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Rhino.Geometry;
 
 namespace the_Dominion.Conics
@@ -29,6 +25,14 @@ namespace the_Dominion.Conics
             ComputeFocus();
 
             TransformShape();
+        }
+
+        public Hyperbola(Hyperbola hyperbola)
+            : base(hyperbola)
+        {
+            A = hyperbola.A;
+            B = hyperbola.B;
+            H = hyperbola.H;
         }
 
         public double A { get; }
@@ -107,6 +111,11 @@ namespace the_Dominion.Conics
             double focusDist = Math.Sqrt(A * A + B * B);
 
             Focus = new Point3d(focusDist, 0, 0);
+        }
+
+        public override ConicSection Duplicate()
+        {
+            return new Hyperbola(this);
         }
     }
 }

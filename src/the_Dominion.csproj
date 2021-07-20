@@ -67,6 +67,8 @@
     <Compile Include="Conics\ConicSection.cs" />
     <Compile Include="Conics\Hyperbola.cs" />
     <Compile Include="Conics\Parabola.cs" />
+    <Compile Include="Conics\Wrappers\Conic_Param.cs" />
+    <Compile Include="Conics\Wrappers\GH_Conic.cs" />
     <Compile Include="the_DominionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

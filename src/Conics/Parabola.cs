@@ -1,10 +1,7 @@
 ﻿using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace the_Dominion.Conics
 {
@@ -49,6 +46,18 @@ namespace the_Dominion.Conics
             TransformShape();
         }
 
+        public Parabola(Parabola parabola)
+            : base(parabola)
+        {
+            Section = parabola.Section;
+
+            A = parabola.A;
+            B = parabola.B;
+            C = parabola.C;
+            Domain = parabola.Domain;
+            VertexPlane = parabola.VertexPlane;
+        }
+
         public double A { get; }
 
         public double B { get; }
@@ -56,6 +65,8 @@ namespace the_Dominion.Conics
         public double C { get; }
 
         public Interval Domain { get; } = new Interval(-1, 1);
+
+        public Plane VertexPlane { get; private set; }
 
         public void ConstructParabola()
         {
@@ -65,7 +76,7 @@ namespace the_Dominion.Conics
 
             Section = Curve.CreateControlPointCurve(points, 2) as NurbsCurve;
 
-            ComputeBasePlane();
+            ComputeVertexPlane();
             ComputeFocus();
         }
 
@@ -122,22 +133,31 @@ namespace the_Dominion.Conics
 
         protected override void ComputeFocus()
         {
-            Focus = BasePlane.Origin + new Point3d(0, A / 4, 0);
+            Focus = VertexPlane.Origin + new Point3d(0, A / 4, 0);
         }
 
-        private void ComputeBasePlane()
+        private void ComputeVertexPlane()
         {
             var vertex = ComputeParabolaVertex();
 
-            var basePlane = Plane.WorldXY;
-            basePlane.Origin = vertex;
+            var vertexPlane = Plane.WorldXY;
+            vertexPlane.Origin = vertex;
 
             if (A < 0)
             {
-                basePlane.Rotate(Math.PI, basePlane.ZAxis);
+                vertexPlane.Rotate(Math.PI, vertexPlane.ZAxis);
             }
 
-            BasePlane = basePlane;
+            VertexPlane = vertexPlane;
+        }
+
+        public override void TransformShape()
+        {
+            base.TransformShape();
+
+            Plane vertexPlane = VertexPlane;
+            vertexPlane.Transform(Transform);
+            VertexPlane = vertexPlane;
         }
 
         public void ConstructParabolaFromFocus(double a, Interval interval)
@@ -151,6 +171,11 @@ namespace the_Dominion.Conics
             Point3d p1 = new Point3d(interval.Max, y1, 0);
 
             Section = NurbsCurve.CreateParabolaFromFocus(Focus, p0, p1);
+        }
+
+        public override ConicSection Duplicate()
+        {
+            return new Parabola(this);
         }
     }
 }
