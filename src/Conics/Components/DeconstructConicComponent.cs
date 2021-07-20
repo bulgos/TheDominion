@@ -11,6 +11,9 @@ namespace the_Dominion.Conics.Components
                   "Deconstruct a Conic into its constituent parts",
                   "Dominion", "Conics") { }
 
+        protected DeconstructConicComponent(string name, string nickname, string description, string category, string subCategory)
+            : base(name, nickname, description, category, subCategory) { }
+
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddParameter(new Conic_Param(), "Parabola", "P", "The Parabola to Deconstruct", GH_ParamAccess.item);

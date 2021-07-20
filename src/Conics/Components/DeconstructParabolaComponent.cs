@@ -5,6 +5,12 @@ namespace the_Dominion.Conics.Components
 {
     public class DeconstructParabolaComponent : DeconstructConicComponent
     {
+        public DeconstructParabolaComponent()
+            : base("DeconstructParabola", "DPrb",
+                  "Deconstruct a Parabola into its constituent parts",
+                  "Dominion", "Conics")
+        { }
+
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             base.RegisterOutputParams(pManager);
