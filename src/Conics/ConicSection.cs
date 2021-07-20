@@ -1,9 +1,4 @@
 ﻿using Rhino.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace the_Dominion.Conics
 {
@@ -16,7 +11,7 @@ namespace the_Dominion.Conics
 
         protected ConicSection(Plane plane)
         {
-            if (plane == Plane.WorldXY)
+            if (plane == Plane.Unset || plane == Plane.WorldXY)
                 return;
 
             BasePlane = plane;
@@ -49,7 +44,12 @@ namespace the_Dominion.Conics
             }
         }
 
-        public BoundingBox BoundingBox => Section.GetBoundingBox(Transform);
+        public BoundingBox BoundingBox => 
+            IsValid 
+            ? Section.GetBoundingBox(Transform) 
+            : BoundingBox.Empty;
+
+        public virtual bool IsValid => Section != null;
 
         protected abstract void ComputeFocus();
 
@@ -65,7 +65,7 @@ namespace the_Dominion.Conics
 
         public virtual void TransformShape(Transform xform)
         {
-            if (xform == Transform.Identity)
+            if (!IsValid || xform == Transform.Identity)
                 return;
 
             Section.Transform(xform);
@@ -79,11 +79,17 @@ namespace the_Dominion.Conics
 
         public BoundingBox GetBoundingBox(Transform xform)
         {
+            if (!IsValid)
+                return BoundingBox.Empty;
+
             return Section.GetBoundingBox(xform);
         }
 
         public bool Morph(SpaceMorph xmorph)
         {
+            if (!IsValid)
+                return false;
+
             return xmorph.Morph(Section);
         }
 

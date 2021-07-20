@@ -41,7 +41,7 @@ namespace the_Dominion.Conics.Components
             DA.GetData(3, ref c);
             DA.GetData(4, ref interval);
 
-            Parabola parabola = new Parabola(plane, a, b, c, interval);
+            Parabola parabola = new Parabola(a, b, c, plane, interval);
 
             DA.SetData(0, parabola);
         }

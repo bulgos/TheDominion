@@ -8,18 +8,23 @@ namespace the_Dominion.Conics
     public class Parabola : ConicSection
     {
         public Parabola()
-            : this(1, new Interval(-10, 10)) { }
+            : this(1, Interval.Unset) { }
 
         public Parabola(double a, Interval domain)
-            : this(Plane.WorldXY, a, 0, 0, domain) { }
+            : this(a, 0, 0, Plane.Unset, domain) { }
 
-        public Parabola(Plane plane, double a, double b, double c, Interval domain)
+        public Parabola(double a, double b, double c)
+            : this(a, b, c, Plane.Unset, Interval.Unset) { }
+
+        public Parabola(double a, double b, double c, Plane plane, Interval domain)
             : base(plane)
         {
             A = a;
             B = b;
             C = c;
-            Domain = domain;
+
+            if (domain != Interval.Unset)
+                Domain = domain;
 
             ConstructParabola();
             TransformShape();
@@ -68,7 +73,7 @@ namespace the_Dominion.Conics
 
         public double C { get; }
 
-        public Interval Domain { get; } = new Interval(-1, 1);
+        public Interval Domain { get; } = new Interval(-10, 10);
 
         public Plane VertexPlane { get; private set; }
 

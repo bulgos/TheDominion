@@ -70,7 +70,7 @@ namespace the_Dominion.Conics.Wrappers
 
         public void DrawViewportWires(GH_PreviewWireArgs args)
         {
-            if (Value == null)
+            if (Value == null || !Value.IsValid)
                 return;
 
             args.Pipeline.DrawCurve(Value.Section, args.Color);
@@ -119,9 +119,13 @@ namespace the_Dominion.Conics.Wrappers
 
         public override string ToString()
         {
-            return Value == null
-                ? "Null Conic Section"
-                : Value.ToString();
+            if (Value == null)
+                return "Null Conic Section";
+
+            if (!Value.IsValid)
+                return $"Invalid {Value}";
+
+            return Value.ToString();
         }
     }
 }
