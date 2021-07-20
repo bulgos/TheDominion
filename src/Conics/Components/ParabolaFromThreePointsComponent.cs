@@ -5,7 +5,7 @@ using the_Dominion.Conics.Wrappers;
 
 namespace the_Dominion.Conics.Components
 {
-    public class ParabolaFromPointsComponent : GH_Component
+    public class ParabolaFromThreePointsComponent : GH_Component
     {
         /// <summary>
         /// Each implementation of GH_Component must provide a public 
@@ -14,7 +14,7 @@ namespace the_Dominion.Conics.Components
         /// Subcategory the panel. If you use non-existing tab or panel names, 
         /// new tabs/panels will automatically be created.
         /// </summary>
-        public ParabolaFromPointsComponent()
+        public ParabolaFromThreePointsComponent()
           : base("ConstructParabolaFrom3Points", "CPrb3Pt",
               "Constructs a Parabola from 3 Points",
               "Dominion", "Conics")
@@ -37,8 +37,6 @@ namespace the_Dominion.Conics.Components
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new Conic_Param(), "Parabola", "P", "The resulting Parabola", GH_ParamAccess.item);
-            pManager.AddPointParameter("Focus", "F", "The Focal Point of the Parabola", GH_ParamAccess.item);
-            pManager.AddPlaneParameter("Plane", "Pl", "The calculated Base Plane of the Parabola", GH_ParamAccess.item);
         }
 
         /// <summary>
