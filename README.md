@@ -12,7 +12,7 @@ A Grasshopper plugin for modelling conics and curves accurately from equations.
 3. Open Rhino,
 4. Run `_GrasshopperDeveloperSettings` from the Rhino Command Line.
 5. Add a Folder and navigate the tree explorer to the 'bin' folder of where you have cloned the repository locally, e.g. C:\Users\\($user)\source\repos\bulgos\the_Dominion\src\bin
-6. Run `_Grasshopper` and navigate to the 'Dominion' tab.
+6. Run `_Grasshopper` from the Rhino Command Line and navigate to the 'Dominion' tab.
 
 ## Authors
 * Daniel Christev  
