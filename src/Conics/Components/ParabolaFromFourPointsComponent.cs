@@ -40,15 +40,26 @@ namespace the_Dominion.Conics.Components
         /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Point3d p1 = Point3d.Unset;
-            Point3d p2 = Point3d.Unset;
-            Point3d p3 = Point3d.Unset;
-            Point3d p4 = Point3d.Unset;
+            //Point3d p1 = Point3d.Unset;
+            //Point3d p2 = Point3d.Unset;
+            //Point3d p3 = Point3d.Unset;
+            //Point3d p4 = Point3d.Unset;
 
-            DA.GetData(0, ref p1);
-            DA.GetData(1, ref p2);
-            DA.GetData(2, ref p3);
-            DA.GetData(3, ref p4);
+            //DA.GetData(0, ref p1);
+            //DA.GetData(1, ref p2);
+            //DA.GetData(2, ref p3);
+            //DA.GetData(3, ref p4);
+
+            Point3d p1 = new Point3d(-4, 4, 0);
+            Point3d p2 = new Point3d(-3, 2, 0);
+            Point3d p3 = new Point3d(0, 0, 0);
+            Point3d p4 = new Point3d(3, 1, 0);
+
+            //Point3d p1 = new Point3d(-1, 4, 0);
+            //Point3d p2 = new Point3d(-2, -2, 0);
+            //Point3d p3 = new Point3d(0, 0, 0);
+            //Point3d p4 = new Point3d(4, 0, 0);
+
 
             Parabola[] parabolae = Parabola.ComputeParabolasThroughFourPoints(p1, p2, p3, p4);
 

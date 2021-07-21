@@ -1,4 +1,5 @@
-﻿using Rhino.Geometry;
+﻿using Rhino.Collections;
+using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
 using System;
 using System.Linq;
@@ -179,6 +180,27 @@ namespace the_Dominion.Conics
             // https://www.mathpages.com/home/kmath037/kmath037.htm
             // https://math.stackexchange.com/a/3224627
 
+            var transformedPoints = GetTransformedPoints(p1, p2, p3, p4);
+            var p1xForm = transformedPoints.Item1;
+            var p2xForm = transformedPoints.Item2;
+            var p3xForm = transformedPoints.Item3;
+            var p4xForm = transformedPoints.Item4;
+
+            var a0 = p2xForm.Y - p1xForm.Y;
+            var b0 = 2 * (p2xForm.X - p1xForm.X);
+            var c0 = p2xForm.X * (p2xForm.X - 1) / p2xForm.Y - p1xForm.X * (p1xForm.X - 1) / p1xForm.Y;
+
+            var rotation = PointAngle(p4);
+
+            var roots0 = ComputeQuadraticRoots(a0, b0, c0);
+            var ang1 = Math.Atan(roots0.Item1) + rotation;
+            var ang2 = Math.Atan(roots0.Item2) + rotation;
+
+            //p1 = p1xForm;
+            //p2 = p2xForm;
+            //p3 = p3xForm;
+            //p4 = p4xForm;
+
             var ray1 = new Line(p1, p3);
             var ray2 = new Line(p2, p3);
             var ray4 = new Line(p4, p3);
@@ -187,13 +209,16 @@ namespace the_Dominion.Conics
             var ray2Flipped = new Line(p3, p2);
             var ray4Flipped = new Line(p3, p4);
 
-            var t1 = AngleBetweenLines(ray1Flipped, ray2Flipped);
+            var t1 = AngleBetweenLines(ray1Flipped, ray4Flipped);
             var t2 = AngleBetweenLines(ray2Flipped, ray4Flipped);
+
+            var tan1 = Math.Tan(t1);
+            var atan1 = Math.Atan(t1);
 
             var s1 = Math.Sin(t1);
             var s2 = Math.Sin(t2);
-            var c1 = Math.Sin(t1);
-            var c2 = Math.Sin(t2);
+            var c1 = Math.Cos(t1);
+            var c2 = Math.Cos(t2);
 
             var a = s1 * s2 * (s2 * ray2.Length - s1 * ray1.Length);
             var b = 2 * s2 * s1 * (c1 * ray1.Length - c2 * ray2.Length);
@@ -204,9 +229,45 @@ namespace the_Dominion.Conics
             var basePlane = Plane.WorldXY;
             //basePlane.Rotate(t2, basePlane.ZAxis);
 
-            Parabola parabola = new Parabola(basePlane, p1, p2, p4);
+            var plane1 = Plane.WorldXY;
+            plane1.Rotate(ang1, plane1.ZAxis);
 
-            return new Parabola[] { parabola, parabola };
+            var plane2 = Plane.WorldXY;
+            plane2.Rotate(ang2, plane2.ZAxis);
+
+            Parabola parabola = new Parabola(plane1, p1, p2, p4);
+            Parabola parabola2 = new Parabola(plane2, p1, p3, p4);
+            Parabola angleParabola = new Parabola(a, b, c);
+
+            return new Parabola[] { parabola, parabola2 };
+        }
+
+        private static Tuple<Point3d, Point3d, Point3d, Point3d> GetTransformedPoints(Point3d p1, Point3d p2, Point3d p3, Point3d p4)
+        {
+            Vector3d translationVector = Point3d.Origin - p3;
+            Transform translation = Transform.Translation(translationVector);
+
+            double rotationAngle = -VectorAngle(p4 - p3);
+            Transform rotation = Transform.Rotation(rotationAngle, Point3d.Origin);
+
+            double transformScale = 1/(p4 - p3).Length;
+            Transform scale = Transform.Scale(Point3d.Origin, transformScale);
+
+            //Point3d[] points = { new Point3d(p1), new Point3d(p2), new Point3d(p3), new Point3d(p4) };
+            Point3dList points = new Point3dList() { new Point3d(p1), new Point3d(p2), new Point3d(p3), new Point3d(p4) };
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                var pt = points[i];
+
+                pt.Transform(translation);
+                pt.Transform(rotation);
+                pt.Transform(scale);
+
+                points[i] = pt;
+            }
+
+            return new Tuple<Point3d, Point3d, Point3d, Point3d>(points[0], points[1], points[2], points[3]);
         }
 
         private static double AngleBetweenLines(Line l1, Line l2)
@@ -222,9 +283,19 @@ namespace the_Dominion.Conics
             return t2 - t1;
         }
 
+        public static double LineAngle(Line line)
+        {
+            return VectorAngle(line.Direction);
+        }
+
         public static double VectorAngle(Vector3d vector)
         {
             return Math.Atan2(vector.Y, vector.X);
+        }
+
+        public static double PointAngle(Point3d point)
+        {
+            return Math.Atan2(point.Y, point.X);
         }
 
         private static Tuple<double, double> ComputeQuadraticRoots(double a, double b, double c)
