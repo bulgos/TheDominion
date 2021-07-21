@@ -74,11 +74,11 @@
     <Compile Include="the_DominionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\CircleMath.cs" />
+    <Compile Include="Utility\Components\SignedVectorAngleComponent.cs" />
+    <Compile Include="Utility\Components\VectorAngleInPlaneComponent.cs" />
     <Compile Include="Utility\Geometry.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Utility\Components\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
