@@ -227,8 +227,8 @@ namespace the_Dominion.Conics
             // calculate the domain in the given plane
             Point3d[] points = { p1, p2, p3, p4 };
 
-            var domain1 = points.ComputeTransformedBoundsInPlane(plane1);
-            var domain2 = points.ComputeTransformedBoundsInPlane(plane2);
+            var domain1 = points.ComputeTransformedBoundsInPlane(plane1, Plane.WorldXY);
+            var domain2 = points.ComputeTransformedBoundsInPlane(plane2, Plane.WorldXY);
 
             // construct the parabolas from three of the points and the calculated plane
             Parabola parabola1 = new Parabola(p1, p2, p4, plane1);
