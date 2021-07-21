@@ -2,8 +2,6 @@
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using the_Dominion.Utility;
 
 namespace the_Dominion.Conics
