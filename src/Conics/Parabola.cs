@@ -199,15 +199,6 @@ namespace the_Dominion.Conics
             // and p4 is at (1, 0, 0)
             // this unitizes the problem such that we can solve across p1 and p2
 
-            // create a transform and its inverse that moves p3 to the origin
-            Transform xform = Transform.Translation(new Vector3d(p3));
-            xform.TryGetInverse(out Transform xformInverse);
-
-            p1.Transform(xformInverse);
-            p2.Transform(xformInverse);
-            p3.Transform(xformInverse);
-            p4.Transform(xformInverse);
-
             // create new points which meet the translation, rotation and scale requirements to solve
             var transformedPoints = GetTransformedPoints(p1, p2, p3, p4);
             var p1xForm = transformedPoints.Item1;
@@ -219,18 +210,15 @@ namespace the_Dominion.Conics
             var c = p2xForm.X * (p2xForm.X - 1) / p2xForm.Y - p1xForm.X * (p1xForm.X - 1) / p1xForm.Y;
 
             // the angle of p4-p3 gives us the transformation.
-            //var rotation = PointAngle(p4);
             var rotation = VectorAngle(p4 - p3);
 
+            // calculating the roots gives us the solution tan(t) = root1, root2
+            // sp we take the inverse Tan to find the angle at which valid parabolae will form
             var roots = ComputeQuadraticRoots(a, b, c);
             var ang1 = Math.Atan(roots.Item1) + rotation;
             var ang2 = Math.Atan(roots.Item2) + rotation;
-            //var atan1 = Math.Atan(roots.Item1);
-            //var atan2 = Math.Atan(roots.Item2);
 
-            //var ang1 = atan1 + rotation;
-            //var ang2 = atan2 + rotation;
-
+            // create planes which meet the angle requirement
             var plane1 = Plane.WorldXY;
             plane1.Rotate(ang1, plane1.ZAxis);
             var xform1 = Transform.Rotation(ang1, Point3d.Origin);
@@ -239,15 +227,10 @@ namespace the_Dominion.Conics
             plane2.Rotate(ang2, plane2.ZAxis);
             var xform2 = Transform.Rotation(ang2, Point3d.Origin);
 
-            p1.Transform(xform);
-            p2.Transform(xform);
-            p3.Transform(xform);
-            p4.Transform(xform);
-
+            // calculate the domain in the given plane
             Point3d[] points = { p1, p2, p3, p4 };
             Point3dList relativePoints1 = new Point3dList(points);
             Point3dList relativePoints2 = new Point3dList(points);
-            Point3dList relativePoints3 = new Point3dList(points);
 
             relativePoints1.Transform(xform1.Transpose());
             relativePoints2.Transform(xform2.Transpose());
@@ -258,9 +241,11 @@ namespace the_Dominion.Conics
             var domain1 = new Interval(x1s.Min(), x1s.Max());
             var domain2 = new Interval(x2s.Min(), x2s.Max());
 
+            // construct the parabolas from three of the points and the calculated plane
             Parabola parabola1 = new Parabola(p1, p2, p4, plane1);
             Parabola parabola2 = new Parabola(p1, p2, p4, plane2);
 
+            // set the domain
             parabola1.Domain = domain1;
             parabola2.Domain = domain2;
 
