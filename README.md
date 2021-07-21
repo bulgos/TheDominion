@@ -1,8 +1,19 @@
-# Grasshopper Tools and Fabrication Scripts
-Repository for collaboration and code review between Michael Wickerson and Daniel Christev.
+# The Dominion
+A Grasshopper plugin for modelling conics and curves accurately from equations.
 
 ## Getting Started
-Let the fun begin!
+#### Prerequisites
+* Rhino 6
+* [Grasshopper Template](https://www.google.com) for Visual Studio
 
-Testing for Michael
-Received by Michael
+#### Steps
+1. Clone the repository.
+2. Build the Application in Visual Studio.
+3. Open Rhino,
+4. Run `_GrasshopperDeveloperSettings` from the Rhino Command Line.
+5. Add a Folder and navigate the tree explorer to the 'bin' folder of this cloned repository, e.g. C:\Users\$user\source\repos\bulgos\the_Dominion\src\bin
+6. Run `_Grasshopper` and navigate to the 'Dominion' tab
+
+## Authors
+Daniel Christev  
+Michael Wickerson
