@@ -12,11 +12,17 @@ A Grasshopper plugin for modelling conics and curves accurately from equations.
 3. Open Rhino,
 4. Run `_GrasshopperDeveloperSettings` from the Rhino Command Line.
 5. Add a Folder and navigate the tree explorer to the 'bin' folder of this cloned repository, e.g. C:\Users\$user\source\repos\bulgos\the_Dominion\src\bin
-6. Run `_Grasshopper` and navigate to the 'Dominion' tab
+6. Run `_Grasshopper` and navigate to the 'Dominion' tab.
 
 ## Authors
-Daniel Christev  
-Michael Wickerson
+* Daniel Christev  
+* Michael Wickerson
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details
+MIT License. Copyright 2021 Daniel Christev, Michael Wickerson.  
+See [LICENSE](./LICENSE) for details.
+
+## Useful Links
+[Conic Linear Programming](https://web.stanford.edu/class/msande314/sdpmain.pdf)  
+[opennurbs](https://github.com/mcneel/opennurbs)  
+[SCS (fast conic optimizer)](https://github.com/kul-optec/scs#superscs)  
