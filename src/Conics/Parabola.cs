@@ -88,6 +88,10 @@ namespace the_Dominion.Conics
 
         public Plane VertexPlane { get; private set; }
 
+        public double Discriminant => ComputeDiscriminant();
+
+        public Tuple<double, Point3d>[] Roots => ComputeQuadraticRoots();
+
         public void ConstructParabola()
         {
             Point3d p0 = ComputeTangentIntersections(Domain.Min, Domain.Max, out Line tangent1, out Line tangent2);
@@ -198,35 +202,39 @@ namespace the_Dominion.Conics
 
             // create new points which meet the translation, rotation and scale requirements to solve
             var transformedPoints = GetTransformedPoints(p1, p2, p3, p4);
-            var p1xForm = transformedPoints.Item1;
-            var p2xForm = transformedPoints.Item2;
+            Point3d p1xForm = transformedPoints.Item1;
+            Point3d p2xForm = transformedPoints.Item2;
 
             // we calculate the angle quadratic of the form A*tan(t)^2 + B*Tan(t) + C = 0
-            var a = p2xForm.Y - p1xForm.Y;
-            var b = 2 * (p2xForm.X - p1xForm.X);
-            var c = p2xForm.X * (p2xForm.X - 1) / p2xForm.Y - p1xForm.X * (p1xForm.X - 1) / p1xForm.Y;
+            double a = p2xForm.Y - p1xForm.Y;
+            double b = 2 * (p2xForm.X - p1xForm.X);
+            double c = p2xForm.X * (p2xForm.X - 1) / p2xForm.Y - p1xForm.X * (p1xForm.X - 1) / p1xForm.Y;
 
             // the angle of p4-p3 gives us the transformation.
-            var rotation = (p4 - p3).VectorAngle();
+            double rotation = (p4 - p3).VectorAngle();
 
             // calculating the roots gives us the solution tan(t) = root1, root2
             // sp we take the inverse Tan to find the angle at which valid parabolae will form
             var roots = ComputeQuadraticRoots(a, b, c);
-            var ang1 = Math.Atan(roots.Item1) + rotation;
-            var ang2 = Math.Atan(roots.Item2) + rotation;
+
+            if (roots.Length < 2)
+                return new Parabola[] { null, null };
+
+            double ang1 = Math.Atan(roots[0]) + rotation;
+            double ang2 = Math.Atan(roots[1]) + rotation;
 
             // create planes which meet the angle requirement
-            var plane1 = Plane.WorldXY;
+            Plane plane1 = Plane.WorldXY;
             plane1.Rotate(ang1, plane1.ZAxis);
 
-            var plane2 = Plane.WorldXY;
+            Plane plane2 = Plane.WorldXY;
             plane2.Rotate(ang2, plane2.ZAxis);
 
             // calculate the domain in the given plane
             Point3d[] points = { p1, p2, p3, p4 };
 
-            var domain1 = points.ComputeTransformedBoundsInPlane(plane1, Plane.WorldXY);
-            var domain2 = points.ComputeTransformedBoundsInPlane(plane2, Plane.WorldXY);
+            Interval domain1 = points.ComputeTransformedBoundsInPlane(plane1, Plane.WorldXY);
+            Interval domain2 = points.ComputeTransformedBoundsInPlane(plane2, Plane.WorldXY);
 
             // construct the parabolas from three of the points and the calculated plane
             Parabola parabola1 = new Parabola(p1, p2, p4, plane1);
@@ -266,14 +274,54 @@ namespace the_Dominion.Conics
             return new Tuple<Point3d, Point3d, Point3d, Point3d>(points[0], points[1], points[2], points[3]);
         }
 
-        private static Tuple<double, double> ComputeQuadraticRoots(double a, double b, double c)
+        private Tuple<double, Point3d>[] ComputeQuadraticRoots()
         {
-            var discriminant = b * b - 4 * a * c;
+            double[] rootParameters = ComputeQuadraticRoots(A, B, C);
 
-            var root1 = (-b + Math.Sqrt(discriminant)) / (2 * a);
-            var root2 = (-b - Math.Sqrt(discriminant)) / (2 * a);
+            var roots = new Tuple<double, Point3d>[rootParameters.Length];
 
-            return new Tuple<double, double>(root1, root2);
+            for (int i = 0; i < rootParameters.Length; i++)
+            {
+                var rootPt = ComputeParabolaPoint(rootParameters[i]);
+                rootPt.Transform(Transform);
+
+                roots[i] = new Tuple<double, Point3d>(rootParameters[i], rootPt);
+            }
+
+            return roots;
+        }
+
+        private static double[] ComputeQuadraticRoots(double a, double b, double c)
+        {
+            double discriminant = ComputeDiscriminant(a, b, c);
+
+            if (discriminant < 0)
+            {
+                return new double[0];
+            }
+
+            else if (discriminant > 0)
+            {
+                double root1 = (-b + Math.Sqrt(discriminant)) / (2 * a);
+                double root2 = (-b - Math.Sqrt(discriminant)) / (2 * a);
+
+                return new double[] { root1, root2 };
+            }
+
+            else
+            {
+                return new double[] { -b / (2 * a) };
+            }
+        }
+
+        private double ComputeDiscriminant()
+        {
+            return ComputeDiscriminant(A, B, C);
+        }
+
+        private static double ComputeDiscriminant(double a, double b, double c)
+        {
+            return b * b - 4 * a * c;
         }
 
         public void ConstructParabolaFromFocus()

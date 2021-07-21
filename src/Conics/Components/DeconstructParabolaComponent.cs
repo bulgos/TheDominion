@@ -1,5 +1,6 @@
 ﻿using Grasshopper.Kernel;
 using System;
+using System.Linq;
 
 namespace the_Dominion.Conics.Components
 {
@@ -20,6 +21,8 @@ namespace the_Dominion.Conics.Components
             pManager.AddNumberParameter("B", "B", "B", GH_ParamAccess.item);
             pManager.AddNumberParameter("C", "C", "C", GH_ParamAccess.item);
             pManager.AddIntervalParameter("Domain", "D", "The Domain to calculate the function in", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Discriminant", "Di", "The Discriminant", GH_ParamAccess.item);
+            pManager.AddPointParameter("Roots", "R", "Roots of the Parabola", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -43,6 +46,8 @@ namespace the_Dominion.Conics.Components
             DA.SetData(5, parabola.B);
             DA.SetData(6, parabola.C);
             DA.SetData(7, parabola.Domain);
+            DA.SetData(8, parabola.Discriminant);
+            DA.SetDataList(9, parabola.Roots.Select(root => root.Item2));
         }
 
         public override Guid ComponentGuid => new Guid("71e49a09-9095-4ffd-9824-32eca6e0a9c3");

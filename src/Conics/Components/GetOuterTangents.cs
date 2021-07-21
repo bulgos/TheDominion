@@ -1,5 +1,6 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
+using System;
 using the_Dominion.Utility;
 
 namespace the_Dominion.Conics.Components
