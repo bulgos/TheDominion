@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace the_Dominion.Conics
+namespace the_Dominion.Utility
 {
     public class CircleMath
     {

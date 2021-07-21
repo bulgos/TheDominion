@@ -56,7 +56,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Conics\CircleMath.cs" />
     <Compile Include="Conics\Components\ConicTypeComponent.cs" />
     <Compile Include="Conics\Components\DeconstructConicComponent.cs" />
     <Compile Include="Conics\Components\DeconstructParabolaComponent.cs" />
@@ -74,6 +73,7 @@
     <Compile Include="Conics\Wrappers\GH_Conic.cs" />
     <Compile Include="the_DominionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utility\CircleMath.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
