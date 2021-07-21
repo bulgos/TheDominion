@@ -4,6 +4,7 @@ using Rhino.Geometry.Intersect;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using the_Dominion.Utility;
 
 namespace the_Dominion.Conics
 {
@@ -12,7 +13,7 @@ namespace the_Dominion.Conics
         private Interval _domain = new Interval(-10, 10);
 
         public Parabola()
-: this(1, Interval.Unset) { }
+            : this(1, Interval.Unset) { }
 
         public Parabola(double a, Interval domain)
             : this(a, 0, 0, Plane.Unset, domain) { }
@@ -50,10 +51,10 @@ namespace the_Dominion.Conics
             C = quadratic.Item3;
 
             Point3d[] points = { p1, p2, p3 };
-            
+
             // compute bounds if domain is unset
             Domain = domain == Interval.Unset
-                ? ComputeBounds(points)
+                ? points.ComputeBounds()
                 : domain;
 
             ConstructParabola();
@@ -208,7 +209,7 @@ namespace the_Dominion.Conics
             var c = p2xForm.X * (p2xForm.X - 1) / p2xForm.Y - p1xForm.X * (p1xForm.X - 1) / p1xForm.Y;
 
             // the angle of p4-p3 gives us the transformation.
-            var rotation = VectorAngle(p4 - p3);
+            var rotation = (p4 - p3).VectorAngle();
 
             // calculating the roots gives us the solution tan(t) = root1, root2
             // sp we take the inverse Tan to find the angle at which valid parabolae will form
@@ -226,8 +227,8 @@ namespace the_Dominion.Conics
             // calculate the domain in the given plane
             Point3d[] points = { p1, p2, p3, p4 };
 
-            var domain1 = ComputeTransformedBoundsInPlane(points, plane1);
-            var domain2 = ComputeTransformedBoundsInPlane(points, plane2);
+            var domain1 = points.ComputeTransformedBoundsInPlane(plane1);
+            var domain2 = points.ComputeTransformedBoundsInPlane(plane2);
 
             // construct the parabolas from three of the points and the calculated plane
             Parabola parabola1 = new Parabola(p1, p2, p4, plane1);
@@ -240,34 +241,12 @@ namespace the_Dominion.Conics
             return new Parabola[] { parabola1, parabola2 };
         }
 
-        private static Interval ComputeTransformedBoundsInPlane(IEnumerable<Point3d> points, Plane targetPlane)
-        {
-            return ComputeTransformedBoundsInPlane(points, Plane.WorldXY, targetPlane);
-        }
-
-        private static Interval ComputeTransformedBoundsInPlane(IEnumerable<Point3d> points, Plane sourcePlane, Plane targetPlane)
-        {
-            Transform xform = Transform.PlaneToPlane(sourcePlane, targetPlane);
-
-            Point3dList transformablePoints = new Point3dList(points);
-            transformablePoints.Transform(xform);
-
-            return ComputeBounds(transformablePoints);
-        }
-
-        private static Interval ComputeBounds(IEnumerable<Point3d> points)
-        {
-            var xValues = points.Select(pt => pt.X);
-
-            return new Interval(xValues.Min(), xValues.Max());
-        }
-
         private static Tuple<Point3d, Point3d, Point3d, Point3d> GetTransformedPoints(Point3d p1, Point3d p2, Point3d p3, Point3d p4)
         {
             Vector3d translationVector = Point3d.Origin - p3;
             Transform translation = Transform.Translation(translationVector);
 
-            double rotationAngle = -VectorAngle(p4 - p3);
+            double rotationAngle = -(p4 - p3).VectorAngle();
             Transform rotation = Transform.Rotation(rotationAngle, Point3d.Origin);
 
             double transformScale = 1 / (p4 - p3).Length;
@@ -287,34 +266,6 @@ namespace the_Dominion.Conics
             }
 
             return new Tuple<Point3d, Point3d, Point3d, Point3d>(points[0], points[1], points[2], points[3]);
-        }
-
-        private static double AngleBetweenLines(Line l1, Line l2)
-        {
-            return AngleBetweenVectors(l1.Direction, l2.Direction);
-        }
-
-        private static double AngleBetweenVectors(Vector3d v1, Vector3d v2)
-        {
-            double t1 = VectorAngle(v1);
-            double t2 = VectorAngle(v2);
-
-            return t2 - t1;
-        }
-
-        public static double LineAngle(Line line)
-        {
-            return VectorAngle(line.Direction);
-        }
-
-        public static double VectorAngle(Vector3d vector)
-        {
-            return Math.Atan2(vector.Y, vector.X);
-        }
-
-        public static double PointAngle(Point3d point)
-        {
-            return Math.Atan2(point.Y, point.X);
         }
 
         private static Tuple<double, double> ComputeQuadraticRoots(double a, double b, double c)
