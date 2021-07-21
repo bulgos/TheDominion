@@ -56,7 +56,7 @@ namespace the_Dominion.Conics.Components
             DA.GetData(2, ref p2);
             DA.GetData(3, ref p3);
 
-            var parabola = new Parabola(plane, p1, p2, p3);
+            var parabola = new Parabola(p1, p2, p3, plane);
 
             DA.SetData(0, parabola);
         }

@@ -8,8 +8,10 @@ namespace the_Dominion.Conics
 {
     public class Parabola : ConicSection
     {
+        private Interval _domain = new Interval(-10, 10);
+
         public Parabola()
-            : this(1, Interval.Unset) { }
+: this(1, Interval.Unset) { }
 
         public Parabola(double a, Interval domain)
             : this(a, 0, 0, Plane.Unset, domain) { }
@@ -28,19 +30,17 @@ namespace the_Dominion.Conics
                 Domain = domain;
 
             ConstructParabola();
-            TransformShape();
         }
 
-        public Parabola(Plane plane, Point3d p1, Point3d p2, Point3d p3)
+        public Parabola(Point3d p1, Point3d p2, Point3d p3, Plane plane)
+            : this(p1, p2, p3, plane, Interval.Unset) { }
+
+        public Parabola(Point3d p1, Point3d p2, Point3d p3, Plane plane, Interval domain)
             : base(plane)
         {
             p1.Transform(InverseTransform);
             p2.Transform(InverseTransform);
             p3.Transform(InverseTransform);
-
-            //p1.Transform(Transform);
-            //p2.Transform(Transform);
-            //p3.Transform(Transform);
 
             Tuple<double, double, double> quadratic = ComputeQuadraticParametersFrom3Points(p1, p2, p3);
 
@@ -48,12 +48,17 @@ namespace the_Dominion.Conics
             B = quadratic.Item2;
             C = quadratic.Item3;
 
-            double[] xValues = { p1.X, p2.X, p3.X };
-
-            Domain = new Interval(xValues.Min(), xValues.Max());
+            if (domain == Interval.Unset)
+            {
+                double[] xValues = { p1.X, p2.X, p3.X };
+                Domain = new Interval(xValues.Min(), xValues.Max());
+            }
+            else
+            {
+                Domain = domain;
+            }
 
             ConstructParabola();
-            TransformShape();
         }
 
         public Parabola(Parabola parabola)
@@ -74,7 +79,15 @@ namespace the_Dominion.Conics
 
         public double C { get; }
 
-        public Interval Domain { get; } = new Interval(-10, 10);
+        public Interval Domain
+        {
+            get => _domain; 
+            set
+            {
+                _domain = value;
+                ConstructParabola();
+            }
+        }
 
         public Plane VertexPlane { get; private set; }
 
@@ -88,6 +101,7 @@ namespace the_Dominion.Conics
 
             ComputeVertexPlane();
             ComputeFocus();
+            TransformShape();
         }
 
         private Tuple<double, double, double> ComputeQuadraticParametersFrom3Points(Point3d p1, Point3d p2, Point3d p3)
@@ -179,67 +193,78 @@ namespace the_Dominion.Conics
         {
             // https://www.mathpages.com/home/kmath037/kmath037.htm
             // https://math.stackexchange.com/a/3224627
+            
+            // this method requires a transformation such that
+            // p3 is at the origin (0, 0, 0)
+            // and p4 is at (1, 0, 0)
+            // this unitizes the problem such that we can solve across p1 and p2
 
+            // create a transform and its inverse that moves p3 to the origin
+            Transform xform = Transform.Translation(new Vector3d(p3));
+            xform.TryGetInverse(out Transform xformInverse);
+
+            p1.Transform(xformInverse);
+            p2.Transform(xformInverse);
+            p3.Transform(xformInverse);
+            p4.Transform(xformInverse);
+
+            // create new points which meet the translation, rotation and scale requirements to solve
             var transformedPoints = GetTransformedPoints(p1, p2, p3, p4);
             var p1xForm = transformedPoints.Item1;
             var p2xForm = transformedPoints.Item2;
-            var p3xForm = transformedPoints.Item3;
-            var p4xForm = transformedPoints.Item4;
 
-            var a0 = p2xForm.Y - p1xForm.Y;
-            var b0 = 2 * (p2xForm.X - p1xForm.X);
-            var c0 = p2xForm.X * (p2xForm.X - 1) / p2xForm.Y - p1xForm.X * (p1xForm.X - 1) / p1xForm.Y;
+            // we calculate the angle quadratic of the form A*tan(t)^2 + B*Tan(t) + C = 0
+            var a = p2xForm.Y - p1xForm.Y;
+            var b = 2 * (p2xForm.X - p1xForm.X);
+            var c = p2xForm.X * (p2xForm.X - 1) / p2xForm.Y - p1xForm.X * (p1xForm.X - 1) / p1xForm.Y;
 
-            var rotation = PointAngle(p4);
-
-            var roots0 = ComputeQuadraticRoots(a0, b0, c0);
-            var ang1 = Math.Atan(roots0.Item1) + rotation;
-            var ang2 = Math.Atan(roots0.Item2) + rotation;
-
-            //p1 = p1xForm;
-            //p2 = p2xForm;
-            //p3 = p3xForm;
-            //p4 = p4xForm;
-
-            var ray1 = new Line(p1, p3);
-            var ray2 = new Line(p2, p3);
-            var ray4 = new Line(p4, p3);
-
-            var ray1Flipped = new Line(p3, p1);
-            var ray2Flipped = new Line(p3, p2);
-            var ray4Flipped = new Line(p3, p4);
-
-            var t1 = AngleBetweenLines(ray1Flipped, ray4Flipped);
-            var t2 = AngleBetweenLines(ray2Flipped, ray4Flipped);
-
-            var tan1 = Math.Tan(t1);
-            var atan1 = Math.Atan(t1);
-
-            var s1 = Math.Sin(t1);
-            var s2 = Math.Sin(t2);
-            var c1 = Math.Cos(t1);
-            var c2 = Math.Cos(t2);
-
-            var a = s1 * s2 * (s2 * ray2.Length - s1 * ray1.Length);
-            var b = 2 * s2 * s1 * (c1 * ray1.Length - c2 * ray2.Length);
-            var c = s2 * c1 * (ray4.Length - c1 * ray1.Length) - s1 * c2 * (ray4.Length - c2 * ray2.Length);
+            // the angle of p4-p3 gives us the transformation.
+            //var rotation = PointAngle(p4);
+            var rotation = VectorAngle(p4 - p3);
 
             var roots = ComputeQuadraticRoots(a, b, c);
+            var ang1 = Math.Atan(roots.Item1) + rotation;
+            var ang2 = Math.Atan(roots.Item2) + rotation;
+            //var atan1 = Math.Atan(roots.Item1);
+            //var atan2 = Math.Atan(roots.Item2);
 
-            var basePlane = Plane.WorldXY;
-            //basePlane.Rotate(t2, basePlane.ZAxis);
+            //var ang1 = atan1 + rotation;
+            //var ang2 = atan2 + rotation;
 
             var plane1 = Plane.WorldXY;
             plane1.Rotate(ang1, plane1.ZAxis);
+            var xform1 = Transform.Rotation(ang1, Point3d.Origin);
 
             var plane2 = Plane.WorldXY;
             plane2.Rotate(ang2, plane2.ZAxis);
+            var xform2 = Transform.Rotation(ang2, Point3d.Origin);
 
-            Parabola parabola = new Parabola(plane1, p1, p2, p4);
-            Parabola parabola2 = new Parabola(plane2, p1, p3, p4);
-            Parabola angleParabola = new Parabola(a, b, c);
+            p1.Transform(xform);
+            p2.Transform(xform);
+            p3.Transform(xform);
+            p4.Transform(xform);
 
-            return new Parabola[] { parabola, parabola2 };
+            Point3d[] points = { p1, p2, p3, p4 };
+            Point3dList relativePoints1 = new Point3dList(points);
+            Point3dList relativePoints2 = new Point3dList(points);
+            Point3dList relativePoints3 = new Point3dList(points);
+
+            relativePoints1.Transform(xform1.Transpose());
+            relativePoints2.Transform(xform2.Transpose());
+
+            var x1s = relativePoints1.Select(pt => pt.X);
+            var x2s = relativePoints2.Select(pt => pt.X);
+
+            var domain1 = new Interval(x1s.Min(), x1s.Max());
+            var domain2 = new Interval(x2s.Min(), x2s.Max());
+
+            Parabola parabola1 = new Parabola(p1, p2, p4, plane1);
+            Parabola parabola2 = new Parabola(p1, p2, p4, plane2);
+
+            parabola1.Domain = domain1;
+            parabola2.Domain = domain2;
+
+            return new Parabola[] { parabola1, parabola2 };
         }
 
         private static Tuple<Point3d, Point3d, Point3d, Point3d> GetTransformedPoints(Point3d p1, Point3d p2, Point3d p3, Point3d p4)
@@ -250,10 +275,9 @@ namespace the_Dominion.Conics
             double rotationAngle = -VectorAngle(p4 - p3);
             Transform rotation = Transform.Rotation(rotationAngle, Point3d.Origin);
 
-            double transformScale = 1/(p4 - p3).Length;
+            double transformScale = 1 / (p4 - p3).Length;
             Transform scale = Transform.Scale(Point3d.Origin, transformScale);
 
-            //Point3d[] points = { new Point3d(p1), new Point3d(p2), new Point3d(p3), new Point3d(p4) };
             Point3dList points = new Point3dList() { new Point3d(p1), new Point3d(p2), new Point3d(p3), new Point3d(p4) };
 
             for (int i = 0; i < points.Count; i++)
