@@ -2,6 +2,7 @@
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace the_Dominion.Conics
@@ -48,15 +49,12 @@ namespace the_Dominion.Conics
             B = quadratic.Item2;
             C = quadratic.Item3;
 
-            if (domain == Interval.Unset)
-            {
-                double[] xValues = { p1.X, p2.X, p3.X };
-                Domain = new Interval(xValues.Min(), xValues.Max());
-            }
-            else
-            {
-                Domain = domain;
-            }
+            Point3d[] points = { p1, p2, p3 };
+            
+            // compute bounds if domain is unset
+            Domain = domain == Interval.Unset
+                ? ComputeBounds(points)
+                : domain;
 
             ConstructParabola();
         }
@@ -81,7 +79,7 @@ namespace the_Dominion.Conics
 
         public Interval Domain
         {
-            get => _domain; 
+            get => _domain;
             set
             {
                 _domain = value;
@@ -193,7 +191,7 @@ namespace the_Dominion.Conics
         {
             // https://www.mathpages.com/home/kmath037/kmath037.htm
             // https://math.stackexchange.com/a/3224627
-            
+
             // this method requires a transformation such that
             // p3 is at the origin (0, 0, 0)
             // and p4 is at (1, 0, 0)
@@ -221,25 +219,15 @@ namespace the_Dominion.Conics
             // create planes which meet the angle requirement
             var plane1 = Plane.WorldXY;
             plane1.Rotate(ang1, plane1.ZAxis);
-            var xform1 = Transform.Rotation(ang1, Point3d.Origin);
 
             var plane2 = Plane.WorldXY;
             plane2.Rotate(ang2, plane2.ZAxis);
-            var xform2 = Transform.Rotation(ang2, Point3d.Origin);
 
             // calculate the domain in the given plane
             Point3d[] points = { p1, p2, p3, p4 };
-            Point3dList relativePoints1 = new Point3dList(points);
-            Point3dList relativePoints2 = new Point3dList(points);
 
-            relativePoints1.Transform(xform1.Transpose());
-            relativePoints2.Transform(xform2.Transpose());
-
-            var x1s = relativePoints1.Select(pt => pt.X);
-            var x2s = relativePoints2.Select(pt => pt.X);
-
-            var domain1 = new Interval(x1s.Min(), x1s.Max());
-            var domain2 = new Interval(x2s.Min(), x2s.Max());
+            var domain1 = ComputeTransformedBoundsInPlane(points, plane1);
+            var domain2 = ComputeTransformedBoundsInPlane(points, plane2);
 
             // construct the parabolas from three of the points and the calculated plane
             Parabola parabola1 = new Parabola(p1, p2, p4, plane1);
@@ -250,6 +238,28 @@ namespace the_Dominion.Conics
             parabola2.Domain = domain2;
 
             return new Parabola[] { parabola1, parabola2 };
+        }
+
+        private static Interval ComputeTransformedBoundsInPlane(IEnumerable<Point3d> points, Plane targetPlane)
+        {
+            return ComputeTransformedBoundsInPlane(points, Plane.WorldXY, targetPlane);
+        }
+
+        private static Interval ComputeTransformedBoundsInPlane(IEnumerable<Point3d> points, Plane sourcePlane, Plane targetPlane)
+        {
+            Transform xform = Transform.PlaneToPlane(sourcePlane, targetPlane);
+
+            Point3dList transformablePoints = new Point3dList(points);
+            transformablePoints.Transform(xform);
+
+            return ComputeBounds(transformablePoints);
+        }
+
+        private static Interval ComputeBounds(IEnumerable<Point3d> points)
+        {
+            var xValues = points.Select(pt => pt.X);
+
+            return new Interval(xValues.Min(), xValues.Max());
         }
 
         private static Tuple<Point3d, Point3d, Point3d, Point3d> GetTransformedPoints(Point3d p1, Point3d p2, Point3d p3, Point3d p4)
