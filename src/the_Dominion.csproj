@@ -32,9 +32,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MathNet.Numerics, Version=4.15.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.15.0\lib\net40\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Drawing" />
@@ -67,6 +72,7 @@
     <Compile Include="Conics\Components\ParabolaFromQuadraticComponent.cs" />
     <Compile Include="Conics\Components\ParabolaFromThreePointsComponent.cs" />
     <Compile Include="Conics\ConicSection.cs" />
+    <Compile Include="Conics\ConicSolver.cs" />
     <Compile Include="Conics\Hyperbola.cs" />
     <Compile Include="Conics\Parabola.cs" />
     <Compile Include="Conics\Wrappers\Conic_Param.cs" />
@@ -78,7 +84,9 @@
     <Compile Include="Utility\Components\VectorAngleInPlaneComponent.cs" />
     <Compile Include="Utility\Geometry.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
