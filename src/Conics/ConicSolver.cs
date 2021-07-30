@@ -131,5 +131,153 @@ namespace the_Dominion.Conics
 
             return conicSolver;
         }
+
+        public void From5Points(Point3d pt1, Point3d pt2, Point3d pt3, Point3d pt4, Point3d pt5)
+        {
+            Point2d p1 = new Point2d(pt1.X, pt1.Y);
+            Point2d p2 = new Point2d(pt2.X, pt2.Y);
+            Point2d p3 = new Point2d(pt3.X, pt3.Y);
+            Point2d p4 = new Point2d(pt4.X, pt4.Y);
+            Point2d p5 = new Point2d(pt5.X, pt5.Y);
+
+            Point2d[] pts = new[] { p1, p2, p3, p4, p5 };
+
+            double[][] matrixValues = new double[5][];
+            Vector<double> vector = Vector.Build.Dense(5, 1);
+
+            for (int i = 0; i < pts.Length; i++)
+            {
+                matrixValues[i] = new[] { pts[i].X * pts[i].X, pts[i].X * pts[i].Y, pts[i].Y * pts[i].Y, pts[i].X, pts[i].Y };
+            }
+
+            Matrix<double> matrix = DenseMatrix.OfRowArrays(matrixValues);
+
+            Vector<double> solution = matrix.Solve(vector);
+
+            A = solution[0];
+            B = solution[1];
+            C = solution[2];
+            D = solution[3];
+            E = solution[4];
+            //F = solution[5, 0];
+            F = -1;
+        }
+
+        public static ConicSolver FindConicSection(List<Point3d> points)
+        {
+            const int num_rows = 5;
+            const int num_cols = 5;
+
+            var conicSolver = new ConicSolver();
+
+            // Build the augmented matrix.
+            double[,] arr = new double[num_rows, num_cols + 2];
+            for (int row = 0; row < num_rows; row++)
+            {
+                arr[row, 0] = points[row].X * points[row].X;
+                arr[row, 1] = points[row].X * points[row].Y;
+                arr[row, 2] = points[row].Y * points[row].Y;
+                arr[row, 3] = points[row].X;
+                arr[row, 4] = points[row].Y;
+                arr[row, 5] = -1;
+                arr[row, 6] = 0;
+            }
+            Console.WriteLine("    Initial Array:");
+
+            // Perform Gaussian elmination.
+            const double tiny = 0.00001;
+            for (int r = 0; r < num_rows - 1; r++)
+            {
+                // Zero out all entries in column r after this row.
+                // See if this row has a non-zero entry in column r.
+                if (Math.Abs(arr[r, r]) < tiny)
+                {
+                    // Too close to zero. Try to swap with a later row.
+                    for (int r2 = r + 1; r2 < num_rows; r2++)
+                    {
+                        if (Math.Abs(arr[r2, r]) > tiny)
+                        {
+                            // This row will work. Swap them.
+                            for (int c = 0; c <= num_cols; c++)
+                            {
+                                double tmp = arr[r, c];
+                                arr[r, c] = arr[r2, c];
+                                arr[r2, c] = tmp;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+                // If this row has a non-zero entry in column r, use it.
+                if (Math.Abs(arr[r, r]) > tiny)
+                {
+                    // Zero out this column in later rows.
+                    for (int r2 = r + 1; r2 < num_rows; r2++)
+                    {
+                        double factor = -arr[r2, r] / arr[r, r];
+                        for (int c = r; c <= num_cols; c++)
+                        {
+                            arr[r2, c] = arr[r2, c] + factor * arr[r, c];
+                        }
+                    }
+                }
+                Console.WriteLine("    After eliminating column " + r + ":");
+            }
+            Console.WriteLine("    After elimination:");
+
+            // See if we have a solution.
+            if (arr[num_rows - 1, num_cols - 1] == 0)
+            {
+                // We have no solution.
+                // See if all of the entries in this row are 0.
+                bool all_zeros = true;
+                for (int c = 0; c <= num_cols + 1; c++)
+                {
+                    if (arr[num_rows - 1, c] != 0)
+                    {
+                        all_zeros = false;
+                        break;
+                    }
+                }
+                if (all_zeros)
+                {
+                    // solution is not unique
+                }
+                else
+                {
+                    // no solution exists
+                }
+                conicSolver.A = 0;
+                conicSolver.B = 0;
+                conicSolver.C = 0;
+                conicSolver.D = 0;
+                conicSolver.E = 0;
+                conicSolver.F = 0;
+            }
+            else
+            {
+                // Backsolve.
+                for (int r = num_rows - 1; r >= 0; r--)
+                {
+                    double tmp = arr[r, num_cols];
+                    for (int r2 = r + 1; r2 < num_rows; r2++)
+                    {
+                        tmp -= arr[r, r2] * arr[r2, num_cols + 1];
+                    }
+                    arr[r, num_cols + 1] = tmp / arr[r, r];
+                }
+
+                // Save the results.
+                conicSolver.A = arr[0, num_cols + 1];
+                conicSolver.B = arr[1, num_cols + 1];
+                conicSolver.C = arr[2, num_cols + 1];
+                conicSolver.D = arr[3, num_cols + 1];
+                conicSolver.E = arr[4, num_cols + 1];
+                conicSolver.F = 1;
+            }
+
+            return conicSolver;
+        }
     }
 }

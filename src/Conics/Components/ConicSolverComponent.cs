@@ -44,12 +44,13 @@ namespace the_Dominion.Conics.Components
             Point3d p5 = Point3d.Unset;
 
             DA.GetData(0, ref p1);
-            DA.GetData(0, ref p2);
-            DA.GetData(0, ref p3);
-            DA.GetData(0, ref p4);
-            DA.GetData(0, ref p5);
+            DA.GetData(1, ref p2);
+            DA.GetData(2, ref p3);
+            DA.GetData(3, ref p4);
+            DA.GetData(4, ref p5);
 
-            ConicSolver conicSolver = ConicSolver.SolveConic(p1, p2, p3, p4, p5);
+            ConicSolver conicSolver = new ConicSolver();
+            conicSolver.From5Points(p1, p2, p3, p4, p5);
 
             DA.SetData(0, conicSolver.A);
             DA.SetData(1, conicSolver.B);
