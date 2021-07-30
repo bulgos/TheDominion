@@ -33,7 +33,7 @@ namespace the_Dominion.Conics.Components
             DA.GetData(0, ref conicSection);
 
             DA.SetData(0, conicSection.Section);
-            DA.SetData(1, conicSection.Focus);
+            DA.SetData(1, conicSection.Focus1);
             DA.SetData(2, conicSection.BasePlane);
         }
 

@@ -70,12 +70,6 @@ namespace the_Dominion.Conics
             VertexPlane = parabola.VertexPlane;
         }
 
-        public double A { get; }
-
-        public double B { get; }
-
-        public double C { get; }
-
         public Interval Domain
         {
             get => _domain;
@@ -87,8 +81,6 @@ namespace the_Dominion.Conics
         }
 
         public Plane VertexPlane { get; private set; }
-
-        public double Discriminant => ComputeDiscriminant();
 
         public Tuple<double, Point3d>[] Roots => ComputeQuadraticRoots();
 
@@ -173,7 +165,7 @@ namespace the_Dominion.Conics
 
         protected override void ComputeFocus()
         {
-            Focus = VertexPlane.Origin + new Point3d(0, A / 4, 0);
+            Focus1 = VertexPlane.Origin + new Point3d(0, A / 4, 0);
         }
 
         public override void TransformShape()
@@ -293,7 +285,7 @@ namespace the_Dominion.Conics
 
         private static double[] ComputeQuadraticRoots(double a, double b, double c)
         {
-            double discriminant = ComputeDiscriminant(a, b, c);
+            double discriminant = Geometry.ComputeDiscriminant(a, b, c);
 
             if (discriminant < 0)
             {
@@ -312,16 +304,6 @@ namespace the_Dominion.Conics
             {
                 return new double[] { -b / (2 * a) };
             }
-        }
-
-        private double ComputeDiscriminant()
-        {
-            return ComputeDiscriminant(A, B, C);
-        }
-
-        private static double ComputeDiscriminant(double a, double b, double c)
-        {
-            return b * b - 4 * a * c;
         }
 
         public void ConstructParabolaFromFocus()

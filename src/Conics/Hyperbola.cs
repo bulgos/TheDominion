@@ -110,7 +110,7 @@ namespace the_Dominion.Conics
         {
             double focusDist = Math.Sqrt(A * A + B * B);
 
-            Focus = new Point3d(focusDist, 0, 0);
+            Focus1 = new Point3d(focusDist, 0, 0);
         }
 
         public override ConicSection Duplicate()

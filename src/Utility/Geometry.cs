@@ -69,5 +69,10 @@ namespace the_Dominion.Utility
 
             return new Interval(xValues.Min(), xValues.Max());
         }
+
+        public static double ComputeDiscriminant(double a, double b, double c)
+        {
+            return b * b - 4 * a * c;
+        }
     }
 }
