@@ -1,4 +1,6 @@
-﻿using Rhino.Collections;
+﻿using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+using Rhino.Collections;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
 using System;
@@ -42,11 +44,11 @@ namespace the_Dominion.Conics
             p2.Transform(InverseTransform);
             p3.Transform(InverseTransform);
 
-            Tuple<double, double, double> quadratic = ComputeQuadraticParametersFrom3Points(p1, p2, p3);
+            Vector<double> quadratic = SolveParabolaFrom3Points(p1, p2, p3);
 
-            A = quadratic.Item1;
-            B = quadratic.Item2;
-            C = quadratic.Item3;
+            A = quadratic[0];
+            B = quadratic[1];
+            C = quadratic[2];
 
             Point3d[] points = { p1, p2, p3 };
 
@@ -97,16 +99,21 @@ namespace the_Dominion.Conics
             TransformShape();
         }
 
-        private Tuple<double, double, double> ComputeQuadraticParametersFrom3Points(Point3d p1, Point3d p2, Point3d p3)
+        private Vector<double> SolveParabolaFrom3Points(Point3d p1, Point3d p2, Point3d p3)
         {
-            /// http://stackoverflow.com/questions/717762/how-to-calculate-the-vertex-of-a-parabola-given-three-points
+            var pts = new Point3d[] { p1, p2, p3 };
+            var matrixValues = new double[3][];
 
-            double denom = (p1.X - p2.X) * (p1.X - p3.X) * (p2.X - p3.X);
-            double a = (p3.X * (p2.Y - p1.Y) + p2.X * (p1.Y - p3.Y) + p1.X * (p3.Y - p2.Y)) / denom;
-            double b = (p3.X * p3.X * (p1.Y - p2.Y) + p2.X * p2.X * (p3.Y - p1.Y) + p1.X * p1.X * (p2.Y - p3.Y)) / denom;
-            double c = (p2.X * p3.X * (p2.X - p3.X) * p1.Y + p3.X * p1.X * (p3.X - p1.X) * p2.Y + p1.X * p2.X * (p1.X - p2.X) * p3.Y) / denom;
+            var vector = Vector<double>.Build.Dense(new double[] { p1.Y, p2.Y, p3.Y });
 
-            return new Tuple<double, double, double>(a, b, c);
+            for (int i = 0; i < matrixValues.Length; i++)
+            {
+                matrixValues[i] = new[] { pts[i].X * pts[i].X, pts[i].X, 1 };
+            }
+
+            Matrix<double> matrix = DenseMatrix.OfRowArrays(matrixValues);
+
+            return matrix.Solve(vector);
         }
 
         public Point3d ComputeParabolaPoint(double x)

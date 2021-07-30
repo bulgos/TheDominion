@@ -26,9 +26,9 @@ namespace the_Dominion.Conics.Components
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("Plane", "P", "Plane in which to create Parabola", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddPointParameter("P1", "p1", "First point on the Parabola", GH_ParamAccess.item);
-            pManager.AddPointParameter("P2", "p2", "Second point on the Parabola", GH_ParamAccess.item);
-            pManager.AddPointParameter("P3", "p3", "Third point on the Parabola", GH_ParamAccess.item);
+            pManager.AddPointParameter("P1", "p1", "First point on the Parabola", GH_ParamAccess.item, new Point3d(-1, 1, 0));
+            pManager.AddPointParameter("P2", "p2", "Second point on the Parabola", GH_ParamAccess.item, new Point3d(0, 0, 0));
+            pManager.AddPointParameter("P3", "p3", "Third point on the Parabola", GH_ParamAccess.item, new Point3d(1, 1, 0));
         }
 
         /// <summary>
