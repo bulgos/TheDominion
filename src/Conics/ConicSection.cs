@@ -16,6 +16,7 @@ namespace the_Dominion.Conics
         public ConicSection(IEnumerable<Point3d> points)
         {
             From5Points(points);
+            GetConicTransform();
         }
 
         protected ConicSection()
@@ -100,6 +101,15 @@ namespace the_Dominion.Conics
             : BoundingBox.Empty;
 
         public virtual bool IsValid => Section != null;
+
+        public void GetConicTransform()
+        {
+            double rotation = Geometry.ACot((A - C) / B) / 2;
+            Vector3d translation = Vector3d.Zero;
+
+            translation.X = (2 * C * D - B * E) / Discriminant;
+            translation.Y = (2 * A * E - B * D) / Discriminant;
+        }
 
         private ConicSectionType GetConicType()
         {

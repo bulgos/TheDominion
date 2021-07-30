@@ -74,5 +74,17 @@ namespace the_Dominion.Utility
         {
             return b * b - 4 * a * c;
         }
+
+        // https://stackoverflow.com/a/15501536/4486449
+        // solving Acotangent
+        public static double ACot(double x)
+        {
+            return x == 0 ? 0 : Math.Atan(1 / x);
+        }
+
+        public static double ACotContinuous(double x)
+        {
+            return Math.PI / 2 - Math.Atan(x);
+        }
     }
 }
