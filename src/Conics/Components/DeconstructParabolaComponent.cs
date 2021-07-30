@@ -17,11 +17,7 @@ namespace the_Dominion.Conics.Components
             base.RegisterOutputParams(pManager);
 
             pManager.AddPlaneParameter("VertexPlane", "VPl", "The Plane the Conic was constructed from", GH_ParamAccess.item);
-            pManager.AddNumberParameter("A", "A", "A", GH_ParamAccess.item);
-            pManager.AddNumberParameter("B", "B", "B", GH_ParamAccess.item);
-            pManager.AddNumberParameter("C", "C", "C", GH_ParamAccess.item);
             pManager.AddIntervalParameter("Domain", "D", "The Domain to calculate the function in", GH_ParamAccess.item);
-            pManager.AddNumberParameter("Discriminant", "Di", "The Discriminant", GH_ParamAccess.item);
             pManager.AddPointParameter("Roots", "R", "Roots of the Parabola", GH_ParamAccess.list);
         }
 
@@ -41,13 +37,9 @@ namespace the_Dominion.Conics.Components
                 return;
             }
 
-            DA.SetData(3, parabola.VertexPlane);
-            DA.SetData(4, parabola.A);
-            DA.SetData(5, parabola.B);
-            DA.SetData(6, parabola.C);
-            DA.SetData(7, parabola.Domain);
-            DA.SetData(8, parabola.Discriminant);
-            DA.SetDataList(9, parabola.Roots.Select(root => root.Item2));
+            DA.SetData(11, parabola.VertexPlane);
+            DA.SetData(12, parabola.Domain);
+            DA.SetDataList(13, parabola.Roots.Select(root => root.Item2));
         }
 
         public override Guid ComponentGuid => new Guid("71e49a09-9095-4ffd-9824-32eca6e0a9c3");

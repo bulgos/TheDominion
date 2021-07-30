@@ -1,4 +1,6 @@
-﻿using Rhino.Geometry;
+﻿using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,11 +11,11 @@ namespace the_Dominion.Conics
     public class ConicSection
     {
         private Transform _inverseTransform = Transform.Unset;
-        private double _discriminant;
+        private double _discriminant = double.NaN;
 
-        public ConicSection(Point3d[] points)
+        public ConicSection(IEnumerable<Point3d> points)
         {
-             
+            From5Points(points);
         }
 
         protected ConicSection()
@@ -47,9 +49,9 @@ namespace the_Dominion.Conics
 
         public NurbsCurve Section { get; protected set; }
 
-        public Point3d Focus1 { get; protected set; }
+        public Point3d Focus1 { get; protected set; } = Point3d.Unset;
 
-        public Point3d Focus2 { get; protected set; }
+        public Point3d Focus2 { get; protected set; } = Point3d.Unset;
 
         public double A { get; protected set; }
 
@@ -67,7 +69,7 @@ namespace the_Dominion.Conics
         {
             get
             {
-                if (_discriminant == double.NaN)
+                if (double.IsNaN(_discriminant))
                     ComputeDiscriminant();
 
                 return _discriminant;
@@ -122,6 +124,36 @@ namespace the_Dominion.Conics
         protected virtual void ComputeFocus()
         {
 
+        }
+
+        public void From5Points(IEnumerable<Point3d> points)
+        {
+            // simplest solution we could find
+            // https://math.stackexchange.com/a/1987192/951797
+
+            var pts = points.ToArray();
+
+            if (pts.Length != 5)
+                throw new ArgumentException("Incorrect number of points specified");
+
+            double[][] matrixValues = new double[5][];
+            Vector<double> vector = Vector.Build.Dense(5, 1);
+
+            for (int i = 0; i < pts.Length; i++)
+            {
+                matrixValues[i] = new[] { pts[i].X * pts[i].X, pts[i].X * pts[i].Y, pts[i].Y * pts[i].Y, pts[i].X, pts[i].Y };
+            }
+
+            Matrix<double> matrix = DenseMatrix.OfRowArrays(matrixValues);
+
+            Vector<double> solution = matrix.Solve(vector);
+
+            A = solution[0];
+            B = solution[1];
+            C = solution[2];
+            D = solution[3];
+            E = solution[4];
+            F = -1;
         }
 
         private Transform GetTransform(Plane targetPlane)

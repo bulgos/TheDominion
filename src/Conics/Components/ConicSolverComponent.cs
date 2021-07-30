@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using the_Dominion.Conics.Wrappers;
 
 namespace the_Dominion.Conics.Components
 {
@@ -12,7 +13,7 @@ namespace the_Dominion.Conics.Components
     {
         public ConicSolverComponent()
             : base("ConicSolver", "CSolv", 
-                  "Solves a Conic",
+                  "Solves a Conic in the 2d Plane",
                   "Dominion", "Conics")
         { }
 
@@ -27,12 +28,7 @@ namespace the_Dominion.Conics.Components
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddNumberParameter("A", "A", "A", GH_ParamAccess.item);
-            pManager.AddNumberParameter("B", "B", "B", GH_ParamAccess.item);
-            pManager.AddNumberParameter("C", "C", "C", GH_ParamAccess.item);
-            pManager.AddNumberParameter("D", "D", "D", GH_ParamAccess.item);
-            pManager.AddNumberParameter("E", "E", "E", GH_ParamAccess.item);
-            pManager.AddNumberParameter("F", "F", "F", GH_ParamAccess.item);
+            pManager.AddParameter(new Conic_Param(), "Conic", "C", "The conic section through 5 points", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -49,15 +45,10 @@ namespace the_Dominion.Conics.Components
             DA.GetData(3, ref p4);
             DA.GetData(4, ref p5);
 
-            ConicSolver conicSolver = new ConicSolver();
-            conicSolver.From5Points(p1, p2, p3, p4, p5);
+            var pts = new[] { p1, p2, p3, p4, p5 };
+            ConicSection conicSection = new ConicSection(pts);
 
-            DA.SetData(0, conicSolver.A);
-            DA.SetData(1, conicSolver.B);
-            DA.SetData(2, conicSolver.C);
-            DA.SetData(3, conicSolver.D);
-            DA.SetData(4, conicSolver.E);
-            DA.SetData(5, conicSolver.F);
+            DA.SetData(0, conicSection);
         }
 
         public override Guid ComponentGuid => new Guid("fc4c2115-1efc-4455-b016-6d3c717d5662");
