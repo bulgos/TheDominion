@@ -26,3 +26,5 @@ See [LICENSE](./LICENSE) for details.
 [Conic Linear Programming](https://web.stanford.edu/class/msande314/sdpmain.pdf)  
 [opennurbs](https://github.com/mcneel/opennurbs)  
 [SCS (fast conic optimizer)](https://github.com/kul-optec/scs#superscs)  
+[Plotting Conics](https://mmas.github.io/conics-matplotlib) for use in conjunction with below link:  
+[matplotlib online python](https://trinket.io/embed/python3/a5bd54189b)  
