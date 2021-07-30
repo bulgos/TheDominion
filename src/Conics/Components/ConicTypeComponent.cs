@@ -9,7 +9,7 @@ namespace the_Dominion.Conics.Components
         public ConicTypeComponent()
           : base("ConicType", "ConType",
               "Tests a curve to see if it is a valid type of conic section",
-              "Dominion", "Utility")
+              "Dominion", "Conics")
         { }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
