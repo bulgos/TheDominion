@@ -81,5 +81,7 @@ namespace the_Dominion.Conics.Components
         /// that use the old ID will partially fail during loading.
         /// </summary>
         public override Guid ComponentGuid => new Guid("f9593814-9e59-4c86-b508-4c0d27510b69");
+
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
     }
 }

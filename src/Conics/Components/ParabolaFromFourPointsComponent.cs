@@ -83,5 +83,7 @@ namespace the_Dominion.Conics.Components
         }
 
         public override Guid ComponentGuid => new Guid("e1fba840-9a49-48dc-bded-f2c056d144cc");
+
+        public override GH_Exposure Exposure => GH_Exposure.secondary;
     }
 }
