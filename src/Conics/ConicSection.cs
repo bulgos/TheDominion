@@ -147,7 +147,7 @@ namespace the_Dominion.Conics
                 throw new ArgumentException("Incorrect number of points specified");
 
             double[][] matrixValues = new double[5][];
-            Vector<double> vector = Vector.Build.Dense(5, 1);
+            Vector<double> vector = Vector.Build.Dense(5, -1);
 
             for (int i = 0; i < pts.Length; i++)
             {
@@ -163,7 +163,7 @@ namespace the_Dominion.Conics
             C = solution[2];
             D = solution[3];
             E = solution[4];
-            F = -1;
+            F = 1;
         }
 
         private Transform GetTransform(Plane targetPlane)
