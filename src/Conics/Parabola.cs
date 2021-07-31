@@ -25,8 +25,9 @@ namespace the_Dominion.Conics
             : base(plane)
         {
             A = a;
-            B = b;
-            C = c;
+            D = b;
+            E = -1;
+            F = c;
 
             if (domain != Interval.Unset)
                 Domain = domain;
@@ -47,8 +48,8 @@ namespace the_Dominion.Conics
             Vector<double> quadratic = SolveParabolaFrom3Points(p1, p2, p3);
 
             A = quadratic[0];
-            B = quadratic[1];
-            C = quadratic[2];
+            D = quadratic[1];
+            F = quadratic[2];
 
             Point3d[] points = { p1, p2, p3 };
 
@@ -66,8 +67,8 @@ namespace the_Dominion.Conics
             Section = parabola.Section;
 
             A = parabola.A;
-            B = parabola.B;
-            C = parabola.C;
+            D = parabola.D;
+            F = parabola.F;
             Domain = parabola.Domain;
             VertexPlane = parabola.VertexPlane;
         }
@@ -118,14 +119,14 @@ namespace the_Dominion.Conics
 
         public Point3d ComputeParabolaPoint(double x)
         {
-            double y = A * x * x + B * x + C;
+            double y = A * x * x + D * x + F;
 
             return new Point3d(x, y, 0);
         }
 
         public Vector3d ComputeParabolaTangentVector(double x)
         {
-            double derivative = 2 * A * x + B;
+            double derivative = 2 * A * x + D;
 
             return new Vector3d(1, derivative, 0);
         }
@@ -150,7 +151,7 @@ namespace the_Dominion.Conics
 
         public Point3d ComputeParabolaVertex()
         {
-            double x = -B / (2 * A);
+            double x = -D / (2 * A);
 
             return ComputeParabolaPoint(x);
         }
@@ -204,7 +205,7 @@ namespace the_Dominion.Conics
             Point3d p1xForm = transformedPoints.Item1;
             Point3d p2xForm = transformedPoints.Item2;
 
-            // we calculate the angle quadratic of the form A*tan(t)^2 + B*Tan(t) + C = 0
+            // we calculate the angle quadratic of the form A*tan(t)^2 + D*Tan(t) + F = 0
             double a = p2xForm.Y - p1xForm.Y;
             double b = 2 * (p2xForm.X - p1xForm.X);
             double c = p2xForm.X * (p2xForm.X - 1) / p2xForm.Y - p1xForm.X * (p1xForm.X - 1) / p1xForm.Y;
@@ -275,7 +276,7 @@ namespace the_Dominion.Conics
 
         private Tuple<double, Point3d>[] ComputeQuadraticRoots()
         {
-            double[] rootParameters = ComputeQuadraticRoots(A, B, C);
+            double[] rootParameters = ComputeQuadraticRoots(A, D, F);
 
             var roots = new Tuple<double, Point3d>[rootParameters.Length];
 
