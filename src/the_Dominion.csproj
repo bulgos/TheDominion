@@ -71,6 +71,7 @@
     <Compile Include="Conics\Components\ParabolaFromQuadraticComponent.cs" />
     <Compile Include="Conics\Components\ParabolaFromThreePointsComponent.cs" />
     <Compile Include="Conics\ConicSection.cs" />
+    <Compile Include="Conics\Ellipse.cs" />
     <Compile Include="Conics\Hyperbola.cs" />
     <Compile Include="Conics\Parabola.cs" />
     <Compile Include="Conics\Wrappers\Conic_Param.cs" />

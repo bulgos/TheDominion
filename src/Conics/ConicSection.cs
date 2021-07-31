@@ -1,5 +1,6 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using Rhino.Collections;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,6 @@ namespace the_Dominion.Conics
         public ConicSection(IEnumerable<Point3d> points)
         {
             From5Points(points);
-            GetConicTransform();
         }
 
         protected ConicSection()
@@ -44,6 +44,7 @@ namespace the_Dominion.Conics
             E = conicSection.E;
             F = conicSection.F;
             Discriminant = conicSection.Discriminant;
+            EquationTransform = conicSection.EquationTransform;
         }
 
         public Plane BasePlane { get; } = Plane.WorldXY;
@@ -80,6 +81,8 @@ namespace the_Dominion.Conics
 
         public ConicSectionType ConicSectionType => GetConicType();
 
+        public Transform EquationTransform { get; private set; }
+
         protected Transform Transform { get; } = Transform.Identity;
 
         protected Transform InverseTransform
@@ -109,16 +112,21 @@ namespace the_Dominion.Conics
 
             translation.X = (2 * C * D - B * E) / Discriminant;
             translation.Y = (2 * A * E - B * D) / Discriminant;
+
+            Transform rotate = Transform.Rotation(rotation, Point3d.Origin);
+            Transform translate = Transform.Translation(translation);
+
+            EquationTransform = translate * rotate;
         }
 
         private ConicSectionType GetConicType()
         {
-            if (Discriminant > 0)
+            if (Discriminant < 0)
             {
                 return ConicSectionType.Ellipse;
             }
 
-            if (Discriminant < 0)
+            if (Discriminant > 0)
             {
                 return ConicSectionType.Hyperbola;
             }
@@ -136,7 +144,7 @@ namespace the_Dominion.Conics
 
         }
 
-        public void From5Points(IEnumerable<Point3d> points)
+        public static ConicSection From5Points(IEnumerable<Point3d> points)
         {
             // simplest solution we could find
             // https://math.stackexchange.com/a/1987192/951797
@@ -158,12 +166,23 @@ namespace the_Dominion.Conics
 
             Vector<double> solution = matrix.Solve(vector);
 
-            A = solution[0];
-            B = solution[1];
-            C = solution[2];
-            D = solution[3];
-            E = solution[4];
-            F = 1;
+            ConicSection conicSection = new ConicSection();
+
+            conicSection.A = solution[0];
+            conicSection.B = solution[1];
+            conicSection.C = solution[2];
+            conicSection.D = solution[3];
+            conicSection.E = solution[4];
+            conicSection.F = 1;
+
+            conicSection.GetConicTransform();
+
+            if (conicSection.ConicSectionType == ConicSectionType.Ellipse)
+            {
+                return new Ellipse(conicSection, pts[0], pts[1]);
+            }
+
+            return conicSection;
         }
 
         private Transform GetTransform(Plane targetPlane)

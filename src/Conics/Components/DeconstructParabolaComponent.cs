@@ -37,7 +37,7 @@ namespace the_Dominion.Conics.Components
                 return;
             }
 
-            DA.SetData(11, parabola.VertexPlane);
+            DA.SetData(12, parabola.VertexPlane);
             DA.SetData(12, parabola.Domain);
             DA.SetDataList(13, parabola.Roots.Select(root => root.Item2));
         }
