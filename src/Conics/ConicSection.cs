@@ -100,7 +100,7 @@ namespace the_Dominion.Conics
             {
                 if (_inverseTransform == Transform.Unset)
                 {
-                    _inverseTransform = Transform.Transpose();
+                    Transform.TryGetInverse(out _inverseTransform);
                 }
 
                 return _inverseTransform;
