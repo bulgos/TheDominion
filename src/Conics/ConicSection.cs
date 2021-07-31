@@ -114,45 +114,6 @@ namespace the_Dominion.Conics
 
         public virtual bool IsValid => Section != null;
 
-        public void GetConicTransform()
-        {
-            double rotation = Geometry.ACot((A - C) / B) / 2;
-            Vector3d translation = Vector3d.Zero;
-
-            translation.X = (2 * C * D - B * E) / ConicDiscriminant;
-            translation.Y = (2 * A * E - B * D) / ConicDiscriminant;
-
-
-            Transform rotate = Transform.Rotation(rotation, Point3d.Origin);
-            Transform translate = Transform.Translation(translation);
-
-            Transform = translate * rotate;
-        }
-
-        private ConicSectionType GetConicType()
-        {
-            if (ConicDiscriminant < 0)
-            {
-                return ConicSectionType.Ellipse;
-            }
-
-            if (ConicDiscriminant > 0)
-            {
-                return ConicSectionType.Hyperbola;
-            }
-
-            return ConicSectionType.Parabola;
-        }
-
-        private void ComputeConicDiscriminant()
-        {
-            ConicDiscriminant = Geometry.ComputeDiscriminant(A, B, C);
-        }
-
-        protected virtual void ComputeFocus()
-        {
-
-        }
         public static ConicSection From5Points(IEnumerable<Point3d> points)
         {
             // simplest solution we could find
@@ -199,6 +160,45 @@ namespace the_Dominion.Conics
             }
         }
 
+        private ConicSectionType GetConicType()
+        {
+            if (ConicDiscriminant < 0)
+            {
+                return ConicSectionType.Ellipse;
+            }
+
+            if (ConicDiscriminant > 0)
+            {
+                return ConicSectionType.Hyperbola;
+            }
+
+            return ConicSectionType.Parabola;
+        }
+
+        protected virtual void ComputeFocus()
+        {
+
+        }
+
+        private void ComputeConicDiscriminant()
+        {
+            ConicDiscriminant = Geometry.ComputeDiscriminant(A, B, C);
+        }
+
+        public void GetConicTransform()
+        {
+            double rotation = Geometry.ACot((A - C) / B) / 2;
+            Vector3d translation = Vector3d.Zero;
+
+            translation.X = (2 * C * D - B * E) / ConicDiscriminant;
+            translation.Y = (2 * A * E - B * D) / ConicDiscriminant;
+
+
+            Transform rotate = Transform.Rotation(rotation, Point3d.Origin);
+            Transform translate = Transform.Translation(translation);
+
+            Transform = translate * rotate;
+        }
 
         private void GetTransform(Plane targetPlane)
         {
