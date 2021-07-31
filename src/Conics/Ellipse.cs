@@ -1,13 +1,8 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using MathNet.Numerics.LinearAlgebra.Double.Solvers;
 using Rhino.Collections;
 using Rhino.Geometry;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace the_Dominion.Conics
 {
@@ -17,9 +12,9 @@ namespace the_Dominion.Conics
             : base(conicSection)
         {
             Point3dList pointList = new Point3dList(new[] { pt1, pt2 });
-            EquationTransform.TryGetInverse(out Transform eqTransformInv);
+            
 
-            pointList.Transform(eqTransformInv);
+            pointList.Transform(InverseTransform);
 
             var ellipseMatrixValues = new double[2][];
             Vector<double> ellipseVector = Vector.Build.Dense(2, 1);
@@ -31,13 +26,13 @@ namespace the_Dominion.Conics
 
             Matrix<double> matrix = DenseMatrix.OfRowArrays(ellipseMatrixValues);
             //var solution = matrix.Solve(ellipseVector);
-            var solution = matrix.SolveIterative(ellipseVector, new MlkBiCgStab());
+            var solution = matrix.Solve(ellipseVector);
 
             EllipseA = Math.Sqrt(1 / solution[0]);
             EllipseB = Math.Sqrt(1 / solution[1]);
 
             Plane basePlane = Plane.WorldXY;
-            basePlane.Transform(EquationTransform);
+            basePlane.Transform(Transform);
 
             var ellipse = new Rhino.Geometry.Ellipse(basePlane, EllipseA, EllipseB);
             Section = ellipse.ToNurbsCurve();

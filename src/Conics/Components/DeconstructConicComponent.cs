@@ -32,7 +32,7 @@ namespace the_Dominion.Conics.Components
             pManager.AddNumberParameter("E", "E", "E", GH_ParamAccess.item);
             pManager.AddNumberParameter("F", "F", "F", GH_ParamAccess.item);
             pManager.AddNumberParameter("Discriminant", "Di", "The Discriminant", GH_ParamAccess.item);
-            pManager.AddTransformParameter("Equation Transform", "EqT", "The Equation Transform", GH_ParamAccess.item);
+            pManager.AddTransformParameter("Transform", "X", "The Conic Transform", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -51,8 +51,8 @@ namespace the_Dominion.Conics.Components
             DA.SetData(7, conicSection.D);
             DA.SetData(8, conicSection.E);
             DA.SetData(9, conicSection.F);
-            DA.SetData(10, conicSection.Discriminant);
-            DA.SetData(11, conicSection.EquationTransform);
+            DA.SetData(10, conicSection.ConicDiscriminant);
+            DA.SetData(11, conicSection.Transform);
         }
 
         public override Guid ComponentGuid => new Guid("040d0bab-ee94-4915-8f1a-b812d783048d");

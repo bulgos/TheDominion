@@ -1,4 +1,7 @@
 ﻿using System;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+using Rhino.Collections;
 using Rhino.Geometry;
 
 namespace the_Dominion.Conics
@@ -8,20 +11,49 @@ namespace the_Dominion.Conics
     /// </summary>
     public class Hyperbola : ConicSection
     {
-        public Hyperbola()
-            : this(1, 1, 10) { }
+        public Hyperbola(ConicSection conicSection, Point3d pt1, Point3d pt2)
+            : base(conicSection)
+        {
+            Point3dList pointList = new Point3dList(new[] { pt1, pt2 });
 
-        public Hyperbola(double a, double b, double h)
-            : this(Plane.WorldXY, a, b, h) { }
+            pointList.Transform(InverseTransform);
 
-        public Hyperbola(Plane plane, double a, double b, double h)
+            var hyperbolaMatrixValues = new double[2][];
+            Vector<double> ellipseVector = Vector.Build.Dense(2, 1);
+
+            for (int i = 0; i < 2; i++)
+            {
+                hyperbolaMatrixValues[i] = new[] { Math.Pow(pointList[i].X, 2), Math.Pow(pointList[i].Y, 2) };
+            }
+
+            Matrix<double> matrix = DenseMatrix.OfRowArrays(hyperbolaMatrixValues);
+            //var solution = matrix.Solve(ellipseVector);
+            var solution = matrix.Solve(ellipseVector);
+
+            HyperbolaA = Math.Sqrt(1 / solution[0]);
+            HyperbolaB = Math.Sqrt(1 / -solution[1]);
+
+            Plane basePlane = Plane.WorldXY;
+            basePlane.Transform(Transform);
+
+            Height = 100;
+
+            ComputeHyperbola();
+        }
+
+        public Hyperbola() { }
+
+        public Hyperbola(double a, double b, double height)
+            : this(Plane.WorldXY, a, b, height) { }
+
+        public Hyperbola(Plane plane, double a, double b, double height)
             : base(plane)
         {
-            A = a;
-            B = b;
-            H = h;
+            HyperbolaA = a;
+            HyperbolaB = b;
+            Height = height;
 
-            Section = ComputeHyperbola();
+            ComputeHyperbola();
             ComputeFocus();
 
             TransformShape();
@@ -30,16 +62,16 @@ namespace the_Dominion.Conics
         public Hyperbola(Hyperbola hyperbola)
             : base(hyperbola)
         {
-            A = hyperbola.A;
-            B = hyperbola.B;
-            H = hyperbola.H;
+            HyperbolaA = hyperbola.HyperbolaA;
+            HyperbolaB = hyperbola.HyperbolaB;
+            Height = hyperbola.Height;
         }
 
-        public double A { get; }
+        public double HyperbolaA { get; } = 1;
 
-        public double B { get; }
+        public double HyperbolaB { get; } = 1;
 
-        public double H { get; }
+        public double Height { get; } = 10;
 
         /// <summary>
         /// Draws a hyperbola on the XY plane, centred at 0,0,0
@@ -47,28 +79,28 @@ namespace the_Dominion.Conics
         /// <param name=""></param>
         /// <param name=""></param>
         /// <param name=""></param>
-        private NurbsCurve ComputeHyperbola()
+        private void ComputeHyperbola()
         {
-            // A hyperbola can be drawn as a quadratic rational bezier curve
+            // HyperbolaA hyperbola can be drawn as a quadratic rational bezier curve
             // The curve has three control points: p0, p1, p2
-            // p0 & 02 are the end points of the curve
+            // p0 & p2 are the end points of the curve
             // p1 is near the apex of the curve
-            //
+            
             // Since the hyperboloid is being generated about the z-axis, we can assume
             // p0 & p2 are mirror images of one another about the xy plane.
             // p0 & p2 can be calculated directly from the hyperbola formula:
             // x^2 / a^2 - y^2 / b^2 = 1
-            // In this case, because we are drawing vertically, y = z = height of the hyperbola
-            // so a, b, and z are known. Thus:
+            // In this case, because we are drawing on the XY plane, so y = height of the hyperbola
+            // so a, b, and y are known. Thus:
             // x^2 = a^2 * (1 + (z^2 / b^2)) 
 
-            double x0 = Math.Sqrt((A * A) * (1 + ((H * H) / (B * B))));
-            Point3d p0 = new Point3d(x0, H, 0);
+            double x0 = Math.Sqrt((HyperbolaA * HyperbolaA) * (1 + ((Height * Height) / (HyperbolaB * HyperbolaB))));
+            Point3d p0 = new Point3d(x0, Height, 0);
 
-            Point3d p2 = new Point3d(x0, -H, 0);
+            Point3d p2 = new Point3d(x0, -Height, 0);
 
             // p1 is harder to calculate.
-            // It lies on the x-axis, at the intersection of the tangents from p0 & 02
+            // It lies on the x-axis, at the intersection of the tangents from p0 & p2
             // The tangent for a point(x', y') on a hyperbola is:
             // y-y' = (b^2 * x') / (a^2 * y') * (x - x')
             // http://openstudy.com/updates/4f7ef8c8e4b0bfe8930b75a2
@@ -76,13 +108,13 @@ namespace the_Dominion.Conics
             // x = (-y'^2 * a^2) / (b^2 * x') + x'
             // where x' and y' are the point on the hyperbola 
 
-            double x1 = (-1 * (H * H) * (A * A)) / ((B * B) * p0.X) + p0.X;
+            double x1 = (-1 * (Height * Height) * (HyperbolaA * HyperbolaA)) / ((HyperbolaB * HyperbolaB) * p0.X) + p0.X;
             Point3d p1 = new Point3d(x1, 0, 0);
 
             // We also need the apex point for the hyperbola
             // This is the point where the hyperbola crosses the x-axis
 
-            Point3d q = new Point3d(A, 0, 0);
+            Point3d q = new Point3d(HyperbolaA, 0, 0);
 
             // To draw the hyperbola, we need to know what weight is given to p1
 
@@ -100,7 +132,9 @@ namespace the_Dominion.Conics
             NurbsCurve hyperbola = NurbsCurve.Create(false, 2, points);
             hyperbola.Points.SetPoint(1, new Point4d(p1.X, p1.Y, p1.Z, w1));
 
-            return hyperbola;
+            hyperbola.Transform(EquationTransform);
+
+            Section = hyperbola;
         }
 
         /// <summary>
@@ -108,7 +142,7 @@ namespace the_Dominion.Conics
         /// </summary>
         protected override void ComputeFocus()
         {
-            double focusDist = Math.Sqrt(A * A + B * B);
+            double focusDist = Math.Sqrt(HyperbolaA * HyperbolaA + HyperbolaB * HyperbolaB);
 
             Focus1 = new Point3d(focusDist, 0, 0);
         }

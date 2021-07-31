@@ -1,6 +1,5 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
-using Rhino.Collections;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
@@ -12,7 +11,19 @@ namespace the_Dominion.Conics
     public class ConicSection
     {
         private Transform _inverseTransform = Transform.Unset;
-        private double _discriminant = double.NaN;
+        private double _conicDiscriminant = double.NaN;
+
+        public ConicSection(double a, double b, double c, double d, double e, double f)
+        {
+            A = a;
+            B = b;
+            C = c;
+            D = d;
+            E = e;
+            F = f;
+
+            GetConicTransform();
+        }
 
         public ConicSection(IEnumerable<Point3d> points)
         {
@@ -28,7 +39,7 @@ namespace the_Dominion.Conics
                 return;
 
             BasePlane = plane;
-            Transform = GetTransform(plane);
+            GetTransform(plane);
         }
 
         public ConicSection(ConicSection conicSection)
@@ -43,8 +54,8 @@ namespace the_Dominion.Conics
             D = conicSection.D;
             E = conicSection.E;
             F = conicSection.F;
-            Discriminant = conicSection.Discriminant;
-            EquationTransform = conicSection.EquationTransform;
+            ConicDiscriminant = conicSection.ConicDiscriminant;
+            Transform = conicSection.Transform;
         }
 
         public Plane BasePlane { get; } = Plane.WorldXY;
@@ -67,23 +78,21 @@ namespace the_Dominion.Conics
 
         public double F { get; protected set; }
 
-        public double Discriminant
+        public double ConicDiscriminant
         {
             get
             {
-                if (double.IsNaN(_discriminant))
-                    ComputeDiscriminant();
+                if (double.IsNaN(_conicDiscriminant))
+                    ComputeConicDiscriminant();
 
-                return _discriminant;
+                return _conicDiscriminant;
             }
-            set => _discriminant = value;
+            set => _conicDiscriminant = value;
         }
 
         public ConicSectionType ConicSectionType => GetConicType();
 
-        public Transform EquationTransform { get; private set; }
-
-        protected Transform Transform { get; } = Transform.Identity;
+        protected Transform Transform { get; private set; } = Transform.Identity;
 
         protected Transform InverseTransform
         {
@@ -98,9 +107,9 @@ namespace the_Dominion.Conics
             }
         }
 
-        public BoundingBox BoundingBox => 
-            IsValid 
-            ? Section.GetBoundingBox(Transform) 
+        public BoundingBox BoundingBox =>
+            IsValid
+            ? Section.GetBoundingBox(Transform)
             : BoundingBox.Empty;
 
         public virtual bool IsValid => Section != null;
@@ -110,23 +119,24 @@ namespace the_Dominion.Conics
             double rotation = Geometry.ACot((A - C) / B) / 2;
             Vector3d translation = Vector3d.Zero;
 
-            translation.X = (2 * C * D - B * E) / Discriminant;
-            translation.Y = (2 * A * E - B * D) / Discriminant;
+            translation.X = (2 * C * D - B * E) / ConicDiscriminant;
+            translation.Y = (2 * A * E - B * D) / ConicDiscriminant;
+
 
             Transform rotate = Transform.Rotation(rotation, Point3d.Origin);
             Transform translate = Transform.Translation(translation);
 
-            EquationTransform = translate * rotate;
+            Transform = translate * rotate;
         }
 
         private ConicSectionType GetConicType()
         {
-            if (Discriminant < 0)
+            if (ConicDiscriminant < 0)
             {
                 return ConicSectionType.Ellipse;
             }
 
-            if (Discriminant > 0)
+            if (ConicDiscriminant > 0)
             {
                 return ConicSectionType.Hyperbola;
             }
@@ -134,16 +144,15 @@ namespace the_Dominion.Conics
             return ConicSectionType.Parabola;
         }
 
-        private void ComputeDiscriminant()
+        private void ComputeConicDiscriminant()
         {
-            Discriminant = Geometry.ComputeDiscriminant(A, B, C);
+            ConicDiscriminant = Geometry.ComputeDiscriminant(A, B, C);
         }
 
         protected virtual void ComputeFocus()
         {
 
         }
-
         public static ConicSection From5Points(IEnumerable<Point3d> points)
         {
             // simplest solution we could find
@@ -166,28 +175,34 @@ namespace the_Dominion.Conics
 
             Vector<double> solution = matrix.Solve(vector);
 
-            ConicSection conicSection = new ConicSection();
 
-            conicSection.A = solution[0];
-            conicSection.B = solution[1];
-            conicSection.C = solution[2];
-            conicSection.D = solution[3];
-            conicSection.E = solution[4];
-            conicSection.F = 1;
+            double a = solution[0];
+            double b = solution[1];
+            double c = solution[2];
+            double d = solution[3];
+            double e = solution[4];
+            double f = 1;
 
-            conicSection.GetConicTransform();
+            ConicSection conicSection = new ConicSection(a, b, c, d, e, f);
+            
 
-            if (conicSection.ConicSectionType == ConicSectionType.Ellipse)
+            switch (conicSection.ConicSectionType)
             {
-                return new Ellipse(conicSection, pts[0], pts[1]);
+                case ConicSectionType.Ellipse:
+                    return new Ellipse(conicSection, pts[0], pts[1]);
+                case ConicSectionType.Hyperbola:
+                    return new Hyperbola(conicSection, pts[0], pts[1]);
+                case ConicSectionType.Parabola:
+                    return new Parabola(conicSection);
+                default:
+                    return conicSection;
             }
-
-            return conicSection;
         }
 
-        private Transform GetTransform(Plane targetPlane)
+
+        private void GetTransform(Plane targetPlane)
         {
-            return Transform.PlaneToPlane(Plane.WorldXY, targetPlane);
+            Transform = Transform.PlaneToPlane(Plane.WorldXY, targetPlane);
         }
 
         public virtual void TransformShape()
@@ -233,7 +248,7 @@ namespace the_Dominion.Conics
         public override string ToString()
         {
             return GetType().Name;
-        } 
+        }
 
         #endregion
     }

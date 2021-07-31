@@ -11,9 +11,13 @@ namespace the_Dominion.Conics
     public class Parabola : ConicSection
     {
         private Interval _domain = new Interval(-10, 10);
+        private double _parabolaDiscriminant = double.NaN;
 
-        public Parabola()
-            : this(1, Interval.Unset) { }
+        public Parabola(ConicSection conicSection)
+            : base(conicSection)
+        {
+            ConstructParabola();
+        }
 
         public Parabola(double a, Interval domain)
             : this(a, 0, 0, Plane.Unset, domain) { }
@@ -86,6 +90,18 @@ namespace the_Dominion.Conics
         public Plane VertexPlane { get; private set; }
 
         public Tuple<double, Point3d>[] Roots => ComputeQuadraticRoots();
+
+        public double ParabolaDiscriminant
+        {
+            get
+            {
+                if (double.IsNaN(_parabolaDiscriminant))
+                    ComputeParabolaDiscriminant();
+
+                return _parabolaDiscriminant;
+            }
+            set => _parabolaDiscriminant = value;
+        }
 
         public void ConstructParabola()
         {
@@ -215,7 +231,7 @@ namespace the_Dominion.Conics
 
             // calculating the roots gives us the solution tan(t) = root1, root2
             // sp we take the inverse Tan to find the angle at which valid parabolae will form
-            var roots = ComputeQuadraticRoots(a, b, c);
+            var roots = Geometry.ComputeQuadraticRoots(a, b, c);
 
             if (roots.Length < 2)
                 return new Parabola[] { null, null };
@@ -276,7 +292,7 @@ namespace the_Dominion.Conics
 
         private Tuple<double, Point3d>[] ComputeQuadraticRoots()
         {
-            double[] rootParameters = ComputeQuadraticRoots(A, D, F);
+            double[] rootParameters = Geometry.ComputeQuadraticRoots(A, D, F);
 
             var roots = new Tuple<double, Point3d>[rootParameters.Length];
 
@@ -291,32 +307,14 @@ namespace the_Dominion.Conics
             return roots;
         }
 
-        private static double[] ComputeQuadraticRoots(double a, double b, double c)
-        {
-            double discriminant = Geometry.ComputeDiscriminant(a, b, c);
-
-            if (discriminant < 0)
-            {
-                return new double[0];
-            }
-
-            else if (discriminant > 0)
-            {
-                double root1 = (-b + Math.Sqrt(discriminant)) / (2 * a);
-                double root2 = (-b - Math.Sqrt(discriminant)) / (2 * a);
-
-                return new double[] { root1, root2 };
-            }
-
-            else
-            {
-                return new double[] { -b / (2 * a) };
-            }
-        }
-
         public void ConstructParabolaFromFocus()
         {
             throw new NotImplementedException();
+        }
+
+        private void ComputeParabolaDiscriminant()
+        {
+            ParabolaDiscriminant = Geometry.ComputeDiscriminant(A, D, F);
         }
     }
 }
