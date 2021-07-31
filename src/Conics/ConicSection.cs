@@ -92,9 +92,9 @@ namespace the_Dominion.Conics
 
         public ConicSectionType ConicSectionType => GetConicType();
 
-        protected Transform Transform { get; private set; } = Transform.Identity;
+        public Transform Transform { get; private set; } = Transform.Identity;
 
-        protected Transform InverseTransform
+        public Transform InverseTransform
         {
             get
             {
@@ -145,7 +145,7 @@ namespace the_Dominion.Conics
             double f = 1;
 
             ConicSection conicSection = new ConicSection(a, b, c, d, e, f);
-            
+
 
             switch (conicSection.ConicSectionType)
             {
@@ -158,6 +158,28 @@ namespace the_Dominion.Conics
                 default:
                     return conicSection;
             }
+        }
+
+        public Point3d[] ComputePointAtX(double x)
+        {
+            double a = C;
+            double b = B * x + E;
+            double c = A * x * x + D * x + F;
+
+            return a == 0
+                ? new Point3d[] { new Point3d(x, -c / b, 0) }
+                : Geometry.ComputeQuadraticRoots(a, b, c).Select(y => new Point3d(x, y, 0)).ToArray();
+        }
+
+        public Point3d[] ComputePointAtY(double y)
+        {
+            double a = A;
+            double b = B * y + D;
+            double c = C * y * y + E * y + F;
+
+            return a == 0
+                ? new Point3d[] { new Point3d(-c / b, y, 0) }
+                : Geometry.ComputeQuadraticRoots(a, b, c).Select(x => new Point3d(x, y, 0)).ToArray();
         }
 
         private ConicSectionType GetConicType()

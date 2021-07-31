@@ -1,0 +1,53 @@
+﻿using Grasshopper.Kernel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using the_Dominion.Conics.Wrappers;
+
+namespace the_Dominion.Conics.Components
+{
+    public class EvaluateConicAtComponnent : GH_Component
+    {
+        public EvaluateConicAtComponnent()
+            :base("EvaluateConicAt", "EvalConic",
+                 "Evaluates the conic Equation at the given position",
+                 "Dominion", "Conics")
+        { }
+
+        protected override void RegisterInputParams(GH_InputParamManager pManager)
+        {
+            pManager.AddParameter(new Conic_Param(), "Conic", "C", "Conic Section to Evaluate", GH_ParamAccess.item);
+            pManager.AddNumberParameter("XPostion", "X", "X Position to evaluate on Conic", GH_ParamAccess.item);
+            pManager.AddNumberParameter("YPostion", "Y", "Y Position to evaluate on Conic", GH_ParamAccess.item);
+
+            pManager[1].Optional = true;
+            pManager[2].Optional = true;
+        }
+
+        protected override void RegisterOutputParams(GH_OutputParamManager pManager)
+        {
+            pManager.AddPointParameter("PointsX", "PX", "Points at X-value", GH_ParamAccess.list);
+            pManager.AddPointParameter("PointsY", "PY", "Points at Y-value", GH_ParamAccess.list);
+        }
+
+        protected override void SolveInstance(IGH_DataAccess DA)
+        {
+            ConicSection conicSection = null;
+            double x = double.NaN;
+            double y = double.NaN;
+
+            DA.GetData(0, ref conicSection);
+            DA.GetData(1, ref x);
+            DA.GetData(2, ref y);
+
+            DA.SetDataList(0, conicSection.ComputePointAtX(x));
+            DA.SetDataList(0, conicSection.ComputePointAtY(y));
+        }
+
+        public override Guid ComponentGuid => new Guid("61eaaf21-fcda-420f-8f9b-6eb2a73727ee");
+
+        public override GH_Exposure Exposure => GH_Exposure.primary;
+    }
+}

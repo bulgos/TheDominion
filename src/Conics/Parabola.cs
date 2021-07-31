@@ -89,7 +89,7 @@ namespace the_Dominion.Conics
 
         public Plane VertexPlane { get; private set; }
 
-        public Tuple<double, Point3d>[] Roots => ComputeQuadraticRoots();
+        public Point3d[] Roots => ComputeQuadraticRoots();
 
         public double ParabolaDiscriminant
         {
@@ -290,18 +290,18 @@ namespace the_Dominion.Conics
             return new Tuple<Point3d, Point3d, Point3d, Point3d>(points[0], points[1], points[2], points[3]);
         }
 
-        private Tuple<double, Point3d>[] ComputeQuadraticRoots()
+        private Point3d[] ComputeQuadraticRoots()
         {
             double[] rootParameters = Geometry.ComputeQuadraticRoots(A, D, F);
 
-            var roots = new Tuple<double, Point3d>[rootParameters.Length];
+            var roots = new Point3d[rootParameters.Length];
 
             for (int i = 0; i < rootParameters.Length; i++)
             {
                 var rootPt = ComputeParabolaPoint(rootParameters[i]);
                 rootPt.Transform(Transform);
 
-                roots[i] = new Tuple<double, Point3d>(rootParameters[i], rootPt);
+                roots[i] = rootPt;
             }
 
             return roots;

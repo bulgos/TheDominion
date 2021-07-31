@@ -39,7 +39,7 @@ namespace the_Dominion.Conics.Components
 
             DA.SetData(12, parabola.VertexPlane);
             DA.SetData(13, parabola.Domain);
-            DA.SetDataList(14, parabola.Roots.Select(root => root.Item2));
+            DA.SetDataList(14, parabola.Roots);
         }
 
         public override Guid ComponentGuid => new Guid("71e49a09-9095-4ffd-9824-32eca6e0a9c3");

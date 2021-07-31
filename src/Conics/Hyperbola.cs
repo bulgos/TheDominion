@@ -132,7 +132,7 @@ namespace the_Dominion.Conics
             NurbsCurve hyperbola = NurbsCurve.Create(false, 2, points);
             hyperbola.Points.SetPoint(1, new Point4d(p1.X, p1.Y, p1.Z, w1));
 
-            hyperbola.Transform(EquationTransform);
+            hyperbola.Transform(Transform);
 
             Section = hyperbola;
         }

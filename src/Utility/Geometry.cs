@@ -72,7 +72,7 @@ namespace the_Dominion.Utility
 
         public static double[] ComputeQuadraticRoots(double a, double b, double c)
         {
-            double discriminant = Geometry.ComputeDiscriminant(a, b, c);
+            double discriminant = ComputeDiscriminant(a, b, c);
 
             if (discriminant < 0)
             {

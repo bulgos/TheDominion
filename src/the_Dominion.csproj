@@ -66,6 +66,7 @@
     <Compile Include="Conics\Components\DeconstructConicComponent.cs" />
     <Compile Include="Conics\Components\DeconstructHyperbolaComponent.cs" />
     <Compile Include="Conics\Components\DeconstructParabolaComponent.cs" />
+    <Compile Include="Conics\Components\EvaluateConicAtComponent.cs" />
     <Compile Include="Conics\Components\HyperbolaComponent.cs" />
     <Compile Include="Conics\Components\ParabolaComponent.cs" />
     <Compile Include="Conics\Components\ParabolaFromFourPointsComponent.cs" />
