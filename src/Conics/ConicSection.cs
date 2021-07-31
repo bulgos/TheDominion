@@ -125,7 +125,7 @@ namespace the_Dominion.Conics
                 throw new ArgumentException("Incorrect number of points specified");
 
             double[][] matrixValues = new double[5][];
-            Vector<double> vector = Vector.Build.Dense(5, -1);
+            Vector<double> vector = Vector.Build.Dense(5, 1);
 
             for (int i = 0; i < pts.Length; i++)
             {
@@ -142,7 +142,7 @@ namespace the_Dominion.Conics
             double c = solution[2];
             double d = solution[3];
             double e = solution[4];
-            double f = 1;
+            double f = -1;
 
             ConicSection conicSection = new ConicSection(a, b, c, d, e, f);
 

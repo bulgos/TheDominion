@@ -43,7 +43,7 @@ namespace the_Dominion.Conics.Components
             DA.GetData(2, ref y);
 
             DA.SetDataList(0, conicSection.ComputePointAtX(x));
-            DA.SetDataList(0, conicSection.ComputePointAtY(y));
+            DA.SetDataList(1, conicSection.ComputePointAtY(y));
         }
 
         public override Guid ComponentGuid => new Guid("61eaaf21-fcda-420f-8f9b-6eb2a73727ee");

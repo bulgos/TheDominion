@@ -49,6 +49,10 @@ namespace the_Dominion.Conics
         public Hyperbola(Plane plane, double a, double b, double height)
             : base(plane)
         {
+            A = Math.Pow(b, 2);
+            C = -Math.Pow(a, 2);
+            F = A * C;
+
             HyperbolaA = a;
             HyperbolaB = b;
             Height = height;
