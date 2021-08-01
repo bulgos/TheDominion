@@ -207,14 +207,88 @@ namespace the_Dominion.Conics
             ConicDiscriminant = Geometry.ComputeDiscriminant(A, B, C);
         }
 
+        public double ComputeConicRotation()
+        {
+            return Geometry.ACot((A - C) / B) / 2;
+        }
+
+        public Vector3d ComputeConicTranslation()
+        {
+            double x = (2 * C * D - B * E) / ConicDiscriminant;
+            double y = (2 * A * E - B * D) / ConicDiscriminant;
+
+            return new Vector3d(x, y, 0);
+        }
+
+        public void TransformToStandardConic()
+        {
+            TranslateConic();
+            RotateConic();
+
+            // normalise parameters
+            double factor = -1 / F;
+
+            A *= factor;
+            C *= factor;
+            F = -1;
+        }
+
+        public void TranslateConic()
+        {
+            Vector3d vector = ComputeConicTranslation();
+
+            TranslateConic(vector);
+        }
+
+        public void TranslateConic(Vector3d vector)
+        {
+            double h = vector.X;
+            double k = vector.Y;
+
+            double d = 2 * A * h + B * k + D;
+            double e = B * h + 2 * C * k + E;
+            double f = A * h * h + B * h * k + C * k * k + D * h + E * k + F;
+
+            // A, B, C remain unchanged
+            D = d;
+            E = e;
+            F = f;
+        }
+
+        public void RotateConic()
+        {
+            double angle = ComputeConicRotation();
+
+            RotateConic(angle);
+        }
+
+        public void RotateConic(double angle)
+        {
+            // https://en.wikipedia.org/wiki/Rotation_of_axes
+
+            double cost = Math.Cos(angle);
+            double sint = Math.Sin(angle);
+            double cos2t = Math.Pow(cost, 2);
+            double sin2t = Math.Pow(sint, 2);
+
+            double a = A * cos2t + B * sint * cost + C * sin2t;
+            double b = 2 * (C - A) * sint * cost + B * (cos2t - sin2t);
+            double c = A * sin2t - B * sint * cost + C * cos2t;
+            double d = D * cost + E * sint;
+            double e = -D * sint + E * cost;
+
+            A = a;
+            B = b;
+            C = c;
+            D = d;
+            E = e;
+            // F remains unchanged
+        }
+
         public void GetConicTransform()
         {
-            double rotation = Geometry.ACot((A - C) / B) / 2;
-            Vector3d translation = Vector3d.Zero;
-
-            translation.X = (2 * C * D - B * E) / ConicDiscriminant;
-            translation.Y = (2 * A * E - B * D) / ConicDiscriminant;
-
+            double rotation = ComputeConicRotation();
+            Vector3d translation = ComputeConicTranslation();
 
             Transform rotate = Transform.Rotation(rotation, Point3d.Origin);
             Transform translate = Transform.Translation(translation);
