@@ -1,19 +1,15 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using the_Dominion.Conics.Wrappers;
 
 namespace the_Dominion.Conics.Components
 {
-    public class ConicSolverComponent : GH_Component
+    public class ConicFrom5PointsComponent : GH_Component
     {
-        public ConicSolverComponent()
-            : base("ConicSolver", "CSolv", 
-                  "Solves a Conic in the 2d Plane",
+        public ConicFrom5PointsComponent()
+            : base("5PointConicSolver", "CSolv5", 
+                  "Solves a Conic from 5 points in the 2d Plane",
                   "Dominion", "Conics")
         { }
 
