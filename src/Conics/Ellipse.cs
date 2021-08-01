@@ -1,5 +1,5 @@
-﻿using Rhino.Geometry;
-using System;
+﻿using System;
+using Rhino.Geometry;
 
 namespace the_Dominion.Conics
 {
@@ -8,16 +8,15 @@ namespace the_Dominion.Conics
         public Ellipse(ConicSection conicSection)
             : base(conicSection)
         {
-            ConicSection worldAlignedConic = new ConicSection(conicSection);
-            worldAlignedConic.TransformToStandardConic();
+            if (ConicSectionType != ConicSectionType.Ellipse)
+                throw new ArgumentException("Conic does not represent an Ellipse");
+
+            ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
 
             EllipseA = Math.Pow(Math.Abs(worldAlignedConic.A), -0.5);
             EllipseB = Math.Pow(Math.Abs(worldAlignedConic.C), -0.5);
 
-            Plane basePlane = Plane.WorldXY;
-            basePlane.Transform(Transform);
-
-            var ellipse = new Rhino.Geometry.Ellipse(basePlane, EllipseA, EllipseB);
+            var ellipse = new Rhino.Geometry.Ellipse(BasePlane, EllipseA, EllipseB);
             Section = ellipse.ToNurbsCurve();
         }
 

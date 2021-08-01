@@ -1,7 +1,4 @@
 ﻿using System;
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
-using Rhino.Collections;
 using Rhino.Geometry;
 
 namespace the_Dominion.Conics
@@ -11,37 +8,20 @@ namespace the_Dominion.Conics
     /// </summary>
     public class Hyperbola : ConicSection
     {
-        public Hyperbola(ConicSection conicSection, Point3d pt1, Point3d pt2)
+        public Hyperbola(ConicSection conicSection)
             : base(conicSection)
         {
-            Point3dList pointList = new Point3dList(new[] { pt1, pt2 });
+            if (ConicSectionType != ConicSectionType.Hyperbola)
+                throw new ArgumentException("Conic does not represent a Hyperbola");
 
-            pointList.Transform(InverseTransform);
+            ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
 
-            var hyperbolaMatrixValues = new double[2][];
-            Vector<double> ellipseVector = Vector.Build.Dense(2, 1);
-
-            for (int i = 0; i < 2; i++)
-            {
-                hyperbolaMatrixValues[i] = new[] { Math.Pow(pointList[i].X, 2), Math.Pow(pointList[i].Y, 2) };
-            }
-
-            Matrix<double> matrix = DenseMatrix.OfRowArrays(hyperbolaMatrixValues);
-            //var solution = matrix.Solve(ellipseVector);
-            var solution = matrix.Solve(ellipseVector);
-
-            HyperbolaA = Math.Sqrt(1 / solution[0]);
-            HyperbolaB = Math.Sqrt(1 / -solution[1]);
-
-            Plane basePlane = Plane.WorldXY;
-            basePlane.Transform(Transform);
-
+            HyperbolaA = Math.Pow(Math.Abs(worldAlignedConic.A), -0.5);
+            HyperbolaB = Math.Pow(Math.Abs(worldAlignedConic.C), -0.5);
             Height = 100;
 
             ComputeHyperbola();
         }
-
-        public Hyperbola() { }
 
         public Hyperbola(double a, double b, double height)
             : this(Plane.WorldXY, a, b, height) { }

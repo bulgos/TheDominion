@@ -11,6 +11,7 @@ namespace the_Dominion.Conics
     public class ConicSection
     {
         private Transform _inverseTransform = Transform.Unset;
+        private Plane _basePlane = Plane.Unset;
         private double _conicDiscriminant = double.NaN;
 
         public ConicSection(double a, double b, double c, double d, double e, double f)
@@ -58,7 +59,19 @@ namespace the_Dominion.Conics
             Transform = conicSection.Transform;
         }
 
-        public Plane BasePlane { get; } = Plane.WorldXY;
+        public ConicSection WorldAlignedConic => GetWorldAlignedConic();
+
+        public Plane BasePlane 
+        { 
+            get
+            {
+                if (_basePlane == Plane.Unset)
+                    GetBasePlane();
+
+                return _basePlane;
+            }
+            private set => _basePlane = value; 
+        }
 
         public NurbsCurve Section { get; protected set; }
 
@@ -150,9 +163,9 @@ namespace the_Dominion.Conics
             switch (conicSection.ConicSectionType)
             {
                 case ConicSectionType.Ellipse:
-                    return new Ellipse(conicSection, pts[0], pts[1]);
+                    return new Ellipse(conicSection);
                 case ConicSectionType.Hyperbola:
-                    return new Hyperbola(conicSection, pts[0], pts[1]);
+                    return new Hyperbola(conicSection);
                 case ConicSectionType.Parabola:
                     return new Parabola(conicSection);
                 default:
@@ -296,6 +309,16 @@ namespace the_Dominion.Conics
             Transform = translate * rotate;
         }
 
+        private void GetBasePlane()
+        {
+            var basePlane = Plane.WorldXY;
+            
+            if (Transform != Transform.Identity)
+                basePlane.Transform(Transform);
+
+            BasePlane = basePlane;
+        }
+
         private void GetTransform(Plane targetPlane)
         {
             Transform = Transform.PlaneToPlane(Plane.WorldXY, targetPlane);
@@ -316,6 +339,14 @@ namespace the_Dominion.Conics
             Point3d focus = Focus1;
             focus.Transform(xform);
             Focus1 = focus;
+        }
+
+        private ConicSection GetWorldAlignedConic()
+        {
+            ConicSection worldAlignedConic = new ConicSection(this);
+            worldAlignedConic.TransformToStandardConic();
+
+            return worldAlignedConic;
         }
 
         #region GH_GeometricGoo tools
