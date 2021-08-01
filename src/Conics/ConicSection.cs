@@ -14,7 +14,7 @@ namespace the_Dominion.Conics
         private Plane _basePlane = Plane.Unset;
         private double _conicDiscriminant = double.NaN;
 
-        public ConicSection(double a, double b, double c, double d, double e, double f)
+        protected ConicSection(double a, double b, double c, double d, double e, double f)
         {
             A = a;
             B = b;
@@ -157,11 +157,17 @@ namespace the_Dominion.Conics
             double e = solution[4];
             double f = -1;
 
-            ConicSection conicSection = new ConicSection(a, b, c, d, e, f);
+            return FromConicEquation(a, b, c, d, e, f);
+        }
 
+        public static ConicSection FromConicEquation(double a, double b, double c, double d, double e, double f)
+        {
+            ConicSection conicSection = new ConicSection(a, b, c, d, e, f);
 
             switch (conicSection.ConicSectionType)
             {
+                case ConicSectionType.Circle:
+                    return new Ellipse(conicSection);
                 case ConicSectionType.Ellipse:
                     return new Ellipse(conicSection);
                 case ConicSectionType.Hyperbola:
