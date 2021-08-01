@@ -28,3 +28,5 @@ See [LICENSE](./LICENSE) for details.
 [SCS (fast conic optimizer)](https://github.com/kul-optec/scs#superscs)  
 [Plotting Conics](https://mmas.github.io/conics-matplotlib) for use in conjunction with below link:  
 [matplotlib online python](https://trinket.io/embed/python3/a5bd54189b)  
+[Rotation of axes](https://en.wikipedia.org/wiki/Rotation_of_axes)  
+[Wikipedia Conics](https://en.wikipedia.org/wiki/Conic_section#Conversion_to_canonical_form)  
