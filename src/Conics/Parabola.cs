@@ -16,6 +16,11 @@ namespace the_Dominion.Conics
         public Parabola(ConicSection conicSection)
             : base(conicSection)
         {
+            if (ConicSectionType != ConicSectionType.Parabola)
+                throw new ArgumentException("Conic does not represent a Parabola");
+
+            ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
+
             ConstructParabola();
         }
 

@@ -61,8 +61,8 @@ namespace the_Dominion.Conics
 
         public ConicSection WorldAlignedConic => GetWorldAlignedConic();
 
-        public Plane BasePlane 
-        { 
+        public Plane BasePlane
+        {
             get
             {
                 if (_basePlane == Plane.Unset)
@@ -70,7 +70,7 @@ namespace the_Dominion.Conics
 
                 return _basePlane;
             }
-            private set => _basePlane = value; 
+            private set => _basePlane = value;
         }
 
         public NurbsCurve Section { get; protected set; }
@@ -205,6 +205,9 @@ namespace the_Dominion.Conics
         {
             if (ConicDiscriminant < 0)
             {
+                if (A == C)
+                    return ConicSectionType.Circle;
+
                 return ConicSectionType.Ellipse;
             }
 
@@ -213,7 +216,10 @@ namespace the_Dominion.Conics
                 return ConicSectionType.Hyperbola;
             }
 
-            return ConicSectionType.Parabola;
+            if (ConicDiscriminant == 0 && C == 0)
+                return ConicSectionType.Parabola;
+
+            return ConicSectionType.Unknown;
         }
 
         protected virtual void ComputeFocus()
@@ -228,11 +234,19 @@ namespace the_Dominion.Conics
 
         public double ComputeConicRotation()
         {
-            return Geometry.ACot((A - C) / B) / 2;
+            return B == 0
+                ? 0
+                : Geometry.ACot((A - C) / B) / 2;
         }
 
         public Vector3d ComputeConicTranslation()
         {
+            if (ConicDiscriminant == 0)
+            {
+                //return new Vector3d(-D/2, F, 0);
+                return Vector3d.Zero;
+            }
+
             double x = (2 * C * D - B * E) / ConicDiscriminant;
             double y = (2 * A * E - B * D) / ConicDiscriminant;
 
@@ -318,7 +332,7 @@ namespace the_Dominion.Conics
         private void GetBasePlane()
         {
             var basePlane = Plane.WorldXY;
-            
+
             if (Transform != Transform.Identity)
                 basePlane.Transform(Transform);
 

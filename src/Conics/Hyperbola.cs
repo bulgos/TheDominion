@@ -11,6 +11,8 @@ namespace the_Dominion.Conics
         public Hyperbola(ConicSection conicSection)
             : base(conicSection)
         {
+            if (F == 0)
+                throw new ArgumentException("Hyperbola is degenerate, F cannot be zero");
             if (ConicSectionType != ConicSectionType.Hyperbola)
                 throw new ArgumentException("Conic does not represent a Hyperbola");
 

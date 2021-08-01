@@ -48,18 +48,21 @@ namespace the_Dominion.Conics.Wrappers
                 return true;
             }
 
-            if (typeof(Q).IsAssignableFrom(typeof(GH_Curve)))
+            if (Value.Section != null)
             {
-                object crv = new GH_Curve(Value.Section);
-                target = (Q)crv;
-                return true;
-            }
+                if (typeof(Q).IsAssignableFrom(typeof(GH_Curve)))
+                {
+                    object crv = new GH_Curve(Value.Section);
+                    target = (Q)crv;
+                    return true;
+                }
 
-            if (typeof(Q).IsAssignableFrom(typeof(Curve)))
-            {
-                object crv = Value.Section;
-                target = (Q)crv;
-                return true;
+                if (typeof(Q).IsAssignableFrom(typeof(Curve)))
+                {
+                    object crv = Value.Section;
+                    target = (Q)crv;
+                    return true;
+                }
             }
 
             target = default(Q);

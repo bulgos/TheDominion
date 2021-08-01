@@ -8,7 +8,9 @@ namespace the_Dominion.Conics
         public Ellipse(ConicSection conicSection)
             : base(conicSection)
         {
-            if (ConicSectionType != ConicSectionType.Ellipse)
+            if (F == 0)
+                throw new ArgumentException("Ellipse is degenerate, F cannot be zero");
+            if (ConicSectionType != ConicSectionType.Ellipse && ConicSectionType != ConicSectionType.Circle)
                 throw new ArgumentException("Conic does not represent an Ellipse");
 
             ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
