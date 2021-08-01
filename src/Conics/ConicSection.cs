@@ -320,6 +320,7 @@ namespace the_Dominion.Conics
 
         public void GetConicTransform()
         {
+            // https://math.stackexchange.com/questions/982908/deal-with-non-standard-form-of-conic
             double rotation = ComputeConicRotation();
             Vector3d translation = ComputeConicTranslation();
 
