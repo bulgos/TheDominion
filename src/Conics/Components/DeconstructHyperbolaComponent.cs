@@ -43,10 +43,7 @@ namespace the_Dominion.Conics.Components
             DA.SetData(12, hyperbola.HyperbolaA);
             DA.SetData(13, hyperbola.HyperbolaB);
 
-            DA.SetData(14, hyperbola.P1);
             DA.SetData(15, hyperbola.Apex);
-            DA.SetData(16, hyperbola.Tangent1);
-            DA.SetData(17, hyperbola.Tangent2);
         }
 
         public override Guid ComponentGuid => new Guid("3305b5a2-5428-4b39-9a02-3f4d16e482f5");

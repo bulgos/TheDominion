@@ -41,8 +41,6 @@ namespace the_Dominion.Conics
 
             ComputeHyperbola();
             ComputeFocus();
-
-            TransformShape();
         }
 
         public Hyperbola(Hyperbola hyperbola)
@@ -59,17 +57,7 @@ namespace the_Dominion.Conics
 
         public double Height { get; private set; } = 10;
 
-        public Point3d P0 { get; private set; } = Point3d.Unset;
-
-        public Point3d P1 { get; private set; } = Point3d.Unset;
-
-        public Point3d P2 { get; private set; } = Point3d.Unset;
-
         public Point3d Apex { get; private set; } = Point3d.Unset;
-
-        public Line Tangent1 { get; private set; } = Line.Unset;
-
-        public Line Tangent2 { get; private set; } = Line.Unset;
 
         private Line ComputeTangent(Point3d pt)
         {
@@ -85,105 +73,28 @@ namespace the_Dominion.Conics
             double x0 = Math.Sqrt((HyperbolaA * HyperbolaA) * (1 + ((Height * Height) / (HyperbolaB * HyperbolaB))));
 
             Point3d p0 = new Point3d(x0, Height, 0);
-            Point3d p2 = new Point3d(x0, -Height, 0);
-
-            double x1 = HyperbolaA * HyperbolaA / x0;
-            double w1 = x0 / HyperbolaA;
             Point3d p1 = new Point3d(HyperbolaA, 0, 0);
-            Point3d apex = new Point3d(HyperbolaA, 0, 0);
-
-            Point3d[] points = { p0, apex, p2 };
-            NurbsCurve hyperbola = NurbsCurve.Create(false, 2, points);
-            var weightedP1 = new Point4d(p1.X, p1.Y, p1.Z, w1);
-            hyperbola.Points.SetPoint(1, weightedP1);
-
-            hyperbola.Transform(Transform);
-
-            Section = hyperbola;
-
-            P0 = p0;
-            P2 = p2;
-            P1 = p1;
-            Apex = apex;
-
-            Tangent1 = ComputeTangent(P0);
-            Tangent2 = ComputeTangent(P2);
-        }
-
-        /// <summary>
-        /// Draws a hyperbola on the XY plane, centred at 0,0,0
-        /// </summary>
-        /// <param name=""></param>
-        /// <param name=""></param>
-        /// <param name=""></param>
-        private void ComputeHyperbolaInvalid()
-        {
-            // HyperbolaA hyperbola can be drawn as a quadratic rational bezier curve
-            // The curve has three control points: p0, p1, p2
-            // p0 & p2 are the end points of the curve
-            // p1 is near the apex of the curve
-            
-            // Since the hyperboloid is being generated about the z-axis, we can assume
-            // p0 & p2 are mirror images of one another about the xy plane.
-            // p0 & p2 can be calculated directly from the hyperbola formula:
-            // x^2 / a^2 - y^2 / b^2 = 1
-            // In this case, because we are drawing on the XY plane, so y = height of the hyperbola
-            // so a, b, and y are known. Thus:
-            // x^2 = a^2 * (1 + (z^2 / b^2)) 
-
-            double x0 = Math.Sqrt((HyperbolaA * HyperbolaA) * (1 + ((Height * Height) / (HyperbolaB * HyperbolaB))));
-            Point3d p0 = new Point3d(x0, Height, 0);
             Point3d p2 = new Point3d(x0, -Height, 0);
 
-            // p1 is harder to calculate.
-            // It lies on the x-axis, at the intersection of the tangents from p0 & p2
-            // The tangent for a point(x', y') on a hyperbola is:
-            // y-y' = (b^2 * x') / (a^2 * y') * (x - x')
-            // http://openstudy.com/updates/4f7ef8c8e4b0bfe8930b75a2
-            // Since we know y = 0, we can solve for x
-            // x = (-y'^2 * a^2) / (b^2 * x') + x'
-            // where x' and y' are the point on the hyperbola 
-
-            double x1 = (-1 * (Height * Height) * (HyperbolaA * HyperbolaA)) / ((HyperbolaB * HyperbolaB) * p0.X) + p0.X;
-            Point3d p1 = new Point3d(x1, 0, 0);
-
-            // We also need the apex point for the hyperbola
-            // This is the point where the hyperbola crosses the x-axis
-
-            Point3d apex = new Point3d(HyperbolaA, 0, 0);
-
-            // To draw the hyperbola, we need to know what weight is given to p1
-
-            double w1 = (p0.X - apex.X) / (apex.X - p1.X);
-
-            //d = weight / (1 + weight) * e;
-            // http://www.cs.mtu.edu/~shene/COURSES/cs3621/NOTES/spline/NURBS/RB-conics.html
-
-            //where d = the distance between the apex and point_M
-            // and e = the distance between p1 and point_M
-            // and point_M is midway between p0 and p2
-            // thus, the weight = d / (e - d) 
+            
+            double w1 = x0 / HyperbolaA;
+            
+            Point4d weightedP1 = new Point4d(p1.X, p1.Y, p1.Z, w1);
 
             Point3d[] points = { p0, p1, p2 };
             NurbsCurve hyperbola = NurbsCurve.Create(false, 2, points);
-            hyperbola.Points.SetPoint(1, new Point4d(p1.X, p1.Y, p1.Z, w1));
+            hyperbola.Points.SetPoint(1, weightedP1);
 
-            hyperbola.Transform(Transform);
+            TransformShape();
 
             Section = hyperbola;
 
-            P0 = p0;
-            P2 = p2;
-            P1 = p1;
-            Apex = apex;
-
-            Tangent1 = ComputeTangent(P0);
-            Tangent2 = ComputeTangent(P2);
+            Apex = p1;
         }
 
-        private double CalculateApexWeight(Point3d p0, Point3d p1, Point3d p2, Point3d apex)
+        private double ComputeApexWeight(Point3d p0)
         {
-            throw new NotImplementedException();
+            return HyperbolaA * HyperbolaA / p0.X;
         }
 
         /// <summary>

@@ -39,7 +39,7 @@ namespace the_Dominion.Conics.Components
             DA.GetData(2, ref y);
 
             var xPoints = conicSection.ComputePointAtX(x);
-            var yPoints = conicSection.ComputePointAtY(y;
+            var yPoints = conicSection.ComputePointAtY(y);
             
             if (xPoints.Length > 0)
                 DA.SetDataList(0, xPoints);
