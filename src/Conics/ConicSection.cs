@@ -26,7 +26,7 @@ namespace the_Dominion.Conics
             GetConicTransform();
         }
 
-        public ConicSection(IEnumerable<Point3d> points)
+        protected ConicSection(IEnumerable<Point3d> points)
         {
             From5Points(points);
         }
@@ -179,6 +179,16 @@ namespace the_Dominion.Conics
             }
         }
 
+        public Line ComputeTangent(Point3d pt)
+        {
+            double derivative = ComputeDerivative(pt);
+
+            Vector3d direction = new Vector3d(1, derivative, 0);
+            direction.Unitize();
+
+            return new Line(pt, direction);
+        }
+
         public Point3d[] ComputePointAtX(double x)
         {
             double a = C;
@@ -222,9 +232,14 @@ namespace the_Dominion.Conics
             return ConicSectionType.Unknown;
         }
 
-        protected virtual void ComputeFocus()
+        public virtual double ComputeDerivative(Point3d pt)
         {
+            throw new ArgumentException("Can only Compute Derivative for derived classes, not for base class.");
+        }
 
+        protected virtual void ComputeFoci()
+        {
+            throw new ArgumentException("Can only Compute Focus for derived classes, not for base class.");
         }
 
         private void ComputeConicDiscriminant()

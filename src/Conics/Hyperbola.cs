@@ -3,9 +3,6 @@ using Rhino.Geometry;
 
 namespace the_Dominion.Conics
 {
-    /// <summary>
-    /// see https://www.danieldavis.com/how-to-draw-a-hyperboloid/
-    /// </summary>
     public class Hyperbola : ConicSection
     {
         public Hyperbola(ConicSection conicSection)
@@ -18,8 +15,8 @@ namespace the_Dominion.Conics
 
             ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
 
-            HyperbolaA = Math.Pow(Math.Abs(worldAlignedConic.A), -0.5);
-            HyperbolaB = Math.Pow(Math.Abs(worldAlignedConic.C), -0.5);
+            MajorAxis = Math.Pow(Math.Abs(worldAlignedConic.A), -0.5);
+            MinorAxis = Math.Pow(Math.Abs(worldAlignedConic.C), -0.5);
             Height = 100;
 
             ComputeHyperbola();
@@ -35,49 +32,39 @@ namespace the_Dominion.Conics
             C = -Math.Pow(a, 2);
             F = A * C;
 
-            HyperbolaA = a;
-            HyperbolaB = b;
+            MajorAxis = a;
+            MinorAxis = b;
             Height = height;
 
             ComputeHyperbola();
-            ComputeFocus();
+            ComputeFoci();
         }
 
         public Hyperbola(Hyperbola hyperbola)
             : base(hyperbola)
         {
-            HyperbolaA = hyperbola.HyperbolaA;
-            HyperbolaB = hyperbola.HyperbolaB;
+            MajorAxis = hyperbola.MajorAxis;
+            MinorAxis = hyperbola.MinorAxis;
             Height = hyperbola.Height;
         }
 
-        public double HyperbolaA { get; } = 1;
+        public double MajorAxis { get; } = 1;
 
-        public double HyperbolaB { get; } = 1;
+        public double MinorAxis { get; } = 1;
 
         public double Height { get; private set; } = 10;
 
         public Point3d Apex { get; private set; } = Point3d.Unset;
 
-        private Line ComputeTangent(Point3d pt)
-        {
-            double derivative = (HyperbolaB * HyperbolaB * pt.X) / (HyperbolaA * HyperbolaA * pt.Y);
-
-            var direction = new Vector3d(1, derivative, 0);
-
-            return new Line(pt, direction);
-        }
-
         private void ComputeHyperbola()
         {
-            double x0 = Math.Sqrt((HyperbolaA * HyperbolaA) * (1 + ((Height * Height) / (HyperbolaB * HyperbolaB))));
+            double x0 = Math.Sqrt((MajorAxis * MajorAxis) * (1 + ((Height * Height) / (MinorAxis * MinorAxis))));
 
             Point3d p0 = new Point3d(x0, Height, 0);
-            Point3d p1 = new Point3d(HyperbolaA, 0, 0);
+            Point3d p1 = new Point3d(MajorAxis, 0, 0);
             Point3d p2 = new Point3d(x0, -Height, 0);
-
             
-            double w1 = x0 / HyperbolaA;
+            double w1 = x0 / MajorAxis;
             
             Point4d weightedP1 = new Point4d(p1.X, p1.Y, p1.Z, w1);
 
@@ -85,26 +72,31 @@ namespace the_Dominion.Conics
             NurbsCurve hyperbola = NurbsCurve.Create(false, 2, points);
             hyperbola.Points.SetPoint(1, weightedP1);
 
-            TransformShape();
-
             Section = hyperbola;
+            TransformShape();
 
             Apex = p1;
         }
 
+        public override double ComputeDerivative(Point3d pt)
+        {
+            return (Math.Pow(MinorAxis, 2) * pt.X) / (Math.Pow(MinorAxis, 2) * pt.Y);
+        }
+
         private double ComputeApexWeight(Point3d p0)
         {
-            return HyperbolaA * HyperbolaA / p0.X;
+            return MajorAxis * MajorAxis / p0.X;
         }
 
         /// <summary>
         /// Focus for a Hyperbola is given by c^2 = a^2 + b^2
         /// </summary>
-        protected override void ComputeFocus()
+        protected override void ComputeFoci()
         {
-            double focusDist = Math.Sqrt(HyperbolaA * HyperbolaA + HyperbolaB * HyperbolaB);
+            double focusDist = Math.Sqrt(MajorAxis * MajorAxis + MinorAxis * MinorAxis);
 
-            Focus1 = new Point3d(focusDist, 0, 0);
+            Focus1 = new Point3d(-focusDist, 0, 0);
+            Focus2 = new Point3d(focusDist, 0, 0);
         }
 
         public override ConicSection Duplicate()

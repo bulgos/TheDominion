@@ -40,8 +40,8 @@ namespace the_Dominion.Conics.Components
                 return;
             }
 
-            DA.SetData(12, hyperbola.HyperbolaA);
-            DA.SetData(13, hyperbola.HyperbolaB);
+            DA.SetData(12, hyperbola.MajorAxis);
+            DA.SetData(13, hyperbola.MinorAxis);
 
             DA.SetData(15, hyperbola.Apex);
         }

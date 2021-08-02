@@ -4,6 +4,7 @@ using Rhino.Collections;
 using Rhino.Geometry;
 using Rhino.Geometry.Intersect;
 using System;
+using System.Collections.Generic;
 using the_Dominion.Utility;
 
 namespace the_Dominion.Conics
@@ -117,8 +118,13 @@ namespace the_Dominion.Conics
             Section = Curve.CreateControlPointCurve(points, 2) as NurbsCurve;
 
             ComputeVertexPlane();
-            ComputeFocus();
+            ComputeFoci();
             TransformShape();
+        }
+
+        public void ConstructParabolaFromFocus()
+        {
+            throw new NotImplementedException();
         }
 
         private Vector<double> SolveParabolaFrom3Points(Point3d p1, Point3d p2, Point3d p3)
@@ -138,6 +144,16 @@ namespace the_Dominion.Conics
             return matrix.Solve(vector);
         }
 
+        public override double ComputeDerivative(Point3d pt)
+        {
+            return 2 * A * pt.X + D;
+        }
+
+        protected override void ComputeFoci()
+        {
+            Focus1 = VertexPlane.Origin + new Point3d(0, A / 4, 0);
+        }
+
         public Point3d ComputeParabolaPoint(double x)
         {
             double y = A * x * x + D * x + F;
@@ -145,27 +161,14 @@ namespace the_Dominion.Conics
             return new Point3d(x, y, 0);
         }
 
-        public Vector3d ComputeParabolaTangentVector(double x)
-        {
-            double derivative = 2 * A * x + D;
-
-            return new Vector3d(1, derivative, 0);
-        }
-
-        public Line ComputeParabolaTangent(double x)
-        {
-            Point3d pt = ComputeParabolaPoint(x);
-            Vector3d tangent = ComputeParabolaTangentVector(x);
-
-            return new Line(pt, tangent);
-        }
-
         public Point3d ComputeTangentIntersections(double x1, double x2, out Line tangent1, out Line tangent2)
         {
-            tangent1 = ComputeParabolaTangent(x1);
-            tangent2 = ComputeParabolaTangent(x2);
+            Point3d p1 = ComputeParabolaPoint(x1);
+            Point3d p2 = ComputeParabolaPoint(x2);
+            tangent1 = ComputeTangent(p1);
+            tangent2 = ComputeTangent(p2);
 
-            Intersection.LineLine(tangent1, tangent2, out double param1, out double param2);
+            Intersection.LineLine(tangent1, tangent2, out double param1, out double _);
 
             return tangent1.PointAt(param1);
         }
@@ -192,11 +195,6 @@ namespace the_Dominion.Conics
             VertexPlane = vertexPlane;
         }
 
-        protected override void ComputeFocus()
-        {
-            Focus1 = VertexPlane.Origin + new Point3d(0, A / 4, 0);
-        }
-
         public override void TransformShape()
         {
             base.TransformShape();
@@ -206,15 +204,15 @@ namespace the_Dominion.Conics
             VertexPlane = vertexPlane;
         }
 
-        public override ConicSection Duplicate()
-        {
-            return new Parabola(this);
-        }
-
-        public static Parabola[] ComputeParabolasThroughFourPoints(Point3d p1, Point3d p2, Point3d p3, Point3d p4)
+        public static Parabola[] ComputeParabolasThroughFourPoints(IEnumerable<Point3d> pts)
         {
             // https://www.mathpages.com/home/kmath037/kmath037.htm
             // https://math.stackexchange.com/a/3224627
+
+            Point3dList pList = new Point3dList(pts);
+
+            if (pList.Count != 4)
+                throw new ArgumentException("Incorrect number of points specified for this method");
 
             // this method requires a transformation such that
             // p3 is at the origin (0, 0, 0)
@@ -222,17 +220,17 @@ namespace the_Dominion.Conics
             // this unitizes the problem such that we can solve across p1 and p2
 
             // create new points which meet the translation, rotation and scale requirements to solve
-            var transformedPoints = GetTransformedPoints(p1, p2, p3, p4);
-            Point3d p1xForm = transformedPoints.Item1;
-            Point3d p2xForm = transformedPoints.Item2;
+            var transformedPoints = GetTransformedPoints(pList);
+            Point3d p1xForm = transformedPoints[0];
+            Point3d p2xForm = transformedPoints[1];
 
-            // we calculate the angle quadratic of the form A*tan(t)^2 + D*Tan(t) + F = 0
+            // we calculate the angle quadratic of the form A*tan(t)^2 + B*Tan(t) + C = 0
             double a = p2xForm.Y - p1xForm.Y;
             double b = 2 * (p2xForm.X - p1xForm.X);
             double c = p2xForm.X * (p2xForm.X - 1) / p2xForm.Y - p1xForm.X * (p1xForm.X - 1) / p1xForm.Y;
 
             // the angle of p4-p3 gives us the transformation.
-            double rotation = (p4 - p3).VectorAngle();
+            double rotation = (pList[3] - pList[2]).VectorAngle();
 
             // calculating the roots gives us the solution tan(t) = root1, root2
             // sp we take the inverse Tan to find the angle at which valid parabolae will form
@@ -252,14 +250,12 @@ namespace the_Dominion.Conics
             plane2.Rotate(ang2, plane2.ZAxis);
 
             // calculate the domain in the given plane
-            Point3d[] points = { p1, p2, p3, p4 };
-
-            Interval domain1 = points.ComputeTransformedBoundsInPlane(plane1, Plane.WorldXY);
-            Interval domain2 = points.ComputeTransformedBoundsInPlane(plane2, Plane.WorldXY);
+            Interval domain1 = pList.ComputeTransformedBoundsInPlane(plane1, Plane.WorldXY);
+            Interval domain2 = pList.ComputeTransformedBoundsInPlane(plane2, Plane.WorldXY);
 
             // construct the parabolas from three of the points and the calculated plane
-            Parabola parabola1 = new Parabola(p1, p2, p4, plane1);
-            Parabola parabola2 = new Parabola(p1, p2, p4, plane2);
+            Parabola parabola1 = new Parabola(pList[0], pList[1], pList[3], plane1);
+            Parabola parabola2 = new Parabola(pList[0], pList[1], pList[3], plane2);
 
             // set the domain
             parabola1.Domain = domain1;
@@ -268,31 +264,23 @@ namespace the_Dominion.Conics
             return new Parabola[] { parabola1, parabola2 };
         }
 
-        private static Tuple<Point3d, Point3d, Point3d, Point3d> GetTransformedPoints(Point3d p1, Point3d p2, Point3d p3, Point3d p4)
+        private static Point3dList GetTransformedPoints(Point3dList pts)
         {
-            Vector3d translationVector = Point3d.Origin - p3;
+            Vector3d translationVector = Point3d.Origin - pts[2];
             Transform translation = Transform.Translation(translationVector);
 
-            double rotationAngle = -(p4 - p3).VectorAngle();
+            double rotationAngle = -(pts[3] - pts[2]).VectorAngle();
             Transform rotation = Transform.Rotation(rotationAngle, Point3d.Origin);
 
-            double transformScale = 1 / (p4 - p3).Length;
+            double transformScale = 1 / (pts[3] - pts[2]).Length;
             Transform scale = Transform.Scale(Point3d.Origin, transformScale);
+            
+            var ptsTransformed = new Point3dList(pts);
+            ptsTransformed.Transform(translation);
+            ptsTransformed.Transform(rotation);
+            ptsTransformed.Transform(scale);
 
-            Point3dList points = new Point3dList() { new Point3d(p1), new Point3d(p2), new Point3d(p3), new Point3d(p4) };
-
-            for (int i = 0; i < points.Count; i++)
-            {
-                var pt = points[i];
-
-                pt.Transform(translation);
-                pt.Transform(rotation);
-                pt.Transform(scale);
-
-                points[i] = pt;
-            }
-
-            return new Tuple<Point3d, Point3d, Point3d, Point3d>(points[0], points[1], points[2], points[3]);
+            return ptsTransformed;
         }
 
         private Point3d[] ComputeQuadraticRoots()
@@ -312,14 +300,14 @@ namespace the_Dominion.Conics
             return roots;
         }
 
-        public void ConstructParabolaFromFocus()
-        {
-            throw new NotImplementedException();
-        }
-
         private void ComputeParabolaDiscriminant()
         {
             ParabolaDiscriminant = Geometry.ComputeDiscriminant(A, D, F);
+        }
+
+        public override ConicSection Duplicate()
+        {
+            return new Parabola(this);
         }
     }
 }

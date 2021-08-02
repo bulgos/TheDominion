@@ -1,6 +1,7 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
+using System.Collections.Generic;
 using the_Dominion.Conics.Wrappers;
 
 namespace the_Dominion.Conics.Components
@@ -59,18 +60,9 @@ namespace the_Dominion.Conics.Components
                 return;
             }
 
-            //Point3d p1 = new Point3d(-4, 4, 0);
-            //Point3d p2 = new Point3d(-3, 2, 0);
-            //Point3d p3 = new Point3d(0, 0, 0);
-            //Point3d p4 = new Point3d(3, 1, 0);
+            List<Point3d> points = new List<Point3d> { p1, p2, p3, p4 };
 
-            //Point3d p1 = new Point3d(-1, 4, 0);
-            //Point3d p2 = new Point3d(-2, -2, 0);
-            //Point3d p3 = new Point3d(0, 0, 0);
-            //Point3d p4 = new Point3d(4, 0, 0);
-
-
-            Parabola[] parabolae = Parabola.ComputeParabolasThroughFourPoints(p1, p2, p3, p4);
+            Parabola[] parabolae = Parabola.ComputeParabolasThroughFourPoints(points);
 
             if (parabolae == null)
             {

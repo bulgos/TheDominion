@@ -78,6 +78,7 @@ namespace the_Dominion.Conics.Wrappers
 
             args.Pipeline.DrawCurve(Value.Section, args.Color);
             args.Pipeline.DrawPoint(Value.Focus1, Rhino.Display.PointStyle.RoundControlPoint, 5, args.Color);
+            args.Pipeline.DrawPoint(Value.Focus2, Rhino.Display.PointStyle.RoundControlPoint, 5, args.Color);
         }
 
         public override IGH_GeometricGoo DuplicateGeometry()
