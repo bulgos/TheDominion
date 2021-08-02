@@ -17,6 +17,11 @@ namespace the_Dominion.Conics.Components
 
             pManager.AddNumberParameter("HyperbolaA", "hA", "The A term from the standard Hyperbola form, different from Conic.A", GH_ParamAccess.item);
             pManager.AddNumberParameter("Hyperbolab", "hB", "The B term from the standard Hyperbola form, different from Conic.B", GH_ParamAccess.item);
+
+            pManager.AddPointParameter("P1", "p1", "p1", GH_ParamAccess.item);
+            pManager.AddPointParameter("Apex", "Q", "Apex Point", GH_ParamAccess.item);
+            pManager.AddLineParameter("Tangent1", "T1", "Tangent 1", GH_ParamAccess.item);
+            pManager.AddLineParameter("Tangent2", "T2", "Tangent 2", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -37,6 +42,11 @@ namespace the_Dominion.Conics.Components
 
             DA.SetData(12, hyperbola.HyperbolaA);
             DA.SetData(13, hyperbola.HyperbolaB);
+
+            DA.SetData(14, hyperbola.P1);
+            DA.SetData(15, hyperbola.Apex);
+            DA.SetData(16, hyperbola.Tangent1);
+            DA.SetData(17, hyperbola.Tangent2);
         }
 
         public override Guid ComponentGuid => new Guid("3305b5a2-5428-4b39-9a02-3f4d16e482f5");
