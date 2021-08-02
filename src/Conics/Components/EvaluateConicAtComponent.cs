@@ -1,9 +1,5 @@
 ﻿using Grasshopper.Kernel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using the_Dominion.Conics.Wrappers;
 
 namespace the_Dominion.Conics.Components
@@ -42,8 +38,14 @@ namespace the_Dominion.Conics.Components
             DA.GetData(1, ref x);
             DA.GetData(2, ref y);
 
-            DA.SetDataList(0, conicSection.ComputePointAtX(x));
-            DA.SetDataList(1, conicSection.ComputePointAtY(y));
+            var xPoints = conicSection.ComputePointAtX(x);
+            var yPoints = conicSection.ComputePointAtY(y;
+            
+            if (xPoints.Length > 0)
+                DA.SetDataList(0, xPoints);
+
+            if (yPoints.Length > 0)
+                DA.SetDataList(1, yPoints);
         }
 
         public override Guid ComponentGuid => new Guid("61eaaf21-fcda-420f-8f9b-6eb2a73727ee");
