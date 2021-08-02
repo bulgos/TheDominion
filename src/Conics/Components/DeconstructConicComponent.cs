@@ -16,7 +16,7 @@ namespace the_Dominion.Conics.Components
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new Conic_Param(), "Parabola", "P", "The Parabola to Deconstruct", GH_ParamAccess.item);
+            pManager.AddParameter(new Conic_Param(), "Conic", "C", "The Conic to Deconstruct", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
