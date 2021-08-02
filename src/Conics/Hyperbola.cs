@@ -72,8 +72,9 @@ namespace the_Dominion.Conics
             NurbsCurve hyperbola = NurbsCurve.Create(false, 2, points);
             hyperbola.Points.SetPoint(1, weightedP1);
 
+            hyperbola.Transform(Transform);
             Section = hyperbola;
-            TransformShape();
+            //TransformShape();
 
             Apex = p1;
         }
