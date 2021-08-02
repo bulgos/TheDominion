@@ -1,10 +1,13 @@
 ﻿using Grasshopper.Kernel;
 using Grasshopper.Kernel.Types;
+using Rhino;
+using Rhino.DocObjects;
 using Rhino.Geometry;
+using System;
 
 namespace the_Dominion.Conics.Wrappers
 {
-    public class GH_Conic : GH_GeometricGoo<ConicSection>, IGH_PreviewData
+    public class GH_Conic : GH_GeometricGoo<ConicSection>, IGH_PreviewData, IGH_BakeAwareData
     {
         public GH_Conic() { }
 
@@ -79,6 +82,18 @@ namespace the_Dominion.Conics.Wrappers
             args.Pipeline.DrawCurve(Value.Section, args.Color);
             args.Pipeline.DrawPoint(Value.Focus1, Rhino.Display.PointStyle.RoundControlPoint, 5, args.Color);
             args.Pipeline.DrawPoint(Value.Focus2, Rhino.Display.PointStyle.RoundControlPoint, 5, args.Color);
+        }
+
+        public bool BakeGeometry(RhinoDoc doc, ObjectAttributes att, out Guid obj_guid)
+        {
+            obj_guid = Guid.Empty;
+
+            if (Value.Section != null)
+                return false;
+
+            obj_guid = doc.Objects.Add(Value.Section);
+
+            return true;
         }
 
         public override IGH_GeometricGoo DuplicateGeometry()
