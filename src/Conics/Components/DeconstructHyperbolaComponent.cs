@@ -6,7 +6,7 @@ namespace the_Dominion.Conics.Components
     public class DeconstructHyperbolaComponent : DeconstructConicComponent
     {
         public DeconstructHyperbolaComponent()
-            : base("DeconstructHyperbola", "DHyprb",
+            : base("DeconstructHyperbola", "DeHyperb",
                   "Deconstruct a Hyperbola into its constituent parts",
                   "Dominion", "Conics")
         { }

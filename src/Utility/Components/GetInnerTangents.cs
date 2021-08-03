@@ -8,7 +8,7 @@ namespace the_Dominion.Conics.Components
     public class GetInnerTangents : GH_Component
     {
         public GetInnerTangents()
-            : base("InnerTangent", "ITan", 
+            : base("Inner Tangents", "InnTang", 
                   "Computes the inner Tangents between two circles",
                   "Dominion", "Circles") { }
 

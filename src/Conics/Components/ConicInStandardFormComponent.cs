@@ -11,8 +11,8 @@ namespace the_Dominion.Conics.Components
     public class ConicStandardFormComponent : GH_Component
     {
         public ConicStandardFormComponent()
-          : base("Standardise Conic", "SConic",
-              "Removes Conic Transform from Equation",
+          : base("Standardise Conic", "StandConic",
+              "Computes the standard form of the Conic by eliminating Transform from Equation",
               "Dominion", "Conics")
         { }
 

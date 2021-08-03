@@ -7,7 +7,7 @@ namespace the_Dominion.Conics.Components
     public class EvaluateConicAtComponnent : GH_Component
     {
         public EvaluateConicAtComponnent()
-            :base("EvaluateConicAt", "EvalConic",
+            :base("Evaluate Conic At", "EvalConic",
                  "Evaluates the conic Equation at the given position",
                  "Dominion", "Conics")
         { }

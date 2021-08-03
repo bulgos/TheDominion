@@ -8,7 +8,7 @@ namespace the_Dominion.Conics.Components
     public class ConicFrom5PointsComponent : GH_Component
     {
         public ConicFrom5PointsComponent()
-            : base("5PointConicSolver", "CSolv5", 
+            : base("5-Point Conic-Solver", "SolveConic5", 
                   "Solves a Conic from 5 points in the 2d Plane",
                   "Dominion", "Conics")
         { }

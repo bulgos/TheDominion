@@ -15,8 +15,8 @@ namespace the_Dominion.Conics.Components
         /// new tabs/panels will automatically be created.
         /// </summary>
         public ParabolaFromThreePointsComponent()
-          : base("ConstructParabolaFrom3Points", "CPrb3Pt",
-              "Constructs a Parabola from 3 Points",
+          : base("3-Point Parabola-Solver", "SolveParab3",
+              "Solves a Parabola from 3 Points in the 2d Plane",
               "Dominion", "Conics")
         { }
 

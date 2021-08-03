@@ -9,8 +9,8 @@ namespace the_Dominion.Conics.Components
     public class ParabolaFromFourPointsComponent : GH_Component
     {
         public ParabolaFromFourPointsComponent()
-          : base("ConstructParabolaFrom4Points", "CPrb4Pt",
-              "Constructs Parabolae from 4 Points",
+          : base("4-Point Parabola-Solver", "SolveParab4",
+              "Solves the Parabolae from 4 Points in the 2d Plane",
               "Dominion", "Conics")
         { }
 

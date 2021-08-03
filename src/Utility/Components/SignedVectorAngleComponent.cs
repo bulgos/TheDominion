@@ -7,7 +7,7 @@ namespace the_Dominion.Utility.Components
     public class SignedVectorAngleComponent : GH_Component
     {
         public SignedVectorAngleComponent()
-            : base("SignedVectorAngle", "SVecAng",
+            : base("Signed Vector Angle", "±VecAng",
                   "Computes the signed angle between two vectors",
                   "Dominion", "Math")
         { }

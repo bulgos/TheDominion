@@ -7,7 +7,7 @@ namespace the_Dominion.Conics.Components
     public class DeconstructParabolaComponent : DeconstructConicComponent
     {
         public DeconstructParabolaComponent()
-            : base("DeconstructParabola", "DPrb",
+            : base("Deconstruct Parabola", "DeParab",
                   "Deconstruct a Parabola into its constituent parts",
                   "Dominion", "Conics")
         { }

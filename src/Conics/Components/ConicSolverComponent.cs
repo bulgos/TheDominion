@@ -7,7 +7,7 @@ namespace the_Dominion.Conics.Components
     public class ConicSolverComponent : GH_Component
     {
         public ConicSolverComponent()
-            : base("ConicSolver", "CSolv",
+            : base("Conic-Solver", "CSolve",
                   "Solves a Conic in the 2d Plane",
                   "Dominion", "Conics")
         { }

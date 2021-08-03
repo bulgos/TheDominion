@@ -7,7 +7,7 @@ namespace the_Dominion.Conics.Components
     public class DeconstructConicComponent : GH_Component
     {
         public DeconstructConicComponent()
-            : base("DeconstructConic", "DConic",
+            : base("Deconstruct Conic", "DeConic",
                   "Deconstruct a Conic into its constituent parts",
                   "Dominion", "Conics") { }
 

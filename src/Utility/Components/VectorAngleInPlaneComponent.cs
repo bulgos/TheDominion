@@ -7,7 +7,7 @@ namespace the_Dominion.Utility.Components
     public class VectorAngleInPlaneComponent : GH_Component
     {
         public VectorAngleInPlaneComponent()
-            : base("AngleInPlane", "VPl", 
+            : base("Angle In Plane", "VecPlnAngle", 
                   "Computes the angle between a Vector and a Plane",
                   "Dominion", "Math")
         { }

@@ -7,7 +7,7 @@ namespace the_Dominion.Conics.Components
     public class ConicTypeComponent : GH_Component
     {
         public ConicTypeComponent()
-          : base("ConicType", "ConType",
+          : base("Conic Type", "ConicType",
               "Tests a curve to see if it is a valid type of conic section",
               "Dominion", "Conics")
         { }

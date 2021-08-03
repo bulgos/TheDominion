@@ -8,7 +8,7 @@ namespace the_Dominion.Conics.Components
     public class ParabolaFromQuadraticComponent : GH_Component
     {
         public ParabolaFromQuadraticComponent()
-          : base("ConstructParabolaFromQuadratic", "CPrbQ",
+          : base("Construct Quadratic Parabola", "ConParabQ",
               "Constructs a Parabola of the form y = ax^2 + bx+ c",
               "Dominion", "Conics")
         { }

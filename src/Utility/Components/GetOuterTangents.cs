@@ -8,7 +8,7 @@ namespace the_Dominion.Conics.Components
     public class GetOuterTangents : GH_Component
     {
         public GetOuterTangents()
-            : base("OuterTangent", "OTan", 
+            : base("Outer Tangents", "OutTang", 
                   "Computes the outer Tangents between two circles",
                   "Dominion", "Circles") { }
 

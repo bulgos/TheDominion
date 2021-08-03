@@ -20,7 +20,7 @@ namespace the_Dominion.Conics.Components
         /// new tabs/panels will automatically be created.
         /// </summary>
         public ParabolaComponent()
-          : base("ConstructParabola", "CPrb",
+          : base("Construct Parabola", "ConParab",
               "Constructs a Parabola in the form y = ax^2",
               "Dominion", "Conics")
         { }

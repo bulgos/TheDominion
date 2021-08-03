@@ -20,7 +20,7 @@ namespace the_Dominion.Conics.Components
         /// new tabs/panels will automatically be created.
         /// </summary>
         public HyperbolaComponent()
-          : base("ConstructHyperbola", "CHyprb",
+          : base("Construct Hyperbola", "ConHyperb",
               "Constructs a Hyperbola in the form x^2 / a^2 - y^2 / b^2 = 1",
               "Dominion", "Conics")
         { }
