@@ -23,7 +23,7 @@ namespace the_Dominion.Conics
             E = e;
             F = f;
 
-            GetConicTransform();
+            ComputeConicTransform();
         }
 
         protected ConicSection(IEnumerable<Point3d> points)
@@ -66,7 +66,7 @@ namespace the_Dominion.Conics
             get
             {
                 if (_basePlane == Plane.Unset)
-                    GetBasePlane();
+                    ComputeBasePlane();
 
                 return _basePlane;
             }
@@ -268,22 +268,6 @@ namespace the_Dominion.Conics
             return new Vector3d(x, y, 0);
         }
 
-        public void TransformToStandardConic()
-        {
-            TranslateConic();
-            RotateConic();
-
-            if (F == 0)
-                return;
-
-            // normalise parameters
-            double factor = -1 / F;
-
-            A *= factor;
-            C *= factor;
-            F = -1;
-        }
-
         public void TranslateConic()
         {
             Vector3d vector = ComputeConicTranslation();
@@ -293,6 +277,8 @@ namespace the_Dominion.Conics
 
         public void TranslateConic(Vector3d vector)
         {
+            //vector *= -1;
+
             double h = vector.X;
             double k = vector.Y;
 
@@ -338,7 +324,7 @@ namespace the_Dominion.Conics
             // F remains unchanged
         }
 
-        public void GetConicTransform()
+        public void ComputeConicTransform()
         {
             // https://math.stackexchange.com/questions/982908/deal-with-non-standard-form-of-conic
             double rotation = ComputeConicRotation();
@@ -350,7 +336,7 @@ namespace the_Dominion.Conics
             TransformMatrix = translate * rotate;
         }
 
-        private void GetBasePlane()
+        private void ComputeBasePlane()
         {
             var basePlane = Plane.WorldXY;
 
@@ -365,24 +351,44 @@ namespace the_Dominion.Conics
             TransformMatrix = Rhino.Geometry.Transform.PlaneToPlane(Plane.WorldXY, targetPlane);
         }
 
-        public virtual void Transform()
+        protected virtual void Transform()
         {
-            Transform(TransformMatrix);
+            TransformShape(TransformMatrix);
         }
 
-        public virtual void Transform(Transform xform)
+        public void TransformToStandardConic()
+        {
+            ComputeConicTransform();
+            TransformEquation(InverseTransformMatrix);
+
+            if (F == 0)
+                return;
+
+            // normalise parameters
+            double factor = -1 / F;
+
+            A *= factor;
+            C *= factor;
+            F = -1;
+        }
+
+        public void TransformEquation(Transform xform)
+        {
+            xform.DecomposeAffine(out Vector3d translation, out Transform rotation, out Transform ortho, out Vector3d diagonal);
+            rotation.GetYawPitchRoll(out double yaw, out double _, out double _);
+
+            TranslateConic(translation);
+            RotateConic(yaw);
+        }
+
+        public virtual void TransformShape(Transform xform)
         {
             if (!IsValid || xform == Rhino.Geometry.Transform.Identity)
                 return;
 
-            xform.DecomposeAffine(out Vector3d translation, out Transform rotation, out Transform ortho, out Vector3d diagonal);
-            rotation.GetYawPitchRoll(out double yaw, out double _, out double _);
-
             var basePlane = BasePlane;
             basePlane.Transform(xform);
             BasePlane = basePlane;
-
-            RotateConic(yaw);
 
             Point3d focus = Focus1;
             focus.Transform(xform);

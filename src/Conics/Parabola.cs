@@ -195,7 +195,7 @@ namespace the_Dominion.Conics
             VertexPlane = vertexPlane;
         }
 
-        public override void Transform()
+        protected override void Transform()
         {
             base.Transform();
 

@@ -22,6 +22,13 @@ namespace the_Dominion.Conics
             Section = ellipse.ToNurbsCurve();
         }
 
+        public Ellipse(Ellipse ellipse)
+            : base(ellipse)
+        {
+            AxisA = ellipse.AxisA;
+            AxisB = ellipse.AxisB;
+        }
+
         public double AxisA { get; private set; }
 
         public double AxisB { get; private set; }
