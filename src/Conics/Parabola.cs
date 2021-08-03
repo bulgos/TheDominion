@@ -22,6 +22,7 @@ namespace the_Dominion.Conics
 
             ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
 
+            Transform(InverseTransformMatrix, false, true);
             ConstructParabola();
         }
 
@@ -89,7 +90,6 @@ namespace the_Dominion.Conics
             set
             {
                 _domain = value;
-                ConstructParabola();
             }
         }
 
@@ -119,7 +119,7 @@ namespace the_Dominion.Conics
 
             ComputeVertexPlane();
             ComputeFoci();
-            Transform();
+            Transform(TransformMatrix);
         }
 
         public void ConstructParabolaFromFocus()
@@ -195,9 +195,9 @@ namespace the_Dominion.Conics
             VertexPlane = vertexPlane;
         }
 
-        public override void Transform()
+        protected override void TransformShape(Transform xform)
         {
-            base.Transform();
+            base.TransformShape(xform);
 
             Plane vertexPlane = VertexPlane;
             vertexPlane.Transform(TransformMatrix);
