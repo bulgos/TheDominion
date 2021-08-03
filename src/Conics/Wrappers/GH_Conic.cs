@@ -126,7 +126,7 @@ namespace the_Dominion.Conics.Wrappers
                 return null;
 
             ConicSection transformedConic = Value.Duplicate();
-            transformedConic.TransformShape(xform);
+            transformedConic.Transform(xform);
 
             return new GH_Conic(transformedConic);
         }

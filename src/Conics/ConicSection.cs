@@ -10,7 +10,7 @@ namespace the_Dominion.Conics
 {
     public class ConicSection
     {
-        private Transform _inverseTransform = Transform.Unset;
+        private Transform _inverseTransform = Rhino.Geometry.Transform.Unset;
         private Plane _basePlane = Plane.Unset;
         private double _conicDiscriminant = double.NaN;
 
@@ -56,7 +56,7 @@ namespace the_Dominion.Conics
             E = conicSection.E;
             F = conicSection.F;
             ConicDiscriminant = conicSection.ConicDiscriminant;
-            Transform = conicSection.Transform;
+            TransformMatrix = conicSection.TransformMatrix;
         }
 
         public ConicSection WorldAlignedConic => GetWorldAlignedConic();
@@ -105,15 +105,15 @@ namespace the_Dominion.Conics
 
         public ConicSectionType ConicSectionType => GetConicType();
 
-        public Transform Transform { get; private set; } = Transform.Identity;
+        public Transform TransformMatrix { get; private set; } = Rhino.Geometry.Transform.Identity;
 
-        public Transform InverseTransform
+        public Transform InverseTransformMatrix
         {
             get
             {
-                if (_inverseTransform == Transform.Unset)
+                if (_inverseTransform == Rhino.Geometry.Transform.Unset)
                 {
-                    Transform.TryGetInverse(out _inverseTransform);
+                    TransformMatrix.TryGetInverse(out _inverseTransform);
                 }
 
                 return _inverseTransform;
@@ -122,7 +122,7 @@ namespace the_Dominion.Conics
 
         public BoundingBox BoundingBox =>
             IsValid
-            ? Section.GetBoundingBox(Transform)
+            ? Section.GetBoundingBox(TransformMatrix)
             : BoundingBox.Empty;
 
         public virtual bool IsValid => Section != null;
@@ -213,6 +213,9 @@ namespace the_Dominion.Conics
 
         private ConicSectionType GetConicType()
         {
+            if (ConicDiscriminant > -Rhino.RhinoMath.ZeroTolerance && ConicDiscriminant < Rhino.RhinoMath.ZeroTolerance)
+                return ConicSectionType.Parabola;
+
             if (ConicDiscriminant < 0)
             {
                 if (A == C)
@@ -225,9 +228,6 @@ namespace the_Dominion.Conics
             {
                 return ConicSectionType.Hyperbola;
             }
-
-            if (ConicDiscriminant == 0 && C == 0)
-                return ConicSectionType.Parabola;
 
             return ConicSectionType.Unknown;
         }
@@ -273,6 +273,9 @@ namespace the_Dominion.Conics
             TranslateConic();
             RotateConic();
 
+            if (F == 0)
+                return;
+
             // normalise parameters
             double factor = -1 / F;
 
@@ -307,12 +310,14 @@ namespace the_Dominion.Conics
         {
             double angle = ComputeConicRotation();
 
-            RotateConic(angle);
+            RotateConic(-angle);
         }
 
         public void RotateConic(double angle)
         {
             // https://en.wikipedia.org/wiki/Rotation_of_axes
+
+            angle *= -1;
 
             double cost = Math.Cos(angle);
             double sint = Math.Sin(angle);
@@ -339,38 +344,45 @@ namespace the_Dominion.Conics
             double rotation = ComputeConicRotation();
             Vector3d translation = ComputeConicTranslation();
 
-            Transform rotate = Transform.Rotation(rotation, Point3d.Origin);
-            Transform translate = Transform.Translation(translation);
+            Transform translate = Rhino.Geometry.Transform.Translation(translation);
+            Transform rotate = Rhino.Geometry.Transform.Rotation(rotation, Point3d.Origin);
 
-            Transform = translate * rotate;
+            TransformMatrix = translate * rotate;
         }
 
         private void GetBasePlane()
         {
             var basePlane = Plane.WorldXY;
 
-            if (Transform != Transform.Identity)
-                basePlane.Transform(Transform);
+            if (TransformMatrix != Rhino.Geometry.Transform.Identity)
+                basePlane.Transform(TransformMatrix);
 
             BasePlane = basePlane;
         }
 
         private void GetTransform(Plane targetPlane)
         {
-            Transform = Transform.PlaneToPlane(Plane.WorldXY, targetPlane);
+            TransformMatrix = Rhino.Geometry.Transform.PlaneToPlane(Plane.WorldXY, targetPlane);
         }
 
-        public virtual void TransformShape()
+        public virtual void Transform()
         {
-            TransformShape(Transform);
+            Transform(TransformMatrix);
         }
 
-        public virtual void TransformShape(Transform xform)
+        public virtual void Transform(Transform xform)
         {
-            if (!IsValid || xform == Transform.Identity)
+            if (!IsValid || xform == Rhino.Geometry.Transform.Identity)
                 return;
 
-            Section.Transform(xform);
+            xform.DecomposeAffine(out Vector3d translation, out Transform rotation, out Transform ortho, out Vector3d diagonal);
+            rotation.GetYawPitchRoll(out double yaw, out double _, out double _);
+
+            var basePlane = BasePlane;
+            basePlane.Transform(xform);
+            BasePlane = basePlane;
+
+            RotateConic(yaw);
 
             Point3d focus = Focus1;
             focus.Transform(xform);
@@ -383,6 +395,22 @@ namespace the_Dominion.Conics
             worldAlignedConic.TransformToStandardConic();
 
             return worldAlignedConic;
+        }
+
+        public string FormatConicEquation()
+        {
+            double[] terms = new[] { A, B, C, D, E, F };
+            char term = 'A';
+
+            string formatString = "Conic:";
+
+            for (int i = 0; i < 6; i++)
+            {
+                formatString += $"\n{term}: {terms[i].ToString("F8")}";
+                term++;
+            }
+
+            return formatString;
         }
 
         #region GH_GeometricGoo tools

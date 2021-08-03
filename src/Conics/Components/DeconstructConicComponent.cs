@@ -33,6 +33,7 @@ namespace the_Dominion.Conics.Components
             pManager.AddNumberParameter("F", "F", "F", GH_ParamAccess.item);
             pManager.AddNumberParameter("Discriminant", "Di", "The Discriminant", GH_ParamAccess.item);
             pManager.AddTransformParameter("Transform", "X", "The Conic Transform", GH_ParamAccess.item);
+            pManager.AddTextParameter("ConicFormatted", "Cf", "A formatted string representation of the Conic Equation", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -40,6 +41,12 @@ namespace the_Dominion.Conics.Components
             ConicSection conicSection = null;
             
             DA.GetData(0, ref conicSection);
+
+            if (conicSection == null)
+            {
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No conic supplied to input.");
+                return;
+            }
 
             DA.SetData(0, conicSection.Section);
             DA.SetData(1, conicSection.Focus1);
@@ -52,7 +59,8 @@ namespace the_Dominion.Conics.Components
             DA.SetData(8, conicSection.E);
             DA.SetData(9, conicSection.F);
             DA.SetData(10, conicSection.ConicDiscriminant);
-            DA.SetData(11, conicSection.Transform);
+            DA.SetData(11, conicSection.TransformMatrix);
+            DA.SetData(12, conicSection.FormatConicEquation());
         }
 
         public override Guid ComponentGuid => new Guid("040d0bab-ee94-4915-8f1a-b812d783048d");

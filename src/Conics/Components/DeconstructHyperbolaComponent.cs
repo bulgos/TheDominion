@@ -40,10 +40,10 @@ namespace the_Dominion.Conics.Components
                 return;
             }
 
-            DA.SetData(12, hyperbola.MajorAxis);
-            DA.SetData(13, hyperbola.MinorAxis);
+            DA.SetData(13, hyperbola.AxisA);
+            DA.SetData(14, hyperbola.AxisB);
 
-            DA.SetData(15, hyperbola.Apex);
+            DA.SetData(16, hyperbola.Apex);
         }
 
         public override Guid ComponentGuid => new Guid("3305b5a2-5428-4b39-9a02-3f4d16e482f5");

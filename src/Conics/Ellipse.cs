@@ -15,20 +15,20 @@ namespace the_Dominion.Conics
 
             ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
 
-            MajorAxis = Math.Pow(Math.Abs(worldAlignedConic.A), -0.5);
-            MinorAxis = Math.Pow(Math.Abs(worldAlignedConic.C), -0.5);
+            AxisA = Math.Pow(Math.Abs(worldAlignedConic.A), -0.5);
+            AxisB = Math.Pow(Math.Abs(worldAlignedConic.C), -0.5);
 
-            var ellipse = new Rhino.Geometry.Ellipse(BasePlane, MajorAxis, MinorAxis);
+            var ellipse = new Rhino.Geometry.Ellipse(BasePlane, AxisA, AxisB);
             Section = ellipse.ToNurbsCurve();
         }
 
-        public double MajorAxis { get; private set; }
+        public double AxisA { get; private set; }
 
-        public double MinorAxis { get; private set; }
+        public double AxisB { get; private set; }
 
         public override double ComputeDerivative(Point3d pt)
         {
-            return Math.Pow(MajorAxis, 2) * pt.Y / (Math.Pow(MinorAxis, 2) * pt.X);
+            return Math.Pow(AxisA, 2) * pt.Y / (Math.Pow(AxisB, 2) * pt.X);
         }
 
         public override ConicSection Duplicate()
@@ -38,12 +38,12 @@ namespace the_Dominion.Conics
 
         protected override void ComputeFoci()
         {
-            if (MajorAxis == MinorAxis)
+            if (AxisA == AxisB)
             {
                 Focus1 = Point3d.Origin;
             }
 
-            var focusDist = Math.Sqrt(MajorAxis * MajorAxis - MinorAxis * MinorAxis);
+            var focusDist = Math.Sqrt(AxisA * AxisA - AxisB * AxisB);
 
             Focus1 = new Point3d(-focusDist, 0, 0);
             Focus2 = new Point3d(focusDist, 0, 0);

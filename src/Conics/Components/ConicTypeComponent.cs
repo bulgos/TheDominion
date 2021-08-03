@@ -29,7 +29,7 @@ namespace the_Dominion.Conics.Components
 
             if (curve == null)
             {
-                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "Input C is not valid");
+                AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No Curve supplied to input.");
                 return;
             }
 

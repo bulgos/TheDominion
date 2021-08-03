@@ -51,9 +51,9 @@ namespace the_Dominion.Conics
         public Parabola(Point3d p1, Point3d p2, Point3d p3, Plane plane, Interval domain)
             : base(plane)
         {
-            p1.Transform(InverseTransform);
-            p2.Transform(InverseTransform);
-            p3.Transform(InverseTransform);
+            p1.Transform(InverseTransformMatrix);
+            p2.Transform(InverseTransformMatrix);
+            p3.Transform(InverseTransformMatrix);
 
             Vector<double> quadratic = SolveParabolaFrom3Points(p1, p2, p3);
 
@@ -119,7 +119,7 @@ namespace the_Dominion.Conics
 
             ComputeVertexPlane();
             ComputeFoci();
-            TransformShape();
+            Transform();
         }
 
         public void ConstructParabolaFromFocus()
@@ -195,12 +195,12 @@ namespace the_Dominion.Conics
             VertexPlane = vertexPlane;
         }
 
-        public override void TransformShape()
+        public override void Transform()
         {
-            base.TransformShape();
+            base.Transform();
 
             Plane vertexPlane = VertexPlane;
-            vertexPlane.Transform(Transform);
+            vertexPlane.Transform(TransformMatrix);
             VertexPlane = vertexPlane;
         }
 
@@ -267,13 +267,13 @@ namespace the_Dominion.Conics
         private static Point3dList GetTransformedPoints(Point3dList pts)
         {
             Vector3d translationVector = Point3d.Origin - pts[2];
-            Transform translation = Transform.Translation(translationVector);
+            Transform translation = Rhino.Geometry.Transform.Translation(translationVector);
 
             double rotationAngle = -(pts[3] - pts[2]).VectorAngle();
-            Transform rotation = Transform.Rotation(rotationAngle, Point3d.Origin);
+            Transform rotation = Rhino.Geometry.Transform.Rotation(rotationAngle, Point3d.Origin);
 
             double transformScale = 1 / (pts[3] - pts[2]).Length;
-            Transform scale = Transform.Scale(Point3d.Origin, transformScale);
+            Transform scale = Rhino.Geometry.Transform.Scale(Point3d.Origin, transformScale);
             
             var ptsTransformed = new Point3dList(pts);
             ptsTransformed.Transform(translation);
@@ -292,7 +292,7 @@ namespace the_Dominion.Conics
             for (int i = 0; i < rootParameters.Length; i++)
             {
                 var rootPt = ComputeParabolaPoint(rootParameters[i]);
-                rootPt.Transform(Transform);
+                rootPt.Transform(TransformMatrix);
 
                 roots[i] = rootPt;
             }

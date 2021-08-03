@@ -15,8 +15,9 @@ namespace the_Dominion.Conics
 
             ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
 
-            MajorAxis = Math.Pow(Math.Abs(worldAlignedConic.A), -0.5);
-            MinorAxis = Math.Pow(Math.Abs(worldAlignedConic.C), -0.5);
+            AxisA = Math.Pow(Math.Abs(worldAlignedConic.A), -0.5);
+            AxisB = -Math.Pow(Math.Abs(worldAlignedConic.C), -0.5);
+
             Height = 100;
 
             ComputeHyperbola();
@@ -29,11 +30,11 @@ namespace the_Dominion.Conics
             : base(plane)
         {
             A = Math.Pow(b, 2);
-            C = -Math.Pow(a, 2);
+            C = Math.Pow(a, 2);
             F = A * C;
 
-            MajorAxis = a;
-            MinorAxis = b;
+            AxisA = a;
+            AxisB = b;
             Height = height;
 
             ComputeHyperbola();
@@ -43,14 +44,14 @@ namespace the_Dominion.Conics
         public Hyperbola(Hyperbola hyperbola)
             : base(hyperbola)
         {
-            MajorAxis = hyperbola.MajorAxis;
-            MinorAxis = hyperbola.MinorAxis;
+            AxisA = hyperbola.AxisA;
+            AxisB = hyperbola.AxisB;
             Height = hyperbola.Height;
         }
 
-        public double MajorAxis { get; } = 1;
+        public double AxisA { get; } = 1;
 
-        public double MinorAxis { get; } = 1;
+        public double AxisB { get; } = 1;
 
         public double Height { get; private set; } = 10;
 
@@ -58,35 +59,54 @@ namespace the_Dominion.Conics
 
         private void ComputeHyperbola()
         {
-            double x0 = Math.Sqrt((MajorAxis * MajorAxis) * (1 + ((Height * Height) / (MinorAxis * MinorAxis))));
+            NurbsCurve hyperbola;
+            Point3d[] pts;
+            double weight = 1;
 
-            Point3d p0 = new Point3d(x0, Height, 0);
-            Point3d p1 = new Point3d(MajorAxis, 0, 0);
-            Point3d p2 = new Point3d(x0, -Height, 0);
-            
-            double w1 = x0 / MajorAxis;
-            
-            Point4d weightedP1 = new Point4d(p1.X, p1.Y, p1.Z, w1);
+            if (AxisA > AxisB)
+            {
+                double x0 = Math.Sqrt((AxisA * AxisA) * (1 + ((Height * Height) / (AxisB * AxisB))));
 
-            Point3d[] points = { p0, p1, p2 };
-            NurbsCurve hyperbola = NurbsCurve.Create(false, 2, points);
+                Point3d p0 = new Point3d(x0, Height, 0);
+                Point3d p1 = new Point3d(AxisA, 0, 0);
+                Point3d p2 = new Point3d(x0, -Height, 0);
+
+                weight = x0 / AxisA;
+
+                pts = new[] { p0, p1, p2 };
+            }
+            else
+            {
+                double y0 = Math.Sqrt((AxisB * AxisB) * (1 + ((Height * Height) / (AxisA * AxisA))));
+
+                Point3d p0 = new Point3d(Height, y0, 0);
+                Point3d p1 = new Point3d(0, AxisB, 0);
+                Point3d p2 = new Point3d(-Height, y0, 0);
+
+                weight = y0 / AxisB;
+
+                pts = new[] { p0, p1, p2 };
+            }
+
+            Point4d weightedP1 = new Point4d(pts[1].X, pts[1].Y, pts[1].Z, weight);
+
+            hyperbola = NurbsCurve.Create(false, 2, pts);
             hyperbola.Points.SetPoint(1, weightedP1);
 
-            hyperbola.Transform(Transform);
-            Section = hyperbola;
-            //TransformShape();
+            Apex = pts[1];
 
-            Apex = p1;
+            hyperbola.Transform(TransformMatrix);
+            Section = hyperbola;
         }
 
         public override double ComputeDerivative(Point3d pt)
         {
-            return (Math.Pow(MinorAxis, 2) * pt.X) / (Math.Pow(MinorAxis, 2) * pt.Y);
+            return (Math.Pow(AxisB, 2) * pt.X) / (Math.Pow(AxisB, 2) * pt.Y);
         }
 
         private double ComputeApexWeight(Point3d p0)
         {
-            return MajorAxis * MajorAxis / p0.X;
+            return AxisA * AxisA / p0.X;
         }
 
         /// <summary>
@@ -94,7 +114,7 @@ namespace the_Dominion.Conics
         /// </summary>
         protected override void ComputeFoci()
         {
-            double focusDist = Math.Sqrt(MajorAxis * MajorAxis + MinorAxis * MinorAxis);
+            double focusDist = Math.Sqrt(AxisA * AxisA + AxisB * AxisB);
 
             Focus1 = new Point3d(-focusDist, 0, 0);
             Focus2 = new Point3d(focusDist, 0, 0);
