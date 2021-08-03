@@ -288,11 +288,13 @@ namespace the_Dominion.Conics
         {
             Vector3d vector = ComputeConicTranslation();
 
-            TranslateConic(vector);
+            TranslateConic(-vector);
         }
 
         public void TranslateConic(Vector3d vector)
         {
+            vector *= -1;
+
             double h = vector.X;
             double k = vector.Y;
 
@@ -365,28 +367,41 @@ namespace the_Dominion.Conics
             TransformMatrix = Rhino.Geometry.Transform.PlaneToPlane(Plane.WorldXY, targetPlane);
         }
 
-        public virtual void Transform()
+        public void Transform()
         {
-            Transform(TransformMatrix);
+            TransformShape(TransformMatrix);
         }
 
-        public virtual void Transform(Transform xform)
+        public void Transform(Transform xform, bool transformShape = true, bool transformEquation = true)
+        {
+            if (transformShape)
+                TransformShape(xform);
+
+            if (transformEquation)
+                TransformEquation(xform);
+        }
+
+        public void TransformEquation(Transform xform)
+        {
+            xform.DecomposeAffine(out Vector3d translation, out Transform rotation, out Transform ortho, out Vector3d diagonal);
+            rotation.GetYawPitchRoll(out double yaw, out double _, out double _);
+
+            RotateConic(yaw);
+        }
+
+        protected virtual void TransformShape(Transform xform)
         {
             if (!IsValid || xform == Rhino.Geometry.Transform.Identity)
                 return;
 
-            xform.DecomposeAffine(out Vector3d translation, out Transform rotation, out Transform ortho, out Vector3d diagonal);
-            rotation.GetYawPitchRoll(out double yaw, out double _, out double _);
+            Section.Transform(xform);
 
-            var basePlane = BasePlane;
-            basePlane.Transform(xform);
-            BasePlane = basePlane;
-
-            RotateConic(yaw);
-
-            Point3d focus = Focus1;
-            focus.Transform(xform);
-            Focus1 = focus;
+            Point3d focus1 = Focus1;
+            Point3d focus2 = Focus2;
+            focus1.Transform(xform);
+            focus2.Transform(xform);
+            Focus1 = focus1;
+            Focus2 = focus2;
         }
 
         private ConicSection GetWorldAlignedConic()
@@ -406,7 +421,7 @@ namespace the_Dominion.Conics
 
             for (int i = 0; i < 6; i++)
             {
-                formatString += $"\n{term}: {terms[i].ToString("F8")}";
+                formatString += $"\n{term} = {terms[i].ToString("F8")}";
                 term++;
             }
 
