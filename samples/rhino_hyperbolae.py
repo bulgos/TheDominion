@@ -10,7 +10,7 @@ end = rg.Point3d(10,0,0)
 direction = rg.Vector3d.XAxis
 
 
-a = 0.536
+a = 1
 b = 1
 
 cmd = "_Hyperbola _FromCoefficient %s %s A %s B %s %s " % (start, direction, a, b, end)
