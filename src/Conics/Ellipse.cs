@@ -18,8 +18,9 @@ namespace the_Dominion.Conics
             AxisA = Math.Pow(Math.Abs(worldAlignedConic.A), -0.5);
             AxisB = Math.Pow(Math.Abs(worldAlignedConic.C), -0.5);
 
-            var ellipse = new Rhino.Geometry.Ellipse(BasePlane, AxisA, AxisB);
+            Rhino.Geometry.Ellipse ellipse = new Rhino.Geometry.Ellipse(BasePlane, AxisA, AxisB);
             Section = ellipse.ToNurbsCurve();
+            ComputeFoci();
         }
 
         public double AxisA { get; private set; }

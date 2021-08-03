@@ -95,8 +95,9 @@ namespace the_Dominion.Conics
 
             Apex = pts[1];
 
-            hyperbola.Transform(TransformMatrix);
             Section = hyperbola;
+            ComputeFoci();
+            Transform();
         }
 
         public override double ComputeDerivative(Point3d pt)
