@@ -101,7 +101,21 @@ namespace the_Dominion.Conics.Wrappers
             if (Value == null)
                 return null;
 
-            return new GH_Conic(Value.Duplicate());
+            return new GH_Conic(DuplicateConic());
+        }
+
+        private ConicSection DuplicateConic()
+        {
+            ConicSection conic = null;
+
+            if (Value is Ellipse ellipse)
+                conic = ellipse.Duplicate();
+            else if (Value is Hyperbola hyperbola)
+                conic = hyperbola.Duplicate();
+            else if (Value is Parabola parabola)
+                conic = parabola.Duplicate();
+
+            return conic;
         }
 
         public override BoundingBox GetBoundingBox(Transform xform)
@@ -114,7 +128,7 @@ namespace the_Dominion.Conics.Wrappers
             if (Value == null)
                 return null;
 
-            ConicSection morphedConic = Value.Duplicate();
+            ConicSection morphedConic = DuplicateConic();
             morphedConic.Morph(xmorph);
 
             return new GH_Conic(morphedConic);
@@ -125,7 +139,7 @@ namespace the_Dominion.Conics.Wrappers
             if (Value == null)
                 return null;
 
-            ConicSection transformedConic = Value.Duplicate();
+            ConicSection transformedConic = DuplicateConic();
             transformedConic.Transform(xform);
 
             return new GH_Conic(transformedConic);
