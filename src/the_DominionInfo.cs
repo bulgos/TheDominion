@@ -17,12 +17,12 @@ namespace the_Dominion
             }
         }
 
-        public override string Description => "A library of tools for Calculus functions inside the Grasshopper platform";
+        public override string Description => "A library of tools for building Curves from Conic Equations";
 
         public override Guid Id => new Guid("d540efd4-25cd-447f-87fc-7b187f033680");
 
         public override string AuthorName => "Daniel Christev and Michael Wickerson";
 
-        public override string AuthorContact => "dchristev@gmail.com" + "\n" + "mike@wickersonstudios.com";
+        public override string AuthorContact => "dchristev@gmail.com | mike@wickersonstudios.com";
     }
 }
