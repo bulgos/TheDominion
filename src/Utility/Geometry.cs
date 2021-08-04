@@ -109,5 +109,10 @@ namespace the_Dominion.Utility
         {
             return Math.PI / 2 - Math.Atan(x);
         }
+
+        public static Transform WorldXYToPlaneTransform(Plane targetPlane)
+        {
+            return Transform.PlaneToPlane(Plane.WorldXY, targetPlane);
+        }
     }
 }

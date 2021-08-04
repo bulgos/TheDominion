@@ -13,29 +13,23 @@ namespace the_Dominion.Conics
             if (ConicSectionType != ConicSectionType.Hyperbola)
                 throw new ArgumentException("Conic does not represent a Hyperbola");
 
-            ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
-
-            AxisA = Math.Pow(Math.Abs(worldAlignedConic.A), -0.5);
-            AxisB = -Math.Pow(Math.Abs(worldAlignedConic.C), -0.5);
-
+            ComputeAxes(out double a, out double b);
+            AxisA = a;
+            AxisB = -b;
             Height = 100;
 
-            ComputeHyperbola();
+            Initialise();
         }
 
         public Hyperbola(double a, double b, double height)
             : this(Plane.WorldXY, a, b, height) { }
 
         public Hyperbola(Plane plane, double a, double b, double height, bool flipAxis = false)
-            : base(plane)
-            {
-            A = Math.Pow(b, 2);
-            C = -Math.Pow(a, 2);
-            F = A * C;
-
+            : base(plane, a * a, 0, -b * b, 0, 0, a * b)
+        {
             AxisA = Math.Abs(a);
             AxisB = -Math.Abs(b);
-            
+
             if (flipAxis)
             {
                 AxisA *= -1;
@@ -44,8 +38,7 @@ namespace the_Dominion.Conics
 
             Height = height;
 
-            ComputeHyperbola();
-            ComputeFoci();
+            Initialise();
         }
 
         public Hyperbola(Hyperbola hyperbola)
@@ -56,19 +49,22 @@ namespace the_Dominion.Conics
             Height = hyperbola.Height;
         }
 
-        public double AxisA { get; } = 1;
-
-        public double AxisB { get; } = 1;
-
         public double Height { get; private set; } = 10;
 
         public Point3d Apex { get; private set; } = Point3d.Unset;
+
+        private void Initialise()
+        {
+            ComputeHyperbola();
+            ComputeFoci();
+            Transform(TransformMatrix);
+        }
 
         private void ComputeHyperbola()
         {
             NurbsCurve hyperbola;
             Point3d[] pts;
-            double weight = 1;
+            double weight;
 
             if (AxisA > AxisB)
             {
@@ -101,8 +97,6 @@ namespace the_Dominion.Conics
             hyperbola.Points.SetPoint(1, weightedP1);
 
             Apex = pts[1];
-
-            hyperbola.Transform(TransformMatrix);
             Section = hyperbola;
         }
 
@@ -122,7 +116,7 @@ namespace the_Dominion.Conics
         protected override void ComputeFoci()
         {
             double focusDist = Math.Sqrt(AxisA * AxisA + AxisB * AxisB);
-            
+
             if (AxisA > AxisB)
             {
                 Focus1 = new Point3d(-focusDist, 0, 0);
@@ -130,7 +124,7 @@ namespace the_Dominion.Conics
             }
             else
             {
-                Focus1 = new Point3d(0, -focusDist,0);
+                Focus1 = new Point3d(0, -focusDist, 0);
                 Focus2 = new Point3d(0, focusDist, 0);
             }
         }

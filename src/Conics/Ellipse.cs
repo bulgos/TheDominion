@@ -13,10 +13,9 @@ namespace the_Dominion.Conics
             if (ConicSectionType != ConicSectionType.Ellipse && ConicSectionType != ConicSectionType.Circle)
                 throw new ArgumentException("Conic does not represent an Ellipse");
 
-            ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
-
-            AxisA = Math.Pow(Math.Abs(worldAlignedConic.A), -0.5);
-            AxisB = Math.Pow(Math.Abs(worldAlignedConic.C), -0.5);
+            ComputeAxes(out double a, out double b);
+            AxisA = a;
+            AxisB = b;
 
             var ellipse = new Rhino.Geometry.Ellipse(BasePlane, AxisA, AxisB);
             Section = ellipse.ToNurbsCurve();
@@ -28,10 +27,6 @@ namespace the_Dominion.Conics
             AxisA = ellipse.AxisA;
             AxisB = ellipse.AxisB;
         }
-
-        public double AxisA { get; private set; }
-
-        public double AxisB { get; private set; }
 
         public override double ComputeDerivative(Point3d pt)
         {

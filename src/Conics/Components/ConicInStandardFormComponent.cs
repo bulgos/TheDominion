@@ -1,9 +1,5 @@
 ﻿using Grasshopper.Kernel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using the_Dominion.Conics.Wrappers;
 
 namespace the_Dominion.Conics.Components
