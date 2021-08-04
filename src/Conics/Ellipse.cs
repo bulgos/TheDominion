@@ -50,10 +50,18 @@ namespace the_Dominion.Conics
                 Focus1 = Point3d.Origin;
             }
 
-            var focusDist = Math.Sqrt(AxisA * AxisA - AxisB * AxisB);
+            double focusDist = Math.Sqrt(AxisA * AxisA - AxisB * AxisB);
 
-            Focus1 = new Point3d(-focusDist, 0, 0);
-            Focus2 = new Point3d(focusDist, 0, 0);
+            if (AxisA > AxisB)
+            {
+                Focus1 = new Point3d(-focusDist, 0, 0);
+                Focus2 = new Point3d(focusDist, 0, 0);
+            }
+            else
+            {
+                Focus1 = new Point3d(0, -focusDist, 0);
+                Focus2 = new Point3d(0, focusDist, 0);
+            }
         }
     }
 }
