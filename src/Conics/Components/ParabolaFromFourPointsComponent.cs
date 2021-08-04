@@ -62,7 +62,7 @@ namespace the_Dominion.Conics.Components
 
             List<Point3d> points = new List<Point3d> { p1, p2, p3, p4 };
 
-            Parabola[] parabolae = Parabola.ComputeParabolasThroughFourPoints(points);
+            Parabola[] parabolae = Parabola.From4Points(points);
 
             if (parabolae == null)
             {
