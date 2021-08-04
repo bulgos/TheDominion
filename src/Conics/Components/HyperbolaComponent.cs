@@ -34,6 +34,8 @@ namespace the_Dominion.Conics.Components
             pManager.AddNumberParameter("a", "a", "a", GH_ParamAccess.item, 1);
             pManager.AddNumberParameter("b", "b", "b", GH_ParamAccess.item, 1);
             pManager.AddNumberParameter("h", "h", "height", GH_ParamAccess.item, 10);
+            pManager.AddBooleanParameter("Flip", "F", "Flip the x and y axes of the Hyperbola\n" +
+                "if true, Hyperbola will be created in the form y^2 / b^2 - x^2 / a^2 = 1", GH_ParamAccess.item, false);
         }
 
         /// <summary>
@@ -55,13 +57,15 @@ namespace the_Dominion.Conics.Components
             double a = double.NaN;
             double b = double.NaN;
             double h = double.NaN;
+            bool flip = false;
 
             DA.GetData(0, ref plane);
             DA.GetData(1, ref a);
             DA.GetData(2, ref b);
             DA.GetData(3, ref h);
+            DA.GetData(4, ref flip);
 
-            Hyperbola hyperbola = new Hyperbola(plane, a, b, h);
+            Hyperbola hyperbola = new Hyperbola(plane, a, b, h, flip);
 
             DA.SetData(0, hyperbola);
         }

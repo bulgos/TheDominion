@@ -26,15 +26,22 @@ namespace the_Dominion.Conics
         public Hyperbola(double a, double b, double height)
             : this(Plane.WorldXY, a, b, height) { }
 
-        public Hyperbola(Plane plane, double a, double b, double height)
+        public Hyperbola(Plane plane, double a, double b, double height, bool flipAxis = false)
             : base(plane)
-        {
+            {
             A = Math.Pow(b, 2);
-            C = Math.Pow(a, 2);
+            C = -Math.Pow(a, 2);
             F = A * C;
 
-            AxisA = a;
-            AxisB = b;
+            AxisA = Math.Abs(a);
+            AxisB = -Math.Abs(b);
+            
+            if (flipAxis)
+            {
+                AxisA *= -1;
+                AxisB *= -1;
+            }
+
             Height = height;
 
             ComputeHyperbola();
@@ -115,9 +122,17 @@ namespace the_Dominion.Conics
         protected override void ComputeFoci()
         {
             double focusDist = Math.Sqrt(AxisA * AxisA + AxisB * AxisB);
-
-            Focus1 = new Point3d(-focusDist, 0, 0);
-            Focus2 = new Point3d(focusDist, 0, 0);
+            
+            if (AxisA > AxisB)
+            {
+                Focus1 = new Point3d(-focusDist, 0, 0);
+                Focus2 = new Point3d(focusDist, 0, 0);
+            }
+            else
+            {
+                Focus1 = new Point3d(0, -focusDist,0);
+                Focus2 = new Point3d(0, focusDist, 0);
+            }
         }
 
         public override ConicSection Duplicate()
