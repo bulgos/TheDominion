@@ -57,16 +57,7 @@ namespace the_Dominion.Conics.Wrappers
 
         public void DrawViewportWires(IGH_PreviewArgs args)
         {
-            switch (args.Document.PreviewMode)
-            {
-                case GH_PreviewMode.Wireframe:
-                    Preview_DrawWires(args);
-                    break;
-                case GH_PreviewMode.Shaded:
-                    if (CentralSettings.PreviewMeshEdges)
-                        Preview_DrawWires(args);
-                    break;
-            }
+            Preview_DrawWires(args);
         }
 
         protected override GH_GetterResult Prompt_Plural(ref List<GH_Conic> values)
