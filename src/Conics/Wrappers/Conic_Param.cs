@@ -1,4 +1,7 @@
-﻿using Grasshopper.Kernel;
+﻿using Grasshopper;
+using Grasshopper.Kernel;
+using Rhino;
+using Rhino.DocObjects;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
@@ -8,14 +11,15 @@ using System.Threading.Tasks;
 
 namespace the_Dominion.Conics.Wrappers
 {
-    public class Conic_Param : GH_PersistentGeometryParam<GH_Conic>, IGH_PreviewObject
+    public class Conic_Param : GH_PersistentGeometryParam<GH_Conic>, IGH_PreviewObject, IGH_BakeAwareObject
     {
         public Conic_Param()
             : base(new GH_InstanceDescription(
                 "ConicSection", "Conic",
                 "Maintains a collection of Conic Sections",
                 "Params", "Geometry"
-                )) { }
+                ))
+        { }
 
         public override Guid ComponentGuid => new Guid("66a13bbe-6cd2-4501-888e-d3b324997594");
 
@@ -27,11 +31,42 @@ namespace the_Dominion.Conics.Wrappers
 
         public override GH_Exposure Exposure => GH_Exposure.hidden;
 
+        public bool IsBakeCapable => !m_data.IsEmpty;
+
+        public void BakeGeometry(RhinoDoc doc, List<Guid> obj_ids)
+        {
+            BakeGeometry(doc, null, obj_ids);
+        }
+
+        public void BakeGeometry(RhinoDoc doc, ObjectAttributes att, List<Guid> obj_ids)
+        {
+            if (att == null)
+                att = doc.CreateDefaultAttributes();
+
+            foreach (IGH_BakeAwareData item in m_data)
+            {
+                if (item != null)
+                {
+                    if (item.BakeGeometry(doc, att, out Guid id))
+                        obj_ids.Add(id);
+                }
+            }
+        }
+
         public void DrawViewportMeshes(IGH_PreviewArgs args) { }
 
         public void DrawViewportWires(IGH_PreviewArgs args)
         {
-            Preview_DrawWires(args);
+            switch (args.Document.PreviewMode)
+            {
+                case GH_PreviewMode.Wireframe:
+                    Preview_DrawWires(args);
+                    break;
+                case GH_PreviewMode.Shaded:
+                    if (CentralSettings.PreviewMeshEdges)
+                        Preview_DrawWires(args);
+                    break;
+            }
         }
 
         protected override GH_GetterResult Prompt_Plural(ref List<GH_Conic> values)

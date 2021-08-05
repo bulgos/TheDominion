@@ -88,7 +88,7 @@ namespace the_Dominion.Conics.Wrappers
         {
             obj_guid = Guid.Empty;
 
-            if (Value.Section != null)
+            if (Value.Section == null)
                 return false;
 
             obj_guid = doc.Objects.Add(Value.Section);
