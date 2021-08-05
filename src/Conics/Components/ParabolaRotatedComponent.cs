@@ -18,8 +18,8 @@ namespace the_Dominion.Conics.Components
             pManager.AddNumberParameter("A", "A", "A", GH_ParamAccess.item, 1);
             pManager.AddNumberParameter("B", "B", "B", GH_ParamAccess.item, 0);
             pManager.AddNumberParameter("C", "C", "C", GH_ParamAccess.item, 0);
-            pManager.AddAngleParameter("Rotation", "R", "Angle to Rotate the Parabola", GH_ParamAccess.item, 0);
-            pManager.AddIntervalParameter("Domain", "D", "The Domain to calculate the function in", GH_ParamAccess.item, new Interval(-10, 10));
+            pManager.AddAngleParameter("Rotation", "R", "Angle to Rotate the Parabola", GH_ParamAccess.item, -0.5 * Math.PI);
+            pManager.AddIntervalParameter("Domain", "D", "The Domain to calculate the function in", GH_ParamAccess.item, new Interval(-5, 5));
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
@@ -40,7 +40,7 @@ namespace the_Dominion.Conics.Components
             DA.GetData(2, ref c);
             DA.GetData(3, ref angle);
             DA.GetData(4, ref interval);
-            
+
             Plane plane = Plane.WorldXY;
             plane.Rotate(angle, plane.ZAxis);
 
