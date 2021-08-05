@@ -35,6 +35,7 @@ namespace the_Dominion.Conics
                     var xform = Geometry.WorldXYToPlaneTransform(plane);
                     TransformEquation(xform);
                     ComputeEquationTransform();
+                    ComputeAxes();
                     plane = Plane.WorldXY;
                     plane.Transform(TransformMatrix);
                 }
@@ -63,6 +64,9 @@ namespace the_Dominion.Conics
             F = conicSection.F;
             ConicDiscriminant = conicSection.ConicDiscriminant;
             TransformMatrix = conicSection.TransformMatrix;
+
+            AxisA = conicSection.AxisA;
+            AxisB = conicSection.AxisB;
         }
 
         public double A { get; protected set; }
@@ -94,6 +98,10 @@ namespace the_Dominion.Conics
         }
 
         public virtual bool IsValid => Section != null;
+
+        public bool IsWorldAligned => B == 0;
+
+        public virtual bool UsesFlippedAxes => false;
 
         public ConicSectionType ConicSectionType => GetConicType();
 
@@ -129,11 +137,14 @@ namespace the_Dominion.Conics
         {
             get
             {
+                if (IsWorldAligned)
+                    return this;
                 if (_worldAlignedConic == null)
                     GetWorldAlignedConic();
 
                 return _worldAlignedConic;
             }
+            private set => _worldAlignedConic = value;
         }
 
         public static ConicSection From5Points(IEnumerable<Point3d> points)
@@ -188,13 +199,18 @@ namespace the_Dominion.Conics
             }
         }
 
-        public void ComputeAxes(out double a, out double b)
+        public void ComputeAxes()
         {
-            a = Math.Pow(Math.Abs(WorldAlignedConic.A), -1.0 / 2.0);
-            b = Math.Pow(Math.Abs(WorldAlignedConic.C), -1.0 / 2.0);
+            // bug: circular reference exists here, so WorldAlignedConic needs to be recomputed after Axes
+            if (Math.Abs(WorldAlignedConic.A) > Rhino.RhinoMath.ZeroTolerance)
+                AxisA = Math.Pow(Math.Abs(WorldAlignedConic.A), -1.0 / 2.0);
+            if (Math.Abs(WorldAlignedConic.C) > Rhino.RhinoMath.ZeroTolerance)
+                AxisB = Math.Pow(Math.Abs(WorldAlignedConic.C), -1.0 / 2.0);
+
+            GetWorldAlignedConic();
         }
 
-        public Line ComputeTangent(Point3d pt)
+        public virtual Line ComputeTangent(Point3d pt)
         {
             double derivative = ComputeDerivative(pt);
 
@@ -206,6 +222,9 @@ namespace the_Dominion.Conics
 
         public Point3d[] ComputePointAtX(double x)
         {
+            if (double.IsNaN(x))
+                return new Point3d[0];
+
             double a = C;
             double b = B * x + E;
             double c = A * x * x + D * x + F;
@@ -217,11 +236,14 @@ namespace the_Dominion.Conics
 
         public Point3d[] ComputePointAtY(double y)
         {
+            if (double.IsNaN(y))
+                return new Point3d[0];
+
             double a = A;
             double b = B * y + D;
             double c = C * y * y + E * y + F;
 
-            return a == 0
+            return Math.Abs(a) < Rhino.RhinoMath.ZeroTolerance
                 ? new Point3d[] { new Point3d(-c / b, y, 0) }
                 : Geometry.ComputeQuadraticRoots(a, b, c).Select(x => new Point3d(x, y, 0)).ToArray();
         }
@@ -264,7 +286,6 @@ namespace the_Dominion.Conics
 
         #region transformation methods
 
-
         public void ComputeBasePlaneTransform()
         {
             TransformMatrix = Geometry.WorldXYToPlaneTransform(BasePlane);
@@ -295,8 +316,8 @@ namespace the_Dominion.Conics
             // and will produce a divide by zero error
             if (ConicSectionType == ConicSectionType.Parabola)
             {
-                return new Vector3d(D / (2 * A), F - (D * D) / (4 * A), 0);
-                //return Vector3d.Zero;
+                //return new Vector3d(D / (2 * A), F - (D * D) / (4 * A), 0);
+                return Vector3d.Zero;
             }
 
             double x = (2 * C * D - B * E) / ConicDiscriminant;
@@ -312,6 +333,47 @@ namespace the_Dominion.Conics
             double rotation = ComputeEquationRotation();
 
             TransformEquation(-translation, -rotation);
+
+
+            if (Math.Abs(A) < Rhino.RhinoMath.ZeroTolerance)
+                A = 0;
+            if (Math.Abs(B) < Rhino.RhinoMath.ZeroTolerance)
+                B = 0;
+            if (Math.Abs(C) < Rhino.RhinoMath.ZeroTolerance)
+                C = 0;
+            if (Math.Abs(D) < Rhino.RhinoMath.ZeroTolerance)
+                D = 0;
+            if (Math.Abs(E) < Rhino.RhinoMath.ZeroTolerance)
+                E = 0;
+            if (Math.Abs(F) < Rhino.RhinoMath.ZeroTolerance)
+                F = 0;
+
+            double factor;
+
+            // normalise parameters
+            if (E != 0 && A != 0)
+            {
+                factor = -1 / E;
+                A *= factor;
+                D *= factor;
+                E = -1;
+                F *= factor;
+            }
+            if (D != 0 && C != 0)
+            {
+                factor = -1 / D;
+                C *= factor;
+                D = -1;
+                E *= factor;
+                F *= factor;
+            }
+            if (A != 0 && C != 0 && F != 0)
+            {
+                factor = -1 / F;
+                A *= factor;
+                C *= factor;
+                F = -1;
+            }
         }
 
         private void TranslateEquation(Vector3d vector)
@@ -397,12 +459,12 @@ namespace the_Dominion.Conics
             Focus2 = focus2;
         }
 
-        private ConicSection GetWorldAlignedConic()
+        private void GetWorldAlignedConic()
         {
             ConicSection worldAlignedConic = Duplicate();
             worldAlignedConic.EliminateTransformationFromEquation();
 
-            return worldAlignedConic;
+            WorldAlignedConic = worldAlignedConic;
         }
 
         #endregion

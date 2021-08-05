@@ -53,7 +53,7 @@ namespace the_Dominion.Conics
 
         public Interval Domain { get; } = new Interval(-10, 10);
 
-        public Plane VertexPlane 
+        public Plane VertexPlane
         {
             get
             {
@@ -65,8 +65,8 @@ namespace the_Dominion.Conics
             private set => _vertexPlane = value;
         }
 
-        public Point3d[] Roots 
-        { 
+        public Point3d[] Roots
+        {
             get
             {
                 if (_roots == null)
@@ -88,6 +88,8 @@ namespace the_Dominion.Conics
             }
             set => _parabolaDiscriminant = value;
         }
+
+        public override bool UsesFlippedAxes => AxisB != 0;
 
         public static Parabola From3Points(Point3d p1, Point3d p2, Point3d p3, Plane plane, Interval domain)
         {
@@ -189,9 +191,31 @@ namespace the_Dominion.Conics
 
         public void ConstructParabola()
         {
-            Point3d p0 = ComputeTangentIntersections(Domain.Min, Domain.Max, out Line tangent1, out Line tangent2);
+            //bool standard = WorldAlignedConic.A > WorldAlignedConic.C;
+            Point3d p0;
+            Point3d p2;
 
-            Point3d[] points = { tangent1.From, p0, tangent2.From };
+            if (!UsesFlippedAxes)
+            {
+                p0 = WorldAlignedConic.ComputePointAtX(Domain.Min)[0];
+                p2 = WorldAlignedConic.ComputePointAtX(Domain.Max)[0];
+            }
+            else
+            {
+                p0 = WorldAlignedConic.ComputePointAtY(Domain.Min)[0];
+                p2 = WorldAlignedConic.ComputePointAtY(Domain.Max)[0];
+            }
+
+            Line tangent1 = WorldAlignedConic.ComputeTangent(p0);
+            Line tangent2 = WorldAlignedConic.ComputeTangent(p2);
+            //Point3d p0 = ComputeTangentIntersections(Domain.Min, Domain.Max, out Line tangent1, out Line tangent2);
+
+            tangent1.Transform(TransformMatrix);
+            tangent2.Transform(TransformMatrix);
+
+            Point3d p1 = Geometry.ComputeLineIntersection(tangent1, tangent2);
+
+            Point3d[] points = { tangent1.From, p1, tangent2.From };
 
             Section = Curve.CreateControlPointCurve(points, 2) as NurbsCurve;
         }
@@ -203,7 +227,21 @@ namespace the_Dominion.Conics
 
         public override double ComputeDerivative(Point3d pt)
         {
-            return 2 * A * pt.X + D;
+            return !UsesFlippedAxes
+                ? 2 * A * pt.X + D
+                : (2 * C * pt.Y + E);
+        }
+
+        public override Line ComputeTangent(Point3d pt)
+        {
+            double derivative = ComputeDerivative(pt);
+
+            Vector3d direction = !UsesFlippedAxes
+                ? new Vector3d(1, derivative, 0)
+                : new Vector3d(derivative, 1, 0);
+            direction.Unitize();
+
+            return new Line(pt, direction);
         }
 
         protected override void ComputeFoci()
@@ -225,9 +263,7 @@ namespace the_Dominion.Conics
             tangent1 = ComputeTangent(p1);
             tangent2 = ComputeTangent(p2);
 
-            Intersection.LineLine(tangent1, tangent2, out double param1, out double _);
-
-            return tangent1.PointAt(param1);
+            return Geometry.ComputeLineIntersection(tangent1, tangent2);
         }
 
         public Point3d ComputeParabolaVertex()

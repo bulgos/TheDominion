@@ -13,9 +13,10 @@ namespace the_Dominion.Conics
             if (ConicSectionType != ConicSectionType.Hyperbola)
                 throw new ArgumentException("Conic does not represent a Hyperbola");
 
-            ComputeAxes(out double a, out double b);
-            AxisA = a;
-            AxisB = -b;
+            AxisB *= -1;
+            //ComputeAxes(out double a, out double b);
+            //AxisA = a;
+            //AxisB = -b;
             Height = 100;
 
             Initialise();
