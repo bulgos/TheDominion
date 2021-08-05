@@ -23,7 +23,7 @@ namespace the_Dominion.Conics
 
             ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
 
-            Transform(InverseTransformMatrix, false, true);
+            Transform(InverseTransformMatrix, false, false, true);
             ConstructParabola();
         }
 
@@ -53,17 +53,7 @@ namespace the_Dominion.Conics
 
         public Interval Domain { get; } = new Interval(-10, 10);
 
-        public Plane VertexPlane
-        {
-            get
-            {
-                if (_vertexPlane == Plane.Unset)
-                    ComputeVertexPlane();
-
-                return _vertexPlane;
-            }
-            private set => _vertexPlane = value;
-        }
+        public Plane VertexPlane { get; private set; }
 
         public Point3d[] Roots
         {
@@ -186,7 +176,7 @@ namespace the_Dominion.Conics
             ConstructParabola();
             ComputeVertexPlane();
             ComputeFoci();
-            //Transform(TransformMatrix);
+            Transform(TransformMatrix, false, true, false);
         }
 
         public void ConstructParabola()
@@ -246,12 +236,12 @@ namespace the_Dominion.Conics
 
         protected override void ComputeFoci()
         {
-            Focus1 = VertexPlane.Origin + new Point3d(0, A / 4, 0);
+            Focus1 = VertexPlane.Origin + (VertexPlane.YAxis * A / 4);
         }
 
         public Point3d ComputeParabolaPoint(double x)
         {
-            double y = A * x * x + D * x + F;
+            double y = WorldAlignedConic.A * x * x + WorldAlignedConic.D * x + WorldAlignedConic.F;
 
             return new Point3d(x, y, 0);
         }
@@ -280,7 +270,7 @@ namespace the_Dominion.Conics
             var vertexPlane = Plane.WorldXY;
             vertexPlane.Origin = vertex;
 
-            if (A < 0)
+            if (AxisA < 0 || AxisB < 0)
             {
                 vertexPlane.Rotate(Math.PI, vertexPlane.ZAxis);
             }
@@ -288,9 +278,9 @@ namespace the_Dominion.Conics
             VertexPlane = vertexPlane;
         }
 
-        protected override void TransformShape(Transform xform)
+        protected override void TransformProperties(Transform xform)
         {
-            base.TransformShape(xform);
+            base.TransformProperties(xform);
 
             Plane vertexPlane = VertexPlane;
             vertexPlane.Transform(TransformMatrix);

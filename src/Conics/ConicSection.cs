@@ -418,22 +418,28 @@ namespace the_Dominion.Conics
             // F remains unchanged
         }
 
-        public void Transform(Transform xform, bool transformShape = true, bool transformEquation = false)
+        public void Transform(Transform xform, bool transformShape = true, bool transformProperties = true, bool transformEquation = false)
         {
+            if (xform == Rhino.Geometry.Transform.Identity)
+                return;
+
             if (transformShape)
                 TransformShape(xform);
+
+            if (transformProperties)
+                TransformProperties(xform);
 
             if (transformEquation)
                 TransformEquation(xform);
         }
 
-        public void TransformEquation(Vector3d translation, double rotation)
+        private void TransformEquation(Vector3d translation, double rotation)
         {
             TranslateEquation(translation);
             RotateEquation(rotation);
         }
 
-        public void TransformEquation(Transform xform)
+        private void TransformEquation(Transform xform)
         {
             if (xform.IsAffine)
             {
@@ -444,13 +450,16 @@ namespace the_Dominion.Conics
             }
         }
 
-        protected virtual void TransformShape(Transform xform)
+        private void TransformShape(Transform xform)
         {
-            if (!IsValid || xform == Rhino.Geometry.Transform.Identity)
+            if (!IsValid)
                 return;
 
             Section.Transform(xform);
+        }
 
+        protected virtual void TransformProperties(Transform xform)
+        {
             Point3d focus1 = Focus1;
             Point3d focus2 = Focus2;
             focus1.Transform(xform);
