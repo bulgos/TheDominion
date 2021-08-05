@@ -1,5 +1,6 @@
 ﻿using Rhino.Collections;
 using Rhino.Geometry;
+using Rhino.Geometry.Intersect;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -113,6 +114,13 @@ namespace the_Dominion.Utility
         public static Transform WorldXYToPlaneTransform(Plane targetPlane)
         {
             return Transform.PlaneToPlane(Plane.WorldXY, targetPlane);
+        }
+
+        public static Point3d ComputeLineIntersection(Line line1, Line line2)
+        {
+            Intersection.LineLine(line1, line2, out double param1, out double _);
+
+            return line1.PointAt(param1);
         }
     }
 }
