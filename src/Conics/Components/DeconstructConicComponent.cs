@@ -31,6 +31,8 @@ namespace the_Dominion.Conics.Components
             pManager.AddNumberParameter("D", "D", "D", GH_ParamAccess.item);
             pManager.AddNumberParameter("E", "E", "E", GH_ParamAccess.item);
             pManager.AddNumberParameter("F", "F", "F", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Axis A", "Aa", "Axis A of the Parabola (if existant", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Axis B", "Ab", "Axis B of the Parabola (if existant", GH_ParamAccess.item);
             pManager.AddNumberParameter("Discriminant", "Di", "The Discriminant", GH_ParamAccess.item);
             pManager.AddTransformParameter("Transform", "X", "The Conic Transform", GH_ParamAccess.item);
             pManager.AddTextParameter("ConicFormatted", "Cf", "A formatted string representation of the Conic Equation", GH_ParamAccess.item);
@@ -58,9 +60,11 @@ namespace the_Dominion.Conics.Components
             DA.SetData(7, conicSection.D);
             DA.SetData(8, conicSection.E);
             DA.SetData(9, conicSection.F);
-            DA.SetData(10, conicSection.ConicDiscriminant);
-            DA.SetData(11, conicSection.TransformMatrix);
-            DA.SetData(12, conicSection.FormatConicEquation());
+            DA.SetData(10, conicSection.AxisA);
+            DA.SetData(11, conicSection.AxisB);
+            DA.SetData(12, conicSection.ConicDiscriminant);
+            DA.SetData(13, conicSection.TransformMatrix);
+            DA.SetData(14, conicSection.FormatConicEquation());
         }
 
         public override Guid ComponentGuid => new Guid("040d0bab-ee94-4915-8f1a-b812d783048d");

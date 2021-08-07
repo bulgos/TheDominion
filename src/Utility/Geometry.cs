@@ -9,6 +9,11 @@ namespace the_Dominion.Utility
 {
     public static class Geometry
     {
+        public static double PlaneAngle2d(this Plane plane)
+        {
+            return plane.XAxis.VectorAngle();
+        }
+
         public static double VectorAngleInPlane(this Vector3d v, Plane plane)
         {
             plane.Flip();
