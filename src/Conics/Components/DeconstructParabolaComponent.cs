@@ -21,11 +21,13 @@ namespace the_Dominion.Conics.Components
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("ConicSection", "C", "The Conic Section", GH_ParamAccess.item);
+            pManager.AddCurveParameter("ParabolaSection", "C", "The Parabola Section Curve", GH_ParamAccess.item);
             pManager.AddPointParameter("Control Points", "CP", "Control Points of the Parabola", GH_ParamAccess.list);
-            pManager.AddPointParameter("Focus1", "F1", "The first Conic Focus", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Axis A", "Aa", "Axis A of the Parabola (if existant)", GH_ParamAccess.item);
+            pManager.AddNumberParameter("Axis B", "Ab", "Axis B of the Parabola (if existant)", GH_ParamAccess.item);
+            pManager.AddPointParameter("Focus", "F", "The Parabola Focus", GH_ParamAccess.item);
             pManager.AddPlaneParameter("BasePlane", "Pl", "The Plane the Conic was constructed from", GH_ParamAccess.item);
-            pManager.AddPlaneParameter("VertexPlane", "VPl", "The Plane the Conic was constructed from", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("VertexPlane", "VPl", "The Plane the Parabola was constructed from", GH_ParamAccess.item);
             pManager.AddIntervalParameter("Domain", "D", "The Domain to calculate the function in", GH_ParamAccess.item);
             pManager.AddPointParameter("Roots", "R", "Roots of the Parabola", GH_ParamAccess.list);
             pManager.AddTextParameter("Direction", "D", "Parabola Direction", GH_ParamAccess.item);
@@ -63,15 +65,17 @@ namespace the_Dominion.Conics.Components
                 controlPoints.Add(pt);
             }
 
-            DA.SetData(0, conicSection.Section);
+            DA.SetData(0, parabola.Section);
             DA.SetDataList(1, controlPoints);
-            DA.SetData(2, conicSection.Focus1);
-            DA.SetData(3, conicSection.BasePlane);
-            DA.SetData(4, parabola.VertexPlane);
-            DA.SetData(5, parabola.Domain);
-            DA.SetDataList(6, parabola.Roots);
-            DA.SetData(7, shape);
-            DA.SetData(8, conicSection.FormatConicEquation());
+            DA.SetData(2, parabola.AxisA);
+            DA.SetData(3, parabola.AxisB);
+            DA.SetData(4, parabola.Focus1);
+            DA.SetData(5, parabola.BasePlane);
+            DA.SetData(6, parabola.VertexPlane);
+            DA.SetData(7, parabola.Domain);
+            DA.SetDataList(8, parabola.Roots);
+            DA.SetData(9, shape);
+            DA.SetData(10, parabola.FormatConicEquation());
         }
 
         public override Guid ComponentGuid => new Guid("71e49a09-9095-4ffd-9824-32eca6e0a9c3");

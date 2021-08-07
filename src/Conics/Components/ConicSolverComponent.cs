@@ -14,11 +14,11 @@ namespace the_Dominion.Conics.Components
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("A", "A", "A", GH_ParamAccess.item, 1);
-            pManager.AddNumberParameter("B", "B", "B", GH_ParamAccess.item, 0);
-            pManager.AddNumberParameter("C", "C", "C", GH_ParamAccess.item, 0);
-            pManager.AddNumberParameter("D", "D", "D", GH_ParamAccess.item, 0);
-            pManager.AddNumberParameter("E", "E", "E", GH_ParamAccess.item, 0);
+            pManager.AddNumberParameter("A", "A", "Ax^2", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("B", "B", "Bxy", GH_ParamAccess.item, 0);
+            pManager.AddNumberParameter("C", "C", "Cy^2", GH_ParamAccess.item, 0);
+            pManager.AddNumberParameter("D", "D", "Dx", GH_ParamAccess.item, 0);
+            pManager.AddNumberParameter("E", "E", "Ey", GH_ParamAccess.item, -1);
             pManager.AddNumberParameter("F", "F", "F", GH_ParamAccess.item, 0);
         }
 
