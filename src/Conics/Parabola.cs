@@ -13,7 +13,6 @@ namespace the_Dominion.Conics
     {
         private double _parabolaDiscriminant = double.NaN;
         private Point3d[] _roots = null;
-        private Plane _vertexPlane = Plane.Unset;
 
         public Parabola(ConicSection conicSection)
             : base(conicSection)
@@ -60,7 +59,10 @@ namespace the_Dominion.Conics
             get
             {
                 if (_roots == null)
-                    ComputeQuadraticRoots();
+                {
+                    //ComputeQuadraticRoots();
+                    _roots = new Point3d[0];
+                }
 
                 return _roots;
             }
@@ -81,36 +83,43 @@ namespace the_Dominion.Conics
 
         public override bool UsesFlippedAxes => AxisB != 0;
 
+        public ParabolaShape ParabolaShape => GetParabolaShape();
+
         public static Parabola From3Points(Point3d p1, Point3d p2, Point3d p3, Plane plane, Interval domain)
         {
+            Point3dList ptList = new Point3dList(new[] { p1, p2, p3 });
+            Point3dList ptListXform = new Point3dList(ptList);
+
             // compute points in WorldXY space
             if (plane != Plane.Unset && plane != Plane.WorldXY)
             {
                 Transform transform = Geometry.WorldXYToPlaneTransform(plane);
                 transform.TryGetInverse(out Transform inverseTransform);
 
-                p1.Transform(inverseTransform);
-                p2.Transform(inverseTransform);
-                p3.Transform(inverseTransform);
+                ptListXform.Transform(inverseTransform);
             }
 
-            var pts = new Point3d[] { p1, p2, p3 };
-            var matrixValues = new double[3][];
+            double[][] matrixValues = new double[3][];
 
-            var vector = Vector<double>.Build.Dense(new double[] { p1.Y, p2.Y, p3.Y });
+            Vector<double> vector = Vector<double>.Build.Dense(new double[] { ptListXform[0].Y, ptListXform[1].Y, ptListXform[2].Y });
 
             for (int i = 0; i < matrixValues.Length; i++)
             {
-                matrixValues[i] = new[] { pts[i].X * pts[i].X, pts[i].X, 1 };
+                matrixValues[i] = new[] { ptListXform[i].X * ptListXform[i].X, ptListXform[i].X, 1 };
             }
 
             Matrix<double> matrix = DenseMatrix.OfRowArrays(matrixValues);
 
-            var quadratic = matrix.Solve(vector);
+            Vector<double> quadratic = matrix.Solve(vector);
 
             // compute bounds if domain is unset
             if (domain == Interval.Unset)
-                domain = pts.ComputeBounds();
+                domain = ptListXform.ComputeBounds();
+
+            var planeAngle = (plane.PlaneAngle2d() + 2 * Math.PI) % (2 * Math.PI);
+
+            if (3 * Math.PI / 4 < planeAngle && planeAngle < 7 * Math.PI / 4)
+                domain = new Interval(-domain.Max, -domain.Min);
 
             return new Parabola(quadratic[0], quadratic[1], quadratic[2], plane, domain);
         }
@@ -176,12 +185,11 @@ namespace the_Dominion.Conics
             ConstructParabola();
             ComputeVertexPlane();
             ComputeFoci();
-            Transform(TransformMatrix, false, true, false);
+            Transform(TransformMatrix, true, true, false);
         }
 
         public void ConstructParabola()
         {
-            //bool standard = WorldAlignedConic.A > WorldAlignedConic.C;
             Point3d p0;
             Point3d p2;
 
@@ -198,10 +206,6 @@ namespace the_Dominion.Conics
 
             Line tangent1 = WorldAlignedConic.ComputeTangent(p0);
             Line tangent2 = WorldAlignedConic.ComputeTangent(p2);
-            //Point3d p0 = ComputeTangentIntersections(Domain.Min, Domain.Max, out Line tangent1, out Line tangent2);
-
-            tangent1.Transform(TransformMatrix);
-            tangent2.Transform(TransformMatrix);
 
             Point3d p1 = Geometry.ComputeLineIntersection(tangent1, tangent2);
 
@@ -236,44 +240,62 @@ namespace the_Dominion.Conics
 
         protected override void ComputeFoci()
         {
-            Focus1 = VertexPlane.Origin + (VertexPlane.YAxis * A / 4);
+            double vertexParameter;
+
+            if (UsesFlippedAxes)
+                vertexParameter = Math.Abs(AxisB);
+            else
+                vertexParameter = Math.Abs(AxisA);
+
+            Focus1 = VertexPlane.Origin + (VertexPlane.YAxis * vertexParameter / 4);
         }
 
-        public Point3d ComputeParabolaPoint(double x)
+        public void ComputeParabolaPoint(ref Point3d pt)
         {
-            double y = WorldAlignedConic.A * x * x + WorldAlignedConic.D * x + WorldAlignedConic.F;
-
-            return new Point3d(x, y, 0);
-        }
-
-        public Point3d ComputeTangentIntersections(double x1, double x2, out Line tangent1, out Line tangent2)
-        {
-            Point3d p1 = ComputeParabolaPoint(x1);
-            Point3d p2 = ComputeParabolaPoint(x2);
-            tangent1 = ComputeTangent(p1);
-            tangent2 = ComputeTangent(p2);
-
-            return Geometry.ComputeLineIntersection(tangent1, tangent2);
+            if (UsesFlippedAxes)
+                pt.X = WorldAlignedConic.C * pt.Y * pt.Y + WorldAlignedConic.E * pt.Y + WorldAlignedConic.F;
+            else
+                pt.Y = WorldAlignedConic.A * pt.X * pt.X + WorldAlignedConic.D * pt.X + WorldAlignedConic.F;
         }
 
         public Point3d ComputeParabolaVertex()
         {
-            double x = -D / (2 * A);
+            Point3d pt = new Point3d();
 
-            return ComputeParabolaPoint(x);
+            if (UsesFlippedAxes)
+                pt.Y = -WorldAlignedConic.E / (2 * WorldAlignedConic.C);
+            else
+                pt.X = -WorldAlignedConic.D / (2 * WorldAlignedConic.A);
+
+            ComputeParabolaPoint(ref pt);
+
+            return pt;
         }
 
         private void ComputeVertexPlane()
         {
             var vertex = ComputeParabolaVertex();
 
-            var vertexPlane = Plane.WorldXY;
-            vertexPlane.Origin = vertex;
+            double angle = Math.PI / 2;
 
-            if (AxisA < 0 || AxisB < 0)
+            switch (ParabolaShape)
             {
-                vertexPlane.Rotate(Math.PI, vertexPlane.ZAxis);
+                case ParabolaShape.NegativeX:
+                    break;
+                case ParabolaShape.NegativeY:
+                    angle *= 2;
+                    break;
+                case ParabolaShape.PositiveX:
+                    angle *= 3;
+                    break;
+                case ParabolaShape.PositiveY:
+                    angle = 0;
+                    break;
             }
+
+            var vertexPlane = Plane.WorldXY;
+            vertexPlane.Rotate(angle, vertexPlane.ZAxis);
+            vertexPlane.Origin = vertex;
 
             VertexPlane = vertexPlane;
         }
@@ -314,7 +336,8 @@ namespace the_Dominion.Conics
 
             for (int i = 0; i < rootParameters.Length; i++)
             {
-                var rootPt = ComputeParabolaPoint(rootParameters[i]);
+                Point3d rootPt = new Point3d(rootParameters[i], 0, 0);
+                ComputeParabolaPoint(ref rootPt);
                 rootPt.Transform(TransformMatrix);
 
                 roots[i] = rootPt;
@@ -328,9 +351,35 @@ namespace the_Dominion.Conics
             ParabolaDiscriminant = Geometry.ComputeDiscriminant(A, D, F);
         }
 
+        private ParabolaShape GetParabolaShape()
+        {
+            if (AxisB == 0)
+            {
+                if (WorldAlignedConic.A * WorldAlignedConic.E < 0)
+                    return ParabolaShape.PositiveY;
+                else
+                    return ParabolaShape.NegativeY;
+            }
+            else
+            {
+                if (WorldAlignedConic.C * WorldAlignedConic.D < 0)
+                    return ParabolaShape.PositiveX;
+                else
+                    return ParabolaShape.NegativeX;
+            }
+        }
+
         public override ConicSection Duplicate()
         {
             return new Parabola(this);
         }
+    }
+
+    public enum ParabolaShape
+    {
+        NegativeX,
+        NegativeY,
+        PositiveX,
+        PositiveY
     }
 }

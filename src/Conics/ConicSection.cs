@@ -11,7 +11,6 @@ namespace the_Dominion.Conics
     public class ConicSection
     {
         private Transform _inverseTransformMatrix = Rhino.Geometry.Transform.Unset;
-        private Plane _basePlane = Plane.Unset;
         private double _conicDiscriminant = double.NaN;
         private ConicSection _worldAlignedConic = null;
 
@@ -34,16 +33,17 @@ namespace the_Dominion.Conics
                 {
                     var xform = Geometry.WorldXYToPlaneTransform(plane);
                     TransformEquation(xform);
-                    ComputeEquationTransform();
-                    ComputeAxes();
-                    plane = Plane.WorldXY;
-                    plane.Transform(TransformMatrix);
                 }
                 else
                 {
                     TransformMatrix = Geometry.WorldXYToPlaneTransform(plane);
                 }
             }
+
+            ComputeEquationTransform();
+            ComputeAxes();
+            plane = Plane.WorldXY;
+            plane.Transform(TransformMatrix);
 
             BasePlane = plane;
         }
