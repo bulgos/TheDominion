@@ -40,6 +40,7 @@ namespace the_Dominion.Conics
                 }
             }
 
+            Unitize();
             ComputeEquationTransform();
             ComputeAxes();
             plane = Plane.WorldXY;
@@ -334,6 +335,13 @@ namespace the_Dominion.Conics
 
             TransformEquation(-translation, -rotation);
 
+            Unitize();
+        }
+
+        private void Unitize()
+        {
+            if (!IsWorldAligned)
+                return;
 
             if (Math.Abs(A) < Rhino.RhinoMath.ZeroTolerance)
                 A = 0;
