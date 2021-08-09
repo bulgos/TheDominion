@@ -22,8 +22,9 @@ namespace the_Dominion.Conics
 
             ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
 
-            Transform(InverseTransformMatrix, false, false, true);
-            ConstructParabola();
+            Initialise();
+            //Transform(InverseTransformMatrix, false, false, true);
+            //ConstructParabola();
         }
 
         public Parabola(double a, Interval domain)
