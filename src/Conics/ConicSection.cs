@@ -40,7 +40,8 @@ namespace the_Dominion.Conics
                 }
             }
 
-            Unitize();
+            //Unitize();
+            GetWorldAlignedConic();
             ComputeEquationTransform();
             ComputeAxes();
             plane = Plane.WorldXY;
@@ -208,10 +209,10 @@ namespace the_Dominion.Conics
             if (Math.Abs(WorldAlignedConic.C) > Rhino.RhinoMath.ZeroTolerance)
                 AxisB = Math.Pow(Math.Abs(WorldAlignedConic.C), -1.0 / 2.0);
 
-            //if (WorldAlignedConic.A < 0)
-            //    AxisA *= -1;
-            //if (WorldAlignedConic.C < 0)
-            //    AxisB *= -1;
+            if (WorldAlignedConic.A < 0)
+                AxisA *= -1;
+            if (WorldAlignedConic.C < 0)
+                AxisB *= -1;
 
             GetWorldAlignedConic();
         }
@@ -354,9 +355,6 @@ namespace the_Dominion.Conics
 
         private void Unitize()
         {
-            if (!IsWorldAligned)
-                return;
-
             if (Math.Abs(A) < Rhino.RhinoMath.ZeroTolerance)
                 A = 0;
             if (Math.Abs(B) < Rhino.RhinoMath.ZeroTolerance)
@@ -369,6 +367,9 @@ namespace the_Dominion.Conics
                 E = 0;
             if (Math.Abs(F) < Rhino.RhinoMath.ZeroTolerance)
                 F = 0;
+
+            if (!IsWorldAligned)
+                return;
 
             double factor;
 
