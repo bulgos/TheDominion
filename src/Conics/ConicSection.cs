@@ -12,7 +12,6 @@ namespace the_Dominion.Conics
     {
         private Transform _inverseTransformMatrix = Rhino.Geometry.Transform.Unset;
         private double _conicDiscriminant = double.NaN;
-        private ConicSection _worldAlignedConic = null;
 
         protected ConicSection(double a, double b, double c, double d, double e, double f)
             : this(Plane.Unset, a, b, c, d, e, f) { }
@@ -65,6 +64,7 @@ namespace the_Dominion.Conics
             F = conicSection.F;
             ConicDiscriminant = conicSection.ConicDiscriminant;
             TransformMatrix = conicSection.TransformMatrix;
+            WorldAlignedConic = conicSection.WorldAlignedConic;
 
             AxisA = conicSection.AxisA;
             AxisB = conicSection.AxisB;
@@ -134,19 +134,7 @@ namespace the_Dominion.Conics
 
         public NurbsCurve Section { get; protected set; }
 
-        public ConicSection WorldAlignedConic
-        {
-            get
-            {
-                if (IsWorldAligned)
-                    return this;
-                if (_worldAlignedConic == null)
-                    GetWorldAlignedConic();
-
-                return _worldAlignedConic;
-            }
-            private set => _worldAlignedConic = value;
-        }
+        public ConicSection WorldAlignedConic { get; private set; }
 
         public static ConicSection From5Points(IEnumerable<Point3d> points)
         {

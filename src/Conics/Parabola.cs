@@ -205,8 +205,8 @@ namespace the_Dominion.Conics
                 p2 = WorldAlignedConic.ComputePointAtY(Domain.Max)[0];
             }
 
-            Line tangent1 = WorldAlignedConic.ComputeTangent(p0);
-            Line tangent2 = WorldAlignedConic.ComputeTangent(p2);
+            Line tangent1 = ComputeTangent(p0);
+            Line tangent2 = ComputeTangent(p2);
 
             Point3d p1 = Geometry.ComputeLineIntersection(tangent1, tangent2);
 
@@ -223,8 +223,8 @@ namespace the_Dominion.Conics
         public override double ComputeDerivative(Point3d pt)
         {
             return !UsesFlippedAxes
-                ? 2 * A * pt.X + D
-                : (2 * C * pt.Y + E);
+                ? 2 * WorldAlignedConic.A * pt.X + WorldAlignedConic.D
+                : (2 * WorldAlignedConic.C * pt.Y + WorldAlignedConic.E);
         }
 
         public override Line ComputeTangent(Point3d pt)
