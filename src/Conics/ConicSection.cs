@@ -344,11 +344,25 @@ namespace the_Dominion.Conics
 
         private void EliminateTransformationFromEquation()
         {
-            // https://math.stackexchange.com/questions/982908/deal-with-non-standard-form-of-conic
-            Vector3d translation = ComputeEquationTranslation();
-            double rotation = ComputeEquationRotation();
+            EliminateTransformationFromEquation(out _, out _);
+        }
 
-            TransformEquation(-translation, -rotation);
+        private void EliminateTransformationFromEquation(out Vector3d translation, out double rotation)
+        {
+            // https://math.stackexchange.com/questions/982908/deal-with-non-standard-form-of-conic
+
+            translation = ComputeEquationTranslation();
+            rotation = ComputeEquationRotation();
+
+            TranslateEquation(-translation);
+            RotateEquation(-rotation);
+
+            //Transform xformRotation = Rhino.Geometry.Transform.Rotation(rotation, Point3d.Origin);
+            //Transform xformTranslation = Rhino.Geometry.Transform.Translation(translation);
+
+            //Transform xform = xformTranslation * xformRotation;
+
+            //TransformEquation(-translation, -rotation);
 
             Unitize();
         }
@@ -458,16 +472,27 @@ namespace the_Dominion.Conics
 
         private void TransformEquation(Vector3d translation, double rotation)
         {
-            TranslateEquation(translation);
             RotateEquation(rotation);
+            TranslateEquation(translation);
         }
 
         private void TransformEquation(Transform xform)
         {
+            // bugs
+            // new process should be:
+            // remove transform
+            // add decomposed transforms
+            // then transform as a sum
+
+            EliminateTransformationFromEquation(out Vector3d eqTranslation, out double eqRotation);
+
             if (xform.IsAffine)
             {
                 xform.DecomposeAffine(out Vector3d translation, out Transform rotation, out Transform ortho, out Vector3d diagonal);
                 rotation.GetYawPitchRoll(out double yaw, out double _, out double _);
+
+                translation += eqTranslation;
+                yaw += eqRotation;
 
                 TransformEquation(translation, yaw);
             }
