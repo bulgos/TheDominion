@@ -104,6 +104,11 @@ namespace the_Dominion.Utility
             return b * b - 4 * a * c;
         }
 
+        public static double ACotRhino(double x)
+        {
+            return Math.Atan(x) + 2 * Math.Atan(1);
+        }
+
         // https://stackoverflow.com/a/15501536/4486449
         // solving Acotangent
         public static double ACot(double x)

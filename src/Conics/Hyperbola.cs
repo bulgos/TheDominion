@@ -26,11 +26,8 @@ namespace the_Dominion.Conics
             : this(Plane.WorldXY, a, b, height) { }
 
         public Hyperbola(Plane plane, double a, double b, double height, bool flipAxis = false)
-            : base(plane, a * a, 0, -b * b, 0, 0, a * b)
+            : base(plane, b * b, 0, -a * a, 0, 0, -a * b)
         {
-            AxisA = Math.Abs(a);
-            AxisB = -Math.Abs(b);
-
             if (flipAxis)
             {
                 AxisA *= -1;

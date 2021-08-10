@@ -84,6 +84,7 @@
     <Compile Include="the_DominionInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utility\CircleMath.cs" />
+    <Compile Include="Utility\Components\ACotangent.cs" />
     <Compile Include="Utility\Components\GetInnerTangents.cs" />
     <Compile Include="Utility\Components\GetOuterTangents.cs" />
     <Compile Include="Utility\Components\SignedVectorAngleComponent.cs" />
