@@ -208,6 +208,11 @@ namespace the_Dominion.Conics
             if (Math.Abs(WorldAlignedConic.C) > Rhino.RhinoMath.ZeroTolerance)
                 AxisB = Math.Pow(Math.Abs(WorldAlignedConic.C), -1.0 / 2.0);
 
+            //if (WorldAlignedConic.A < 0)
+            //    AxisA *= -1;
+            //if (WorldAlignedConic.C < 0)
+            //    AxisB *= -1;
+
             GetWorldAlignedConic();
         }
 
@@ -306,9 +311,18 @@ namespace the_Dominion.Conics
 
         private double ComputeEquationRotation()
         {
-            return B == 0
-                ? 0
-                : Geometry.ACot((A - C) / B) / 2;
+            if (ConicSectionType == ConicSectionType.Parabola)
+            {
+                return B == 0
+                    ? 0
+                    : Geometry.ACot((A - C) / B) / 2;
+            }
+            else
+            {
+                return B == 0
+                    ? 0
+                    : Geometry.ACotContinuous((A - C) / B) / 2;
+            }
         }
 
         public Vector3d ComputeEquationTranslation()
