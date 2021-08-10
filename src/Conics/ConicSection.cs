@@ -40,7 +40,6 @@ namespace the_Dominion.Conics
                 }
             }
 
-            //Unitize();
             GetWorldAlignedConic();
             ComputeEquationTransform();
             ComputeAxes();
@@ -357,13 +356,6 @@ namespace the_Dominion.Conics
             TranslateEquation(-translation);
             RotateEquation(-rotation);
 
-            //Transform xformRotation = Rhino.Geometry.Transform.Rotation(rotation, Point3d.Origin);
-            //Transform xformTranslation = Rhino.Geometry.Transform.Translation(translation);
-
-            //Transform xform = xformTranslation * xformRotation;
-
-            //TransformEquation(-translation, -rotation);
-
             Unitize();
         }
 
@@ -478,12 +470,7 @@ namespace the_Dominion.Conics
 
         private void TransformEquation(Transform xform)
         {
-            // bugs
-            // new process should be:
-            // remove transform
-            // add decomposed transforms
-            // then transform as a sum
-
+            // firstly remove transform, but store transforms to achieve previous equation
             EliminateTransformationFromEquation(out Vector3d eqTranslation, out double eqRotation);
 
             if (xform.IsAffine)
