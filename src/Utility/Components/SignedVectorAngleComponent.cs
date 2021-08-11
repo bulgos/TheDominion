@@ -1,6 +1,8 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
+using System.Drawing;
+using the_Dominion.Properties;
 
 namespace the_Dominion.Utility.Components
 {
@@ -38,5 +40,7 @@ namespace the_Dominion.Utility.Components
         }
 
         public override Guid ComponentGuid => new Guid("6d9594fb-c8a7-4876-ab54-264346e4b0e6");
+
+        protected override Bitmap Icon => Resources.vector_angle_signed;
     }
 }

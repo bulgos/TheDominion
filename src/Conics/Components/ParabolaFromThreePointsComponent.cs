@@ -1,7 +1,9 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
+using System.Drawing;
 using the_Dominion.Conics.Wrappers;
+using the_Dominion.Properties;
 
 namespace the_Dominion.Conics.Components
 {
@@ -62,20 +64,6 @@ namespace the_Dominion.Conics.Components
         }
 
         /// <summary>
-        /// Provides an Icon for every component that will be visible in the User Interface.
-        /// Icons need to be 24x24 pixels.
-        /// </summary>
-        protected override System.Drawing.Bitmap Icon
-        {
-            get
-            {
-                // You can add image files to your project resources and access them like this:
-                //return Resources.IconForThisComponent;
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Each component must have a unique Guid to identify it. 
         /// It is vital this Guid doesn't change otherwise old ghx files 
         /// that use the old ID will partially fail during loading.
@@ -83,5 +71,7 @@ namespace the_Dominion.Conics.Components
         public override Guid ComponentGuid => new Guid("f9593814-9e59-4c86-b508-4c0d27510b69");
 
         public override GH_Exposure Exposure => GH_Exposure.secondary;
+
+        protected override Bitmap Icon => Resources.parabola_3_point;
     }
 }

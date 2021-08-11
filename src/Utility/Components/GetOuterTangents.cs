@@ -1,6 +1,8 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
+using System.Drawing;
+using the_Dominion.Properties;
 using the_Dominion.Utility;
 
 namespace the_Dominion.Conics.Components
@@ -39,5 +41,7 @@ namespace the_Dominion.Conics.Components
         }
 
         public override Guid ComponentGuid => new Guid("3df2a651-3a44-41b5-ae8b-2df306fd9cac");
+
+        protected override Bitmap Icon => Resources.tangents_outer;
     }
 }

@@ -1,7 +1,9 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
+using System.Drawing;
 using the_Dominion.Conics.Wrappers;
+using the_Dominion.Properties;
 
 // In order to load the result of this wizard, you will also need to
 // add the output bin/ folder of this project to the list of loaded
@@ -73,5 +75,7 @@ namespace the_Dominion.Conics.Components
         public override Guid ComponentGuid => new Guid("1c5e49a6-1290-4366-9216-2f1a9139fc0b");
 
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
+
+        protected override Bitmap Icon => Resources.hyperbola_construct;
     }
 }

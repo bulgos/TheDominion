@@ -2,7 +2,9 @@
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using the_Dominion.Conics.Wrappers;
+using the_Dominion.Properties;
 
 namespace the_Dominion.Conics.Components
 {
@@ -71,5 +73,7 @@ namespace the_Dominion.Conics.Components
         public override Guid ComponentGuid => new Guid("3305b5a2-5428-4b39-9a02-3f4d16e482f5");
 
         public override GH_Exposure Exposure => GH_Exposure.tertiary;
+
+        protected override Bitmap Icon => Resources.hyperbola_deconstruct;
     }
 }

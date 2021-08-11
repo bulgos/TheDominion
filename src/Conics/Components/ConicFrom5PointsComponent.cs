@@ -1,7 +1,9 @@
 ﻿using Grasshopper.Kernel;
 using Rhino.Geometry;
 using System;
+using System.Drawing;
 using the_Dominion.Conics.Wrappers;
+using the_Dominion.Properties;
 
 namespace the_Dominion.Conics.Components
 {
@@ -50,5 +52,7 @@ namespace the_Dominion.Conics.Components
         public override Guid ComponentGuid => new Guid("fc4c2115-1efc-4455-b016-6d3c717d5662");
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
+
+        protected override Bitmap Icon => Resources.conic_5_point;
     }
 }
