@@ -63,7 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Conics\Components\ConicFrom5PointsComponent.cs" />
-    <Compile Include="Conics\Components\ConicInStandardFormComponent.cs" />
+    <Compile Include="Conics\Components\ConicNormalisedFormComponent.cs" />
     <Compile Include="Conics\Components\ConicSolverComponent.cs" />
     <Compile Include="Conics\Components\ConicTypeComponent.cs" />
     <Compile Include="Conics\Components\DeconstructConicComponent.cs" />
@@ -120,8 +120,6 @@
     <None Include="Resources\conic_solver.png" />
     <None Include="Resources\conic_deconstruct.png" />
     <None Include="Resources\conic_5_point.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\conic_evaluate.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -4,17 +4,17 @@ using the_Dominion.Conics.Wrappers;
 
 namespace the_Dominion.Conics.Components
 {
-    public class ConicStandardFormComponent : GH_Component
+    public class ConicNormalisedFormComponent : GH_Component
     {
-        public ConicStandardFormComponent()
-          : base("Standardise Conic", "StandConic",
-              "Computes the standard form of the Conic by eliminating Transform from Equation",
+        public ConicNormalisedFormComponent()
+          : base("Normalise Conic", "NormConic",
+              "Computes the standard/normalised form of the Conic by eliminating Transform from Equation",
               "Dominion", "Conics")
         { }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddParameter(new Conic_Param(), "Conic", "C", "The Conic to Standardise", GH_ParamAccess.item);
+            pManager.AddParameter(new Conic_Param(), "Conic", "C", "The Conic to Normalise", GH_ParamAccess.item);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
