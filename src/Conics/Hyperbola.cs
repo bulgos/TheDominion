@@ -97,6 +97,10 @@ namespace the_Dominion.Conics
             Transform mirrorXform = Rhino.Geometry.Transform.Mirror(mirrorPlane);
 
             hyperbola = NurbsCurve.Create(false, 2, pts);
+
+            if (hyperbola == null)
+                return;
+
             hyperbola.Points.SetPoint(1, weightedP1);
             NurbsCurve mirroredHyperbola = hyperbola.Duplicate() as NurbsCurve;
             mirroredHyperbola.Transform(mirrorXform);

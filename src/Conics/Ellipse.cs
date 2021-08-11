@@ -22,7 +22,13 @@ namespace the_Dominion.Conics
         public void Initialise()
         {
             Rhino.Geometry.Ellipse ellipse = new Rhino.Geometry.Ellipse(BasePlane, AxisA, AxisB);
-            Section.Add(ellipse.ToNurbsCurve());
+            
+            NurbsCurve crv = ellipse.ToNurbsCurve();
+            
+            if (crv == null)
+                return;
+
+            Section.Add(crv);
 
             ComputeFoci();
         }
