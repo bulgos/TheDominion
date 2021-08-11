@@ -1,6 +1,7 @@
 ﻿using Grasshopper.Kernel;
 using System;
 using System.Drawing;
+using the_Dominion.Properties;
 
 namespace the_Dominion
 {
@@ -8,16 +9,9 @@ namespace the_Dominion
     {
         public override string Name => "The Dominion";
 
-        public override Bitmap Icon
-        {
-            get
-            {
-                //Return a 24x24 pixel bitmap to represent this GHA library.
-                return null;
-            }
-        }
+        public override Bitmap Icon => Resources.the_dominion;
 
-        public override string Description => "A library of tools for building Curves from Conic Equations";
+        public override string Description => "Provides components for building Mathematical Curves from Conic Equations";
 
         public override Guid Id => new Guid("d540efd4-25cd-447f-87fc-7b187f033680");
 

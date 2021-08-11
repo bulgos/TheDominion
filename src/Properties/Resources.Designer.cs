@@ -243,6 +243,16 @@ namespace the_Dominion.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap the_dominion {
+            get {
+                object obj = ResourceManager.GetObject("the_dominion", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap vector_angle_plane {
             get {
                 object obj = ResourceManager.GetObject("vector_angle_plane", resourceCulture);
