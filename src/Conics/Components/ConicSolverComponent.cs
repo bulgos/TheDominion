@@ -54,7 +54,6 @@ namespace the_Dominion.Conics.Components
 
         public override GH_Exposure Exposure => GH_Exposure.primary;
 
-
         protected override Bitmap Icon => Resources.conic_solver;
     }
 }

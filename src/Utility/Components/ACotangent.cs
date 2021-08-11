@@ -1,5 +1,7 @@
 ﻿using Grasshopper.Kernel;
 using System;
+using System.Drawing;
+using the_Dominion.Properties;
 
 namespace the_Dominion.Utility.Components
 {
@@ -36,6 +38,8 @@ namespace the_Dominion.Utility.Components
         }
 
         public override Guid ComponentGuid => new Guid("4c924329-986a-462d-9e0d-38a61835940c");
+
+        protected override Bitmap Icon => Resources.acotangent;
     }
 #endif
 }

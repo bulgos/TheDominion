@@ -5,9 +5,11 @@ using Rhino.DocObjects;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using the_Dominion.Properties;
 
 namespace the_Dominion.Conics.Wrappers
 {
@@ -32,6 +34,8 @@ namespace the_Dominion.Conics.Wrappers
         public override GH_Exposure Exposure => GH_Exposure.hidden;
 
         public bool IsBakeCapable => !m_data.IsEmpty;
+
+        protected override Bitmap Icon => Resources.conic_param;
 
         public void BakeGeometry(RhinoDoc doc, List<Guid> obj_ids)
         {

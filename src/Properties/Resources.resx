@@ -118,6 +118,9 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="acotangent" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\acotangent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="conic_5_point" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\conic_5_point.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -126,6 +129,12 @@
   </data>
   <data name="conic_evaluate" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\conic_evaluate.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="conic_normalise" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\conic_normalise.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="conic_param" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\conic_param.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="conic_solver" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\conic_solver.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -153,6 +162,9 @@
   </data>
   <data name="parabola_quadratic" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\parabola_quadratic.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="parabola_rotated" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\parabola_rotated.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="tangents_inner" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\tangents_inner.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

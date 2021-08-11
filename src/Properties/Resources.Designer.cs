@@ -63,6 +63,16 @@ namespace the_Dominion.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap acotangent {
+            get {
+                object obj = ResourceManager.GetObject("acotangent", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap conic_5_point {
             get {
                 object obj = ResourceManager.GetObject("conic_5_point", resourceCulture);
@@ -86,6 +96,26 @@ namespace the_Dominion.Properties {
         internal static System.Drawing.Bitmap conic_evaluate {
             get {
                 object obj = ResourceManager.GetObject("conic_evaluate", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap conic_normalise {
+            get {
+                object obj = ResourceManager.GetObject("conic_normalise", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap conic_param {
+            get {
+                object obj = ResourceManager.GetObject("conic_param", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -176,6 +206,16 @@ namespace the_Dominion.Properties {
         internal static System.Drawing.Bitmap parabola_quadratic {
             get {
                 object obj = ResourceManager.GetObject("parabola_quadratic", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap parabola_rotated {
+            get {
+                object obj = ResourceManager.GetObject("parabola_rotated", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
