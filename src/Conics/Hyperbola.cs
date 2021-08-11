@@ -59,6 +59,7 @@ namespace the_Dominion.Conics
             NurbsCurve hyperbola;
             Point3d[] pts;
             double weight;
+            Plane mirrorPlane;
 
             if (AxisA > AxisB)
             {
@@ -71,6 +72,8 @@ namespace the_Dominion.Conics
                 weight = x0 / AxisA;
 
                 pts = new[] { p0, p1, p2 };
+
+                mirrorPlane = Plane.WorldYZ;
             }
             else
             {
@@ -83,15 +86,23 @@ namespace the_Dominion.Conics
                 weight = y0 / AxisB;
 
                 pts = new[] { p0, p1, p2 };
+
+                mirrorPlane = Plane.WorldZX;
             }
 
             Point4d weightedP1 = new Point4d(pts[1].X, pts[1].Y, pts[1].Z, weight);
 
+            Apex = pts[1];
+
+            Transform mirrorXform = Rhino.Geometry.Transform.Mirror(mirrorPlane);
+
             hyperbola = NurbsCurve.Create(false, 2, pts);
             hyperbola.Points.SetPoint(1, weightedP1);
+            NurbsCurve mirroredHyperbola = hyperbola.Duplicate() as NurbsCurve;
+            mirroredHyperbola.Transform(mirrorXform);
 
-            Apex = pts[1];
             Section.Add(hyperbola);
+            Section.Add(mirroredHyperbola);
         }
 
         public override double ComputeDerivative(Point3d pt)
