@@ -104,6 +104,7 @@ namespace the_Dominion.Utility
             return b * b - 4 * a * c;
         }
 
+        // https://developer.rhino3d.com/api/rhinoscript/math_methods/math_methods.htm
         public static double ACotRhino(double x)
         {
             return Math.Atan(x) + 2 * Math.Atan(1);
