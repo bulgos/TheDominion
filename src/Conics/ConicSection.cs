@@ -136,6 +136,8 @@ namespace the_Dominion.Conics
 
         public ConicSection WorldAlignedConic { get; private set; }
 
+        public ConicSection Dual => SolveDual();
+
         public static ConicSection From5Points(IEnumerable<Point3d> points)
         {
             // simplest solution we could find
@@ -186,6 +188,28 @@ namespace the_Dominion.Conics
                 default:
                     return conicSection;
             }
+        }
+
+        private ConicSection SolveDual()
+        {
+            var array = new double[3, 3]
+            {
+                {A, B, D },
+                {B, C, E },
+                {D, E, F }
+            };
+
+            Matrix<double> homogenousMatrix = DenseMatrix.OfArray(array);
+            var dualMatrix = homogenousMatrix.Inverse();
+
+            var a = dualMatrix[0, 0];
+            var b = dualMatrix[0, 1];
+            var c = dualMatrix[1, 1];
+            var d = dualMatrix[2, 0];
+            var e = dualMatrix[2, 1];
+            var f = dualMatrix[2, 2];
+
+            return FromConicEquation(a, b, c, d, e, f);
         }
 
         public void ComputeAxes()
