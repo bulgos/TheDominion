@@ -23,7 +23,7 @@ namespace the_Dominion.Conics.Components
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("ConicSection", "C", "The Conic Section", GH_ParamAccess.item);
+            pManager.AddCurveParameter("ConicSection", "C", "The Conic Section", GH_ParamAccess.list);
             pManager.AddPointParameter("Focus1", "F1", "The first Conic Focus", GH_ParamAccess.item);
             pManager.AddPointParameter("Focus2", "F2", "The second Conic Focus", GH_ParamAccess.item);
             pManager.AddPlaneParameter("BasePlane", "Pl", "The Plane the Conic was constructed from", GH_ParamAccess.item);
@@ -46,13 +46,13 @@ namespace the_Dominion.Conics.Components
             
             DA.GetData(0, ref conicSection);
 
-            if (conicSection == null)
+            if (!conicSection.IsValid)
             {
                 AddRuntimeMessage(GH_RuntimeMessageLevel.Warning, "No conic supplied to input.");
                 return;
             }
 
-            DA.SetData(0, conicSection.Section);
+            DA.SetDataList(0, conicSection.Section);
             DA.SetData(1, conicSection.Focus1);
             DA.SetData(2, conicSection.Focus2);
             DA.SetData(3, conicSection.BasePlane);

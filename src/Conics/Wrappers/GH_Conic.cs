@@ -51,11 +51,11 @@ namespace the_Dominion.Conics.Wrappers
                 return true;
             }
 
-            if (Value.Section != null)
+            if (Value.IsValid)
             {
                 if (typeof(Q).IsAssignableFrom(typeof(GH_Curve)))
                 {
-                    object crv = new GH_Curve(Value.Section);
+                    object crv = new GH_Curve(Value.Section[0]);
                     target = (Q)crv;
                     return true;
                 }
@@ -79,7 +79,11 @@ namespace the_Dominion.Conics.Wrappers
             if (Value == null || !Value.IsValid)
                 return;
 
-            args.Pipeline.DrawCurve(Value.Section, args.Color);
+            foreach (var section in Value.Section)
+            {
+                args.Pipeline.DrawCurve(section, args.Color);
+            }
+
             args.Pipeline.DrawPoint(Value.Focus1, Rhino.Display.PointStyle.RoundControlPoint, 5, args.Color);
             args.Pipeline.DrawPoint(Value.Focus2, Rhino.Display.PointStyle.RoundControlPoint, 5, args.Color);
         }
@@ -88,10 +92,13 @@ namespace the_Dominion.Conics.Wrappers
         {
             obj_guid = Guid.Empty;
 
-            if (Value.Section == null)
+            if (!Value.IsValid)
                 return false;
 
-            obj_guid = doc.Objects.Add(Value.Section);
+            foreach (var section in Value.Section)
+            {
+                obj_guid = doc.Objects.AddCurve(section);
+            }
 
             return true;
         }

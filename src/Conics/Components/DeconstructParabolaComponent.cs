@@ -1,4 +1,6 @@
 ﻿using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
@@ -23,8 +25,8 @@ namespace the_Dominion.Conics.Components
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("ParabolaSection", "C", "The Parabola Section Curve", GH_ParamAccess.item);
-            pManager.AddPointParameter("Control Points", "CP", "Control Points of the Parabola", GH_ParamAccess.list);
+            pManager.AddCurveParameter("ParabolaSection", "C", "The Parabola Section Curve", GH_ParamAccess.list);
+            pManager.AddPointParameter("Control Points", "CP", "Control Points of the Parabola", GH_ParamAccess.tree);
             pManager.AddNumberParameter("Axis A", "Aa", "Axis A of the Parabola (if existant)", GH_ParamAccess.item);
             pManager.AddNumberParameter("Axis B", "Ab", "Axis B of the Parabola (if existant)", GH_ParamAccess.item);
             pManager.AddPointParameter("Focus", "F", "The Parabola Focus", GH_ParamAccess.item);
@@ -59,16 +61,24 @@ namespace the_Dominion.Conics.Components
             shape = shape.Replace("Negative", "-");
             shape = shape.Replace("Positive", "+");
 
-            List<Point3d> controlPoints = new List<Point3d>();
+            GH_Structure<GH_Point> controlPoints = new GH_Structure<GH_Point>();
 
-            for (int i = 0; i < conicSection.Section.Points.Count; i++)
+            for (int i = 0; i < conicSection.Section.Count; i++)
             {
-                conicSection.Section.Points.GetPoint(i, out Point3d pt);
-                controlPoints.Add(pt);
+                if (conicSection.Section[i] is NurbsCurve nurbsCurve)
+                {
+                    GH_Path path = new GH_Path(i);
+
+                    for (int j = 0; j < nurbsCurve.Points.Count; j++)
+                    {
+                        nurbsCurve.Points.GetPoint(j, out Point3d pt);
+                        controlPoints.Append(new GH_Point(pt), path);
+                    }
+                }
             }
 
-            DA.SetData(0, parabola.Section);
-            DA.SetDataList(1, controlPoints);
+            DA.SetDataList(0, parabola.Section);
+            DA.SetDataTree(1, controlPoints);
             DA.SetData(2, parabola.AxisA);
             DA.SetData(3, parabola.AxisB);
             DA.SetData(4, parabola.Focus1);

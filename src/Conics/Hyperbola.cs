@@ -91,7 +91,7 @@ namespace the_Dominion.Conics
             hyperbola.Points.SetPoint(1, weightedP1);
 
             Apex = pts[1];
-            Section = hyperbola;
+            Section.Add(hyperbola);
         }
 
         public override double ComputeDerivative(Point3d pt)

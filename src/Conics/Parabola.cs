@@ -212,7 +212,7 @@ namespace the_Dominion.Conics
 
             Point3d[] points = { tangent1.From, p1, tangent2.From };
 
-            Section = Curve.CreateControlPointCurve(points, 2) as NurbsCurve;
+            Section.Add(Curve.CreateControlPointCurve(points, 2) as NurbsCurve);
         }
 
         public void ConstructParabolaFromFocus()

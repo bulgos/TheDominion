@@ -1,5 +1,6 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
+using Rhino.Collections;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
@@ -50,8 +51,13 @@ namespace the_Dominion.Conics
 
         public ConicSection(ConicSection conicSection)
         {
-            if (conicSection.Section != null)
-                Section = (conicSection.Section.Duplicate() as Curve).ToNurbsCurve();
+            if (conicSection.IsValid)
+            {
+                foreach (var section in conicSection.Section)
+                {
+                    Section.Add((section.Duplicate() as Curve).ToNurbsCurve());
+                }
+            }
 
             BasePlane = conicSection.BasePlane;
             Focus1 = conicSection.Focus1;
@@ -98,7 +104,7 @@ namespace the_Dominion.Conics
             set => _conicDiscriminant = value;
         }
 
-        public virtual bool IsValid => Section != null;
+        public virtual bool IsValid => Section.Count > 0;
 
         public bool IsWorldAligned => B == 0;
 
@@ -129,10 +135,10 @@ namespace the_Dominion.Conics
 
         public BoundingBox BoundingBox =>
             IsValid
-            ? Section.GetBoundingBox(TransformMatrix)
+            ? GetBoundingBox(TransformMatrix)
             : BoundingBox.Empty;
 
-        public NurbsCurve Section { get; protected set; }
+        public CurveList Section { get; protected set; } = new CurveList();
 
         public ConicSection WorldAlignedConic { get; private set; }
 
@@ -529,15 +535,29 @@ namespace the_Dominion.Conics
             if (!IsValid)
                 return BoundingBox.Empty;
 
-            return Section.GetBoundingBox(xform);
+            BoundingBox bbox = BoundingBox.Unset;
+
+            foreach (var section in Section)
+            {
+                if (!bbox.IsValid)
+                {
+                    bbox = section.GetBoundingBox(xform);
+                    continue;
+                }
+
+                bbox.Union(section.GetBoundingBox(xform));
+            }
+
+            return bbox;
         }
 
         public bool Morph(SpaceMorph xmorph)
         {
-            if (!IsValid)
-                return false;
+            //if (!IsValid)
+            //    return false;
 
-            return xmorph.Morph(Section);
+            //return xmorph.Morph(Section);
+            return false;
         }
 
         public override string ToString()

@@ -1,7 +1,8 @@
 ﻿using Grasshopper.Kernel;
+using Grasshopper.Kernel.Data;
+using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using the_Dominion.Conics.Wrappers;
 using the_Dominion.Properties;
@@ -23,8 +24,8 @@ namespace the_Dominion.Conics.Components
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddCurveParameter("Hyperbola Section", "C", "The Hyperbola Section Curve", GH_ParamAccess.item);
-            pManager.AddPointParameter("Control Points", "CP", "Control Points of the Hyperbola", GH_ParamAccess.list);
+            pManager.AddCurveParameter("Hyperbola Section", "C", "The Hyperbola Section Curve", GH_ParamAccess.list);
+            pManager.AddPointParameter("Control Points", "CP", "Control Points of the Hyperbola", GH_ParamAccess.tree);
             pManager.AddNumberParameter("Axis A", "Aa", "Axis A of the Hyperbola", GH_ParamAccess.item);
             pManager.AddNumberParameter("Axis B", "Ab", "Axis B of the Hyperbola", GH_ParamAccess.item);
             pManager.AddPointParameter("Focus1", "F1", "The first Hyperbola Focus", GH_ParamAccess.item);
@@ -52,16 +53,24 @@ namespace the_Dominion.Conics.Components
                 return;
             }
 
-            List<Point3d> controlPoints = new List<Point3d>();
+            GH_Structure<GH_Point> controlPoints = new GH_Structure<GH_Point>();
 
-            for (int i = 0; i < conicSection.Section.Points.Count; i++)
+            for (int i = 0; i < conicSection.Section.Count; i++)
             {
-                conicSection.Section.Points.GetPoint(i, out Point3d pt);
-                controlPoints.Add(pt);
+                if (conicSection.Section[i] is NurbsCurve nurbsCurve)
+                {
+                    GH_Path path = new GH_Path(i);
+
+                    for (int j = 0; j < nurbsCurve.Points.Count; j++)
+                    {
+                        nurbsCurve.Points.GetPoint(j, out Point3d pt);
+                        controlPoints.Append(new GH_Point(pt), path);
+                    }
+                }
             }
 
-            DA.SetData(0, hyperbola.Section);
-            DA.SetDataList(1, controlPoints);
+            DA.SetDataList(0, hyperbola.Section);
+            DA.SetDataTree(1, controlPoints);
             DA.SetData(2, hyperbola.AxisA);
             DA.SetData(3, hyperbola.AxisB);
             DA.SetData(4, hyperbola.Focus1);
