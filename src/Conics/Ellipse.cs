@@ -13,19 +13,18 @@ namespace the_Dominion.Conics
             if (ConicSectionType != ConicSectionType.Ellipse && ConicSectionType != ConicSectionType.Circle)
                 throw new ArgumentException("Conic does not represent an Ellipse");
 
-            //ComputeAxes(out double a, out double b);
-            //AxisA = a;
-            //AxisB = b;
-
-            var ellipse = new Rhino.Geometry.Ellipse(BasePlane, AxisA, AxisB);
-            Section = ellipse.ToNurbsCurve();
+            Initialise();
         }
 
         public Ellipse(Ellipse ellipse)
-            : base(ellipse)
+            : base(ellipse) { }
+
+        public void Initialise()
         {
-            AxisA = ellipse.AxisA;
-            AxisB = ellipse.AxisB;
+            Rhino.Geometry.Ellipse ellipse = new Rhino.Geometry.Ellipse(BasePlane, AxisA, AxisB);
+            Section = ellipse.ToNurbsCurve();
+
+            ComputeFoci();
         }
 
         public override double ComputeDerivative(Point3d pt)
@@ -45,17 +44,17 @@ namespace the_Dominion.Conics
                 Focus1 = Point3d.Origin;
             }
 
-            double focusDist = Math.Sqrt(AxisA * AxisA - AxisB * AxisB);
+            double focusDist = Math.Sqrt(Math.Abs(AxisA * AxisA - AxisB * AxisB));
 
-            if (AxisA > AxisB)
+            if (Math.Abs(AxisA) > Math.Abs(AxisB))
             {
-                Focus1 = new Point3d(-focusDist, 0, 0);
-                Focus2 = new Point3d(focusDist, 0, 0);
+                Focus1 = BasePlane.Origin - BasePlane.XAxis * focusDist;
+                Focus2 = BasePlane.Origin + BasePlane.XAxis * focusDist;
             }
             else
             {
-                Focus1 = new Point3d(0, -focusDist, 0);
-                Focus2 = new Point3d(0, focusDist, 0);
+                Focus1 = BasePlane.Origin - BasePlane.YAxis * focusDist;
+                Focus2 = BasePlane.Origin + BasePlane.YAxis * focusDist;
             }
         }
     }
