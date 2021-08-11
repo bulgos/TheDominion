@@ -18,11 +18,14 @@ namespace the_Dominion.Utility
             double angle1 = Math.Atan2(circle2.Center.Y - circle1.Center.Y, circle2.Center.X - circle1.Center.X) + Math.Acos(shortSide / hypotenuse);
             double angle2 = Math.Atan2(circle2.Center.Y - circle1.Center.Y, circle2.Center.X - circle1.Center.X) - Math.Acos(shortSide / hypotenuse);
 
-            Point3d t1 = circle1.PointAt(angle1);
-            Point3d t2 = circle2.PointAt(angle1);
+            Circle circleWorld1 = new Circle(circle1.Center, circle1.Radius);
+            Circle circleWorld2 = new Circle(circle2.Center, circle2.Radius);
 
-            Point3d t3 = circle1.PointAt(angle2);
-            Point3d t4 = circle2.PointAt(angle2);
+            Point3d t1 = circleWorld1.PointAt(angle1);
+            Point3d t2 = circleWorld2.PointAt(angle1);
+
+            Point3d t3 = circleWorld1.PointAt(angle2);
+            Point3d t4 = circleWorld2.PointAt(angle2);
 
             Line line1 = new Line(t1, t2);
             Line line2 = new Line(t3, t4);
@@ -38,11 +41,14 @@ namespace the_Dominion.Utility
             double angle1 = Math.Atan2(circle2.Center.Y - circle1.Center.Y, circle2.Center.X - circle1.Center.X) + Math.Asin(shortSide / hypotenuse) - Math.PI / 2;
             double angle2 = Math.Atan2(circle2.Center.Y - circle1.Center.Y, circle2.Center.X - circle1.Center.X) - Math.Asin(shortSide / hypotenuse) + Math.PI / 2;
 
-            Point3d t1 = circle1.PointAt(angle1);
-            Point3d t2 = circle2.PointAt(angle1 + Math.PI);
+            Circle circleWorld1 = new Circle(circle1.Center, circle1.Radius);
+            Circle circleWorld2 = new Circle(circle2.Center, circle2.Radius);
 
-            Point3d t3 = circle1.PointAt(angle2);
-            Point3d t4 = circle2.PointAt(angle2 + Math.PI);
+            Point3d t1 = circleWorld1.PointAt(angle1);
+            Point3d t2 = circleWorld2.PointAt(angle1 + Math.PI);
+
+            Point3d t3 = circleWorld1.PointAt(angle2);
+            Point3d t4 = circleWorld2.PointAt(angle2 + Math.PI);
 
             Line line1 = new Line(t1, t2);
             Line line2 = new Line(t3, t4);
