@@ -1,5 +1,6 @@
 ﻿using Grasshopper.Kernel;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using the_Dominion.Properties;
 
@@ -17,6 +18,15 @@ namespace the_Dominion
 
         public override string AuthorName => "Daniel Christev and Michael Wickerson";
 
-        public override string AuthorContact => "dchristev@gmail.com | mike@wickersonstudios.com";
+        public override string AuthorContact => "https://github.com/bulgos/the_Dominion";
+
+        public override string AssemblyVersion
+        {
+            get
+            {
+                System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
+                return FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
+            }
+        }
     }
 }
