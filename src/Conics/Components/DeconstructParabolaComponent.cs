@@ -3,7 +3,6 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using the_Dominion.Conics.Wrappers;
 using the_Dominion.Properties;
@@ -33,9 +32,9 @@ namespace the_Dominion.Conics.Components
             pManager.AddPlaneParameter("BasePlane", "Pl", "The Plane the Conic was constructed from", GH_ParamAccess.item);
             pManager.AddPlaneParameter("VertexPlane", "VPl", "The Plane the Parabola was constructed from", GH_ParamAccess.item);
             pManager.AddIntervalParameter("Domain", "D", "The Domain to calculate the function in", GH_ParamAccess.item);
-            pManager.AddPointParameter("Roots", "R", "Roots of the Parabola", GH_ParamAccess.list);
             pManager.AddTextParameter("Direction", "D", "Parabola Direction", GH_ParamAccess.item);
             pManager.AddTextParameter("ConicFormatted", "Cf", "A formatted string representation of the Conic Equation", GH_ParamAccess.item);
+            //pManager.AddPointParameter("Roots", "R", "Roots of the Parabola", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -85,9 +84,9 @@ namespace the_Dominion.Conics.Components
             DA.SetData(5, parabola.BasePlane);
             DA.SetData(6, parabola.VertexPlane);
             DA.SetData(7, parabola.Domain);
-            DA.SetDataList(8, parabola.Roots);
-            DA.SetData(9, shape);
-            DA.SetData(10, parabola.FormatConicEquation());
+            DA.SetData(8, shape);
+            DA.SetData(9, parabola.FormatConicEquation());
+            //DA.SetDataList(10, parabola.Roots);
         }
 
         public override Guid ComponentGuid => new Guid("71e49a09-9095-4ffd-9824-32eca6e0a9c3");
