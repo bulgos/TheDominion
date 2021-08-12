@@ -9,7 +9,7 @@ If you are only interested in using the application, follow the *Run* instructio
 ## Run
 ##### Option 1:  
 1. Navigate to Releases
-2. Download and unzip the_dominion_x.x.x.x.zip.
+2. Download and unzip the latest Release, e.g. the_dominion_x.x.x.x.zip.
 3. copy all unzipped contents into your component library, usually C:\Users\\($user)\AppData\Roaming\Grasshopper\Libraries
 4. Unblock all files
 
