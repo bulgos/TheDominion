@@ -147,8 +147,24 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>Copy "$(TargetPath)" "$(TargetDir)$(ProjectName).gha"
-Erase "$(TargetPath)"</PostBuildEvent>
+    <PostBuildEvent>SET TARGETGH="$(TargetDir)$(ProjectName).gha"
+Copy "$(TargetPath)" "%25TARGETGH%25"
+Erase "$(TargetPath)"
+
+SET DIST=$(SolutionDir)dist\
+SET MISC="%25DIST%25\misc"
+echo "%25PATH%25"
+echo "%25MISC%25"
+
+if $(ConfigurationName) == Release (
+if not exist "%25DIST%25" mkdir "%25DIST%25"
+copy "%25TARGETGH%25" "%25DIST%25"
+copy "$(TargetDir)*.dll" "%25DIST%25"
+
+if not exist "%25MISC%25" mkdir "%25MISC%25"
+copy "$(SolutionDir)*.md" "%25MISC%25"
+copy "$(SolutionDir)LICENSE" "%25MISC%25"
+)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <FallbackCulture>en-US</FallbackCulture>

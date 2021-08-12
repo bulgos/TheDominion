@@ -262,3 +262,6 @@ __pycache__/
 
 # git diff files
 *.diff
+
+# distribution directory
+dist/
