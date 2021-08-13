@@ -94,9 +94,11 @@
     <Compile Include="Utility\Components\ACotangent.cs" />
     <Compile Include="Utility\Components\GetInnerTangents.cs" />
     <Compile Include="Utility\Components\GetOuterTangents.cs" />
+    <Compile Include="Utility\Components\LogoComponent.cs" />
     <Compile Include="Utility\Components\SignedVectorAngleComponent.cs" />
     <Compile Include="Utility\Components\VectorAngleInPlaneComponent.cs" />
     <Compile Include="Utility\Geometry.cs" />
+    <Compile Include="Utility\Logo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
