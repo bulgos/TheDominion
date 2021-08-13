@@ -15,10 +15,12 @@ namespace the_Dominion.Utility
             Initialise();
         }
 
-        public Logo(double width, double height, double thickness, IEnumerable<double> offsets = null)
+        public Logo(double ratio, double thickness, IEnumerable<double> offsets = null)
+            : this(Plane.WorldXY, ratio, thickness, offsets) { }
+
+        public Logo(Plane plane, double ratio, double thickness, IEnumerable<double> offsets = null)
         {
-            Width = width;
-            Height = height;
+            Ratio = ratio;
 
             switch (true)
             {
@@ -36,22 +38,27 @@ namespace the_Dominion.Utility
             if (offsets != null)
                 Offsets = offsets.ToArray();
 
+            Transformation = Geometry.WorldXYToPlaneTransform(plane);
+
             Initialise();
         }
 
-        public double Width { get; } = 1;
-
-        public double Height { get; } = 1.25;
+        public double Ratio { get; } = 1.25;
 
         public double Thickness { get; } = 0.2;
 
         public double[] Offsets { get; } = new double[0];
 
-        public CurveList Shape { get; private set; } = new CurveList();
+        public Curve MainShape { get; private set; }
+
+        public CurveList Borders { get; private set; } = new CurveList();
+
+        public Transform Transformation { get; }
 
         public void Initialise()
         {
             MakeLogo();
+            Transform();
         }
 
         public void MakeLogo()
@@ -60,12 +67,19 @@ namespace the_Dominion.Utility
             double cos30 = Math.Cos(Math.PI / 6);
             double tan30 = Math.Tan(Math.PI / 6);
 
-            double outerThickness = 1 - (Thickness / cos30);
+            var appendDist = (Ratio - 1) / 2;
 
-            double tSpacingR = (cos30 - Thickness) / 2;
-            double tSpacingL = (cos30 + Thickness) / 2;
+            var thicknessCapped = Thickness < cos30
+                ? Thickness
+                : cos30;
+
+            double outerThickness = 1 - (thicknessCapped / cos30);
+
+            double tSpacingR = (cos30 - thicknessCapped) / 2;
+            double tSpacingL = (cos30 + thicknessCapped) / 2;
 
             Point3d p0 = new Point3d(-cos30, sin30, 0);
+
             Point3d p1 = new Point3d(0, 1, 0);
             Point3d p2 = new Point3d(cos30, sin30, 0);
             Point3d p3 = new Point3d(cos30, -sin30, 0);
@@ -78,21 +92,48 @@ namespace the_Dominion.Utility
             Point3d p10 = new Point3d(-tSpacingR, -p9.Y, 0);
             Point3d p11 = new Point3d(-tSpacingL, p5.Y + tan30 * tSpacingL, 0);
             Point3d p12 = new Point3d(-tSpacingL, -p11.Y, 0);
-            Point3d p13 = new Point3d(p0.X, p0.Y - Thickness / cos30, 0);
+            Point3d p13 = new Point3d(p0.X, p0.Y - thicknessCapped / cos30, 0);
+
+            Vector3d appendVector = new Vector3d(0, appendDist, 0);
+
+            p0 += appendVector;
+            p1 += appendVector;
+            p2 += appendVector;
+            p3 -= appendVector;
+            p4 -= appendVector;
+            p5 -= appendVector;
+            p6 -= appendVector;
+            p7 += appendVector;
+            p8 += appendVector;
+            p9 += appendVector;
+            p10 -= appendVector;
+            p11 -= appendVector;
+            p12 += appendVector;
+            p13 += appendVector;
 
             Polyline logoMain;
 
-            if (Thickness < cos30)
+            if (thicknessCapped < cos30)
                 logoMain = new Polyline() { p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p0 };
             else
-                logoMain = new Polyline() { p0, p1, p2, p3, p4, Point3d.Origin, p0 };
+            {
+                if (Ratio < 1)
+                {
+                    Vector3d intersection = new Vector3d(appendDist / tan30, appendDist, 0);
+                    p0 -= intersection;
 
-            Shape.Add(logoMain);
+                    logoMain = new Polyline() { p0, p1, p2, p3, p4, p5, p0 };
+                }
+                else
+                {
+                    logoMain = new Polyline() { p0, p1, p2, p3, p4, p5, p11, p0 };
+                }
+            }
+
+            MainShape = logoMain.ToPolylineCurve();
             AddBorder();
 
-            Transform xform = Transform.Scale(Plane.WorldXY, Width, Height, 1);
 
-            Shape.Transform(xform);
         }
 
         private void AddBorder()
@@ -107,7 +148,7 @@ namespace the_Dominion.Utility
                 Curve offset1 = CalculatePolygon(Offsets[i * 2]);
                 Curve offset2 = CalculatePolygon(Offsets[i * 2 + 1]);
 
-                Shape.AddRange(new[] { offset1, offset2 });
+                Borders.AddRange(new[] { offset1, offset2 });
             }
         }
 
@@ -115,17 +156,30 @@ namespace the_Dominion.Utility
         {
             Polyline polygon = new Polyline();
 
+            var appendDist = (Ratio - 1) / 2;
+
             for (int i = 0; i <= nSides; i++)
             {
                 double angle = i * Math.PI / 3 + Math.PI / 6;
                 double x = Math.Cos(angle);
                 double y = Math.Sin(angle);
 
+                if (i % 6 < 3)
+                    y += appendDist;
+                else
+                    y -= appendDist;
+
                 var pt = new Point3d(x, y, 0) * (1 + offset);
                 polygon.Add(pt);
             }
 
             return polygon.ToPolylineCurve();
+        }
+
+        private void Transform()
+        {
+            MainShape.Transform(Transformation);
+            Borders.Transform(Transformation);
         }
     }
 }
