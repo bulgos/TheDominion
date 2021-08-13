@@ -31,9 +31,6 @@ namespace the_Dominion.Utility
                     Thickness = thickness;
                     break;
             }
-            //if (thickness > 1)
-            //    Thickness = 1;
-            //else
 
             Initialise();
         }
@@ -57,7 +54,6 @@ namespace the_Dominion.Utility
             double cos30 = Math.Cos(Math.PI / 6);
             double tan30 = Math.Tan(Math.PI / 6);
 
-            double st = 1 - Thickness;
             double outerThickness = 1 - (Thickness / cos30);
 
             double tSpacingR = (cos30 - Thickness) / 2;
@@ -78,7 +74,10 @@ namespace the_Dominion.Utility
             Point3d p12 = new Point3d(-tSpacingL, -p11.Y, 0);
             Point3d p13 = new Point3d(p0.X, p0.Y - Thickness / cos30, 0);
 
-            Shape = new Polyline() { p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p0 };
+            if (Thickness < cos30)
+                Shape = new Polyline() { p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p0 };
+            else
+                Shape = new Polyline() { p0, p1, p2, p3, p4, Point3d.Origin, p0 };
         }
     }
 }
