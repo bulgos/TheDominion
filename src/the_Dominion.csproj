@@ -147,19 +147,24 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>SET TARGETGH="$(TargetDir)$(ProjectName).gha"
+    <PostBuildEvent>SET DIST=$(SolutionDir)dist\
+SET MISC=%25DIST%25misc
+SET SAMP=%25DIST%25samples
+echo "%25DIST%25"
+echo "%25MISC%25"
+echo "%25SAMP%25"
+
+SET TARGETGH="$(TargetDir)$(ProjectName).gha"
 Copy "$(TargetPath)" "%25TARGETGH%25"
 Erase "$(TargetPath)"
-
-SET DIST=$(SolutionDir)dist\
-SET MISC="%25DIST%25\misc"
-echo "%25PATH%25"
-echo "%25MISC%25"
 
 if $(ConfigurationName) == Release (
 if not exist "%25DIST%25" mkdir "%25DIST%25"
 copy "%25TARGETGH%25" "%25DIST%25"
 copy "$(TargetDir)*.dll" "%25DIST%25"
+
+if not exist "%25SAMP%25" mkdir "%25SAMP%25"
+xcopy "$(SolutionDir)samples" "%25SAMP%25" /e /y /i /r
 
 if not exist "%25MISC%25" mkdir "%25MISC%25"
 copy "$(SolutionDir)*.md" "%25MISC%25"
