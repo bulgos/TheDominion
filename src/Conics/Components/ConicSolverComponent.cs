@@ -10,7 +10,7 @@ namespace the_Dominion.Conics.Components
     {
         public ConicSolverComponent()
             : base("Conic-Solver", "CSolve",
-                  "Solves a Conic in the 2d Plane",
+                  "Solves a Conic in the XY Plane",
                   "Dominion", "Conics")
         { }
 

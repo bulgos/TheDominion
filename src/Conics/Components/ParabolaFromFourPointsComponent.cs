@@ -12,7 +12,7 @@ namespace the_Dominion.Conics.Components
     {
         public ParabolaFromFourPointsComponent()
           : base("4-Point Parabola-Solver", "SolveParab4",
-              "Solves the Parabolae from 4 Points in the 2d Plane",
+              "Solves the Parabolae from 4 Points in the XY Plane",
               "Dominion", "Conics")
         { }
 

@@ -11,7 +11,7 @@ namespace the_Dominion.Conics.Components
     {
         public ConicFrom5PointsComponent()
             : base("5-Point Conic-Solver", "SolveConic5", 
-                  "Solves a Conic from 5 points in the 2d Plane",
+                  "Solves a Conic from 5 points in the XY Plane",
                   "Dominion", "Conics")
         { }
 

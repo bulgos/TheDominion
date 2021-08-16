@@ -11,7 +11,7 @@ namespace the_Dominion.Conics.Components
     {
         public ParabolaFromThreePointsComponent()
           : base("3-Point Parabola-Solver", "SolveParab3",
-              "Solves a Parabola from 3 Points in the 2d Plane",
+              "Solves a Parabola from 3 Points in the XY Plane",
               "Dominion", "Conics")
         { }
 
