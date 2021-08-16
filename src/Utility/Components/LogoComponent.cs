@@ -17,7 +17,7 @@ namespace the_Dominion.Utility.Components
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddPlaneParameter("Plane", "P", "Plane of Orientation", GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Plane", "P", "Plane of Orientation", GH_ParamAccess.item, Plane.WorldXY);
             pManager.AddNumberParameter("Ratio", "R", "Height/Width Ratio of Logo", GH_ParamAccess.item, 1.0);
             pManager.AddNumberParameter("Thickness", "T", "Thickness of Logo", GH_ParamAccess.item, 0.2);
             pManager.AddNumberParameter("Borders", "B", "Border curves of Logo", GH_ParamAccess.list);
