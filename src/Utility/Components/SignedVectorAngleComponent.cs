@@ -17,7 +17,7 @@ namespace the_Dominion.Utility.Components
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("Plane", "Pl", "The Plane to test against", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddVectorParameter("Vector1", "V1", "The first Vector to test", GH_ParamAccess.item);
+            pManager.AddVectorParameter("Vector1", "V1", "The first Vector to test", GH_ParamAccess.item, Vector3d.XAxis);
             pManager.AddVectorParameter("Vector2", "V2", "The second Vector to test", GH_ParamAccess.item);
         }
 
