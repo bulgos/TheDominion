@@ -8,7 +8,7 @@ namespace the_Dominion
 {
     public class the_DominionInfo : GH_AssemblyInfo
     {
-        public override string Name => "The Dominion";
+        public override string Name => "The-Dominion";
 
         public override Bitmap Icon => Resources.the_dominion;
 
@@ -20,13 +20,6 @@ namespace the_Dominion
 
         public override string AuthorContact => "https://github.com/bulgos/the_Dominion";
 
-        public override string AssemblyVersion
-        {
-            get
-            {
-                System.Reflection.Assembly assembly = System.Reflection.Assembly.GetExecutingAssembly();
-                return FileVersionInfo.GetVersionInfo(assembly.Location).FileVersion;
-            }
-        }
+        public override string AssemblyVersion => "0.2.1.3";
     }
 }
