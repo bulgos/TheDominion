@@ -16,9 +16,6 @@ namespace the_Dominion.Conics.Components
               "Dominion", "Conics")
         { }
 
-        /// <summary>
-        /// Registers all the input parameters for this component.
-        /// </summary>
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddPointParameter("P1", "p1", "First point on the Parabola", GH_ParamAccess.item);
@@ -27,20 +24,12 @@ namespace the_Dominion.Conics.Components
             pManager.AddPointParameter("P4", "p4", "Fourth point on the Parabola", GH_ParamAccess.item);
         }
 
-        /// <summary>
-        /// Registers all the output parameters for this component.
-        /// </summary>
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
             pManager.AddParameter(new Conic_Param(), "Parabola1", "P1", "The First Parabola", GH_ParamAccess.item);
             pManager.AddParameter(new Conic_Param(), "Parabola2", "P2", "The Second Parabola", GH_ParamAccess.item);
         }
 
-        /// <summary>
-        /// This is the method that actually does the work.
-        /// </summary>
-        /// <param name="DA">The DA object can be used to retrieve data from input parameters and 
-        /// to store data in output parameters.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             Point3d p1 = Point3d.Unset;

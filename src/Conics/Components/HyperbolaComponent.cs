@@ -11,18 +11,18 @@ namespace the_Dominion.Conics.Components
     {
         public HyperbolaComponent()
           : base("Construct Hyperbola", "ConHyperb",
-              "Constructs a Hyperbola in the form x^2 / a^2 - y^2 / b^2 = 1",
+              "Constructs a Hyperbola in the form x² / A² - y² / B² = 1",
               "Dominion", "Conics")
         { }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
             pManager.AddPlaneParameter("Plane", "P", "Plane in which to create Hyperbola", GH_ParamAccess.item, Plane.WorldXY);
-            pManager.AddNumberParameter("a", "a", "a", GH_ParamAccess.item, 1);
-            pManager.AddNumberParameter("b", "b", "b", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("A", "A", "a", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("B", "B", "b", GH_ParamAccess.item, 1);
             pManager.AddNumberParameter("h", "h", "height", GH_ParamAccess.item, 10);
             pManager.AddBooleanParameter("Flip", "F", "Flip the x and y axes of the Hyperbola\n" +
-                "if true, Hyperbola will be created in the form y^2 / b^2 - x^2 / a^2 = 1", GH_ParamAccess.item, false);
+                "if true, Hyperbola will be created in the form y² / B² - x² / A² = 1", GH_ParamAccess.item, false);
         }
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)

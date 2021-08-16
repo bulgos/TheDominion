@@ -11,7 +11,7 @@ namespace the_Dominion.Conics.Components
     {
         public ParabolaRotatedComponent()
           : base("Construct Rotated Parabola", "ConRParab",
-              "Constructs a Parabola with rotation",
+              "Constructs a Parabola with 2d rotation",
               "Dominion", "Conics")
         { }
 

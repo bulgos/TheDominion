@@ -11,7 +11,7 @@ namespace the_Dominion.Conics.Components
     {
         public ParabolaFromQuadraticComponent()
           : base("Construct Quadratic Parabola", "ConParabQ",
-              "Constructs a Parabola of the form y = ax^2 + bx+ c",
+              "Constructs a Parabola of the form y = Ax² + Bx+ C",
               "Dominion", "Conics")
         { }
 

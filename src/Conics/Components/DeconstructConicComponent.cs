@@ -27,9 +27,9 @@ namespace the_Dominion.Conics.Components
             pManager.AddPointParameter("Focus1", "F1", "The first Conic Focus", GH_ParamAccess.item);
             pManager.AddPointParameter("Focus2", "F2", "The second Conic Focus", GH_ParamAccess.item);
             pManager.AddPlaneParameter("BasePlane", "Pl", "The Plane the Conic was constructed from", GH_ParamAccess.item);
-            pManager.AddNumberParameter("A", "A", "Ax^2", GH_ParamAccess.item);
+            pManager.AddNumberParameter("A", "A", "Ax²", GH_ParamAccess.item);
             pManager.AddNumberParameter("B", "B", "Bxy", GH_ParamAccess.item);
-            pManager.AddNumberParameter("C", "C", "Cy^2", GH_ParamAccess.item);
+            pManager.AddNumberParameter("C", "C", "Cy²", GH_ParamAccess.item);
             pManager.AddNumberParameter("D", "D", "Dx", GH_ParamAccess.item);
             pManager.AddNumberParameter("E", "E", "Ey", GH_ParamAccess.item);
             pManager.AddNumberParameter("F", "F", "F", GH_ParamAccess.item);
@@ -37,7 +37,7 @@ namespace the_Dominion.Conics.Components
             pManager.AddNumberParameter("Axis B", "Ab", "Axis B of the Conic", GH_ParamAccess.item);
             pManager.AddNumberParameter("Discriminant", "Di", "The Discriminant", GH_ParamAccess.item);
             pManager.AddTransformParameter("Transform", "X", "The Conic Transform", GH_ParamAccess.item);
-            pManager.AddTextParameter("ConicFormatted", "Cf", "A formatted string representation of the Conic Equation", GH_ParamAccess.item);
+            pManager.AddTextParameter("Formatted Conic", "Cf", "A formatted string representation of the Conic Equation", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)

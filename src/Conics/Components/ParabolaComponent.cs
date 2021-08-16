@@ -11,13 +11,13 @@ namespace the_Dominion.Conics.Components
     {
         public ParabolaComponent()
           : base("Construct Parabola", "ConParab",
-              "Constructs a Parabola in the form y = ax^2",
+              "Constructs a Parabola in the form y = Ax²",
               "Dominion", "Conics")
         { }
 
         protected override void RegisterInputParams(GH_InputParamManager pManager)
         {
-            pManager.AddNumberParameter("a", "a", "a", GH_ParamAccess.item, 1);
+            pManager.AddNumberParameter("A", "A", "A", GH_ParamAccess.item, 1);
             pManager.AddIntervalParameter("Domain", "D", "The Domain to calculate the function in", GH_ParamAccess.item, new Interval(-10, 10));
         }
 
