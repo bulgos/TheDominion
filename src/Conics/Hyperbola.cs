@@ -65,9 +65,9 @@ namespace the_Dominion.Conics
             {
                 double x0 = Math.Sqrt((AxisA * AxisA) * (1 + ((Height * Height) / (AxisB * AxisB))));
 
-                Point3d p0 = new Point3d(x0, Height, 0);
+                Point3d p0 = new Point3d(x0, -Height, 0);
                 Point3d p1 = new Point3d(AxisA, 0, 0);
-                Point3d p2 = new Point3d(x0, -Height, 0);
+                Point3d p2 = new Point3d(x0, Height, 0);
 
                 weight = x0 / AxisA;
 
@@ -79,9 +79,9 @@ namespace the_Dominion.Conics
             {
                 double y0 = Math.Sqrt((AxisB * AxisB) * (1 + ((Height * Height) / (AxisA * AxisA))));
 
-                Point3d p0 = new Point3d(Height, y0, 0);
+                Point3d p0 = new Point3d(-Height, y0, 0);
                 Point3d p1 = new Point3d(0, AxisB, 0);
-                Point3d p2 = new Point3d(-Height, y0, 0);
+                Point3d p2 = new Point3d(Height, y0, 0);
 
                 weight = y0 / AxisB;
 
