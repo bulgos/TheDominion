@@ -7,14 +7,21 @@ If you are only interested in using the application, follow the *Run* instructio
 * [Rhino 6 or 7](https://www.rhino3d.com/)  
 
 ## Run
-##### Option 1:  
+Run the sample files once loaded located in the samples folder.
+
+##### Option 1:
+1. Download the [latest version](https://www.food4rhino.com/en/app/dominion) from food4Rhino.
+2. Copy all unzipped contents into your component library, usually C:\Users\\($user)\AppData\Roaming\Grasshopper\Libraries
+3. Unblock all files
+
+##### Option 2:  
 1. Navigate to Releases
 2. Download and unzip the latest Release, e.g. the_dominion_x.x.x.x.zip.
 3. copy all unzipped contents into your component library, usually C:\Users\\($user)\AppData\Roaming\Grasshopper\Libraries
 4. Unblock all files
 
-##### Option 2 (Experimental):
-1. Open a file from samples folder ~~e.g. 001.gh~~
+##### Option 3 (Experimental):
+1. Open a file from samples folder e.g. dominion_sample_001.gh
 2. Install the plugin from the Yak Package Manager
 
 ## Build
@@ -45,11 +52,11 @@ The matching Visual Studio Template for your version of Rhino.
 
 [Push package to Yak server](https://developer.rhino3d.com/guides/yak/pushing-a-package-to-the-server/)  
 8. Login to Mcneel account `"C:\Program Files\Rhino 7\System\Yak.exe" login`  
-9. Push package to server `"C:\Program Files\Rhino 7\System\Yak.exe" push the-dominion-0.2.1-rh6_13-win.yak`  
+9. Push package to server `"C:\Program Files\Rhino 7\System\Yak.exe" push the-dominion-x.x.x-any-win.yak`  
 10. Check package has been successfully pushed `"C:\Program Files\Rhino 7\System\Yak.exe" search --all --prerelease the-dominion`  
 
 ##### If it is your first time, try the test server:  
-9. Push package to test server `"C:\Program Files\Rhino 7\System\Yak.exe" push --source https://test.yak.rhino3d.com the-dominion-0.2.1-rh6_13-win.yak`  
+9. Push package to test server `"C:\Program Files\Rhino 7\System\Yak.exe" push --source https://test.yak.rhino3d.com the-dominion-x.x.x-any-win.yak`  
 10. Check package has been successfully pushed `"C:\Program Files\Rhino 7\System\Yak.exe" search --source https://test.yak.rhino3d.com --all --prerelease the-dominion`  
 
 [Yak Command Line Tool Reference](https://developer.rhino3d.com/guides/yak/yak-cli-reference/)  
