@@ -3,9 +3,12 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using the_Dominion.Conics.Wrappers;
 using the_Dominion.Properties;
+using the_Dominion.Utility;
 
 namespace the_Dominion.Conics.Components
 {
@@ -57,15 +60,14 @@ namespace the_Dominion.Conics.Components
 
             for (int i = 0; i < conicSection.Section.Count; i++)
             {
-                if (conicSection.Section[i] is NurbsCurve nurbsCurve)
+                if (conicSection.Section[i] is NurbsCurve conicNurbsCurve)
                 {
                     GH_Path path = new GH_Path(i);
 
-                    for (int j = 0; j < nurbsCurve.Points.Count; j++)
-                    {
-                        nurbsCurve.Points.GetPoint(j, out Point3d pt);
-                        controlPoints.Append(new GH_Point(pt), path);
-                    }
+                    IEnumerable<GH_Point> conicGhPoints = conicNurbsCurve.GetPointListFromNurbsCurveControlPoints()
+                        .Select(pt => new GH_Point(pt));
+
+                    controlPoints.AppendRange(conicGhPoints, path);
                 }
             }
 

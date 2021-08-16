@@ -133,5 +133,18 @@ namespace the_Dominion.Utility
 
             return line1.PointAt(param1);
         }
+
+        public static Point3dList GetPointListFromNurbsCurveControlPoints(this NurbsCurve nurbsCurve)
+        {
+            Point3dList controlPoints = new Point3dList(nurbsCurve.Points.Count);
+
+            for (int i = 0; i < nurbsCurve.Points.Count; i++)
+            {
+                nurbsCurve.Points.GetPoint(i, out Point3d pt);
+                controlPoints.Add(pt);
+            }
+
+            return controlPoints;
+        }
     }
 }

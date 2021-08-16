@@ -2,7 +2,6 @@
 using MathNet.Numerics.LinearAlgebra.Double;
 using Rhino.Collections;
 using Rhino.Geometry;
-using Rhino.Geometry.Intersect;
 using System;
 using System.Collections.Generic;
 using the_Dominion.Utility;
@@ -20,11 +19,7 @@ namespace the_Dominion.Conics
             if (ConicSectionType != ConicSectionType.Parabola)
                 throw new ArgumentException("Conic does not represent a Parabola");
 
-            ConicSection worldAlignedConic = conicSection.WorldAlignedConic;
-
             Initialise();
-            //Transform(InverseTransformMatrix, false, false, true);
-            //ConstructParabola();
         }
 
         public Parabola(double a, Interval domain)
@@ -61,8 +56,7 @@ namespace the_Dominion.Conics
             {
                 if (_roots == null)
                 {
-                    //ComputeQuadraticRoots();
-                    _roots = new Point3d[0];
+                    ComputeQuadraticRoots();
                 }
 
                 return _roots;
@@ -336,20 +330,7 @@ namespace the_Dominion.Conics
 
         private void ComputeQuadraticRoots()
         {
-            double[] rootParameters = Geometry.ComputeQuadraticRoots(A, D, F);
-
-            var roots = new Point3d[rootParameters.Length];
-
-            for (int i = 0; i < rootParameters.Length; i++)
-            {
-                Point3d rootPt = new Point3d(rootParameters[i], 0, 0);
-                ComputeParabolaPoint(ref rootPt);
-                rootPt.Transform(TransformMatrix);
-
-                roots[i] = rootPt;
-            }
-
-            Roots = roots;
+            Roots = ComputePointAtY(0);
         }
 
         private void ComputeParabolaDiscriminant()

@@ -3,9 +3,12 @@ using Grasshopper.Kernel.Data;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using the_Dominion.Conics.Wrappers;
 using the_Dominion.Properties;
+using the_Dominion.Utility;
 
 namespace the_Dominion.Conics.Components
 {
@@ -34,7 +37,7 @@ namespace the_Dominion.Conics.Components
             pManager.AddIntervalParameter("Domain", "D", "The Domain to calculate the function in", GH_ParamAccess.item);
             pManager.AddTextParameter("Direction", "D", "Parabola Direction", GH_ParamAccess.item);
             pManager.AddTextParameter("ConicFormatted", "Cf", "A formatted string representation of the Conic Equation", GH_ParamAccess.item);
-            //pManager.AddPointParameter("Roots", "R", "Roots of the Parabola", GH_ParamAccess.list);
+            pManager.AddPointParameter("Roots", "R", "Roots of the Parabola", GH_ParamAccess.list);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
@@ -64,15 +67,14 @@ namespace the_Dominion.Conics.Components
 
             for (int i = 0; i < conicSection.Section.Count; i++)
             {
-                if (conicSection.Section[i] is NurbsCurve nurbsCurve)
+                if (conicSection.Section[i] is NurbsCurve conicNurbsCurve)
                 {
                     GH_Path path = new GH_Path(i);
 
-                    for (int j = 0; j < nurbsCurve.Points.Count; j++)
-                    {
-                        nurbsCurve.Points.GetPoint(j, out Point3d pt);
-                        controlPoints.Append(new GH_Point(pt), path);
-                    }
+                    IEnumerable<GH_Point> conicGhPoints = conicNurbsCurve.GetPointListFromNurbsCurveControlPoints()
+                        .Select(pt => new GH_Point(pt));
+
+                    controlPoints.AppendRange(conicGhPoints, path);
                 }
             }
 
@@ -86,7 +88,7 @@ namespace the_Dominion.Conics.Components
             DA.SetData(7, parabola.Domain);
             DA.SetData(8, shape);
             DA.SetData(9, parabola.FormatConicEquation());
-            //DA.SetDataList(10, parabola.Roots);
+            DA.SetDataList(10, parabola.Roots);
         }
 
         public override Guid ComponentGuid => new Guid("71e49a09-9095-4ffd-9824-32eca6e0a9c3");
