@@ -81,7 +81,7 @@ namespace the_Dominion.Conics.Wrappers
 
             foreach (var section in Value.Section)
             {
-                args.Pipeline.DrawCurve(section, args.Color);
+                args.Pipeline.DrawCurve(section, args.Color, args.Thickness);
             }
 
             args.Pipeline.DrawPoint(Value.Focus1, Rhino.Display.PointStyle.RoundControlPoint, 5, args.Color);
