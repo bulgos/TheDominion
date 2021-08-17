@@ -119,7 +119,7 @@ namespace the_Dominion.Conics
             return new Parabola(quadratic[0], quadratic[1], quadratic[2], plane, domain);
         }
 
-        public static Parabola[] From4Points(IEnumerable<Point3d> pts)
+        public static new Parabola[] From4Points(IEnumerable<Point3d> pts)
         {
             // https://www.mathpages.com/home/kmath037/kmath037.htm
             // https://math.stackexchange.com/a/3224627
