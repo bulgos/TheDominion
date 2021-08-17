@@ -83,3 +83,7 @@ See [LICENSE](./LICENSE) for details.
 
 [Plotting Conics](https://mmas.github.io/conics-matplotlib) for use in conjunction with below link:  
 [matplotlib online python](https://trinket.io/embed/python3/a5bd54189b)  
+
+### General NURBS
+[Geometry for Naval Architects](https://www.sciencedirect.com/book/9780081003282/geometry-for-naval-architects)  
+[Cubic Splines](https://www.sciencedirect.com/topics/engineering/cubic-spline)  
