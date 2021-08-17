@@ -74,6 +74,7 @@ See [LICENSE](./LICENSE) for details.
 [Rotation of axes](https://en.wikipedia.org/wiki/Rotation_of_axes)  
 [Wikipedia Conics](https://en.wikipedia.org/wiki/Conic_section#Conversion_to_canonical_form)  
 [Conics and their Duals](https://www-m10.ma.tum.de/foswiki/pub/Lehre/ProjektiveGeometrieWS0607/chap9.pdf)  
+[AV Akopyan's Geometry of Conics](https://geometry.ru/books/conic_e.pdf)  
 
 ### Other Conic and NURBS Tools
 [opennurbs](https://github.com/mcneel/opennurbs)  
