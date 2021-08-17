@@ -142,6 +142,23 @@ namespace the_Dominion.Conics
 
         public ConicSection WorldAlignedConic { get; private set; }
 
+        public static ConicSection From5PointsAndTangents(IEnumerable<Point3d> points, IEnumerable<Line> lines)
+        {
+            // bugs
+            List<Point3d> pts = points.ToList();
+            List<Line> lns = lines.ToList();
+
+            if (pts.Count + lns.Count != 5)
+                throw new ArgumentException("Incorrect number of points and tangents specified");
+
+            foreach (Line ln in lns)
+            {
+                pts.Add(ln.ComputeDual());
+            }
+
+            return From5Points(pts);
+        }
+
         public static ConicSection From5Points(IEnumerable<Point3d> points)
         {
             // simplest solution we could find

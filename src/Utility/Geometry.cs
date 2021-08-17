@@ -146,5 +146,13 @@ namespace the_Dominion.Utility
 
             return controlPoints;
         }
+
+        public static Point3d ComputeDual(this Line line)
+        {
+            Vector3d vec = line.Direction;
+            Vector3d v1 = new Vector3d(line.From);
+            double dot = v1 * vec;
+            return new Point3d((dot * vec - v1) / (v1*v1 - dot * dot));
+        }
     }
 }

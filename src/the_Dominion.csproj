@@ -64,6 +64,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Conics\Components\ConicFrom5PointsComponent.cs" />
+    <Compile Include="Conics\Components\ConicFromPointsAndTangentsComponent.cs" />
     <Compile Include="Conics\Components\ConicNormalisedFormComponent.cs" />
     <Compile Include="Conics\Components\ConicSolverComponent.cs" />
     <Compile Include="Conics\Components\ConicTypeComponent.cs" />
