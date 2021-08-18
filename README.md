@@ -42,10 +42,10 @@ The matching Visual Studio Template for your version of Rhino.
 ## Deploy
 ##### If you are an owner and want to deploy the application to Yak:  
 [Build Yak packages with Rhino 7](https://developer.rhino3d.com/guides/yak/creating-a-grasshopper-plugin-package/)  
-1. Set Configuration in Visual Studio to Release.
-2. Build Application (this will populate the \dist directory in Release Configuration).
-3. Point cmd prompt to root of the repository
-4. Change to distribution directory `cd \the_Dominion\dist`
+1. Set Visual Studio Build Configuration to Release.
+2. Build Application (this will populate the \dist directory when building Release Configuration).
+3. Open command prompt and point at root of the repository.
+4. Navigate into distribution directory `cd \the_Dominion\dist`
 5. Spec the manifest .yml file `"C:\Program Files\Rhino 7\System\Yak.exe" spec`
 6. Update the manifest manually if necessary.
 7. Build the package (currently windows only) `"C:\Program Files\Rhino 7\System\Yak.exe" build --platform win`
@@ -55,7 +55,7 @@ The matching Visual Studio Template for your version of Rhino.
 9. Push package to server `"C:\Program Files\Rhino 7\System\Yak.exe" push the-dominion-x.x.x-any-win.yak`  
 10. Check package has been successfully pushed `"C:\Program Files\Rhino 7\System\Yak.exe" search --all --prerelease the-dominion`  
 
-##### If it is your first time, try the test server:  
+##### If it is your first time deploying, try the test server:  
 9. Push package to test server `"C:\Program Files\Rhino 7\System\Yak.exe" push --source https://test.yak.rhino3d.com the-dominion-x.x.x-any-win.yak`  
 10. Check package has been successfully pushed `"C:\Program Files\Rhino 7\System\Yak.exe" search --source https://test.yak.rhino3d.com --all --prerelease the-dominion`  
 
