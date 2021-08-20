@@ -16,10 +16,10 @@ namespace Dominion
 
         public override Guid Id => new Guid("d540efd4-25cd-447f-87fc-7b187f033680");
 
-        public override string AuthorName => "Daniel Christev and Michael Wickerson";
+        public override string AuthorName => "Daniel Christev";
 
-        public override string AuthorContact => "https://github.com/bulgos/the_Dominion";
+        public override string AuthorContact => "https://github.com/bulgos/TheDominion";
 
-        public override string AssemblyVersion => "0.2.1.3";
+        public override string AssemblyVersion => "0.2.1.4";
     }
 }
