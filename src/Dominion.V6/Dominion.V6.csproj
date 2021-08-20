@@ -31,5 +31,32 @@
 	</PropertyGroup>
 
 	<Import Project="..\Dominion.Shared\Dominion.Shared.projitems" Label="Shared" />
+	
+	<PropertyGroup>
+		<DistributionDirectory>$(SolutionDir)dist\</DistributionDirectory>
+		<LibraryDirectory>$(DistributionDirectory)dominion\</LibraryDirectory>
+		<SampleDirectory>$(DistributionDirectory)samples\</SampleDirectory>
+		<MiscellaneousDirectory>$(DistributionDirectory)misc\</MiscellaneousDirectory>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<BuildFiles Include="$(TargetDir)*.*"
+					Exclude="$(TargetDir)*.pdb"/>
+		<SampleFiles Include="$(SolutionDir)samples\*.gh"/>
+		<MiscFiles Include="$(SolutionDir)*.md;$(SolutionDir)LICENSE;"/>
+		<InstructionFile Include="$(SolutionDir)install.txt"/>
+	</ItemGroup>
+
+	<Target Name="CustomAfterBuild" AfterTargets="Build" Condition="$(Configuration) == 'Release'">
+		<MakeDir Directories="$(DistributionDirectory)" Condition="!Exists($(DistributionDirectory))"/>
+		<MakeDir Directories="$(LibraryDirectory)" Condition="!Exists($(LibraryDirectory))"/>
+		<MakeDir Directories="$(SampleDirectory)" Condition="!Exists($(SampleDirectory))"/>
+		<MakeDir Directories="$(MiscellaneousDirectory)" Condition="!Exists($(MiscellaneousDirectory))"/>
+		
+		<Copy SourceFiles="@(BuildFiles)" DestinationFolder="$(LibraryDirectory)"/>
+		<Copy SourceFiles="@(SampleFiles)" DestinationFolder="$(SampleDirectory)"/>
+		<Copy SourceFiles="@(MiscFiles)" DestinationFolder="$(MiscellaneousDirectory)"/>
+		<Copy SourceFiles="@(InstructionFile)" DestinationFolder="$(DistributionDirectory)"/>
+	</Target>
 
 </Project>
