@@ -2,9 +2,9 @@
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
-using the_Dominion.Conics.Wrappers;
+using Dominion.Conics.Wrappers;
 
-namespace the_Dominion.Conics.Components
+namespace Dominion.Conics.Components
 {
     public class ConicFrom4PointsComponent : GH_Component
     {

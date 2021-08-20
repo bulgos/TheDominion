@@ -1,7 +1,7 @@
 ﻿using System;
 using Rhino.Geometry;
 
-namespace the_Dominion.Conics
+namespace Dominion.Conics
 {
     public class Ellipse : ConicSection
     {

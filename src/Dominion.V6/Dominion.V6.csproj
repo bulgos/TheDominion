@@ -6,6 +6,9 @@
     <Title>Dominion.V6</Title>
     <Description>Description of Dominion.V6</Description>
     <TargetExt>.gha</TargetExt>
+    <RootNamespace>Dominion</RootNamespace>
+    <ApplicationIcon />
+    <Win32Resource></Win32Resource>
   </PropertyGroup>
   
   <ItemGroup>

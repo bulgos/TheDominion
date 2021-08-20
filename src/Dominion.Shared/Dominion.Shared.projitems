@@ -7,7 +7,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
   </PropertyGroup>
   <PropertyGroup Label="Configuration">
-    <Import_RootNamespace>Dominion.Shared</Import_RootNamespace>
+    <Import_RootNamespace>Dominion</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Conics\Components\ConicFrom4PointsComponent.cs" />

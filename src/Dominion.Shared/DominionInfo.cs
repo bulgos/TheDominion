@@ -2,9 +2,9 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
-using the_Dominion.Properties;
+using Dominion.Properties;
 
-namespace the_Dominion
+namespace Dominion
 {
     public class the_DominionInfo : GH_AssemblyInfo
     {

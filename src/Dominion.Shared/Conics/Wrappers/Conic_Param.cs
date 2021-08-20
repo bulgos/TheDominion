@@ -9,9 +9,9 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using the_Dominion.Properties;
+using Dominion.Properties;
 
-namespace the_Dominion.Conics.Wrappers
+namespace Dominion.Conics.Wrappers
 {
     public class Conic_Param : GH_PersistentGeometryParam<GH_Conic>, IGH_PreviewObject, IGH_BakeAwareObject
     {

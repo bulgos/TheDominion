@@ -2,10 +2,10 @@
 using Rhino.Geometry;
 using System;
 using System.Drawing;
-using the_Dominion.Conics.Wrappers;
-using the_Dominion.Properties;
+using Dominion.Conics.Wrappers;
+using Dominion.Properties;
 
-namespace the_Dominion.Conics.Components
+namespace Dominion.Conics.Components
 {
     public class ParabolaComponent : GH_Component
     {

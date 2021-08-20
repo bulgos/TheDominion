@@ -2,9 +2,9 @@
 using Rhino.Geometry;
 using System;
 using System.Drawing;
-using the_Dominion.Properties;
+using Dominion.Properties;
 
-namespace the_Dominion.Conics.Components
+namespace Dominion.Conics.Components
 {
     public class ConicTypeComponent : GH_Component
     {

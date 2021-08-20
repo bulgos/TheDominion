@@ -2,10 +2,10 @@
 using Rhino.Geometry;
 using System;
 using System.Drawing;
-using the_Dominion.Properties;
-using the_Dominion.Utility;
+using Dominion.Properties;
+using Dominion.Utility;
 
-namespace the_Dominion.Conics.Components
+namespace Dominion.Conics.Components
 {
     public class GetInnerTangents : GH_Component
     {

@@ -2,9 +2,9 @@
 using Rhino.Geometry;
 using System;
 using System.Drawing;
-using the_Dominion.Properties;
+using Dominion.Properties;
 
-namespace the_Dominion.Utility.Components
+namespace Dominion.Utility.Components
 {
     public class SignedVectorAngleComponent : GH_Component
     {

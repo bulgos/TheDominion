@@ -5,7 +5,7 @@ using Rhino.DocObjects;
 using Rhino.Geometry;
 using System;
 
-namespace the_Dominion.Conics.Wrappers
+namespace Dominion.Conics.Wrappers
 {
     public class GH_Conic : GH_GeometricGoo<ConicSection>, IGH_PreviewData, IGH_BakeAwareData
     {

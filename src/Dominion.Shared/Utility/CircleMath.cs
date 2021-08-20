@@ -1,7 +1,7 @@
 ﻿using Rhino.Geometry;
 using System;
 
-namespace the_Dominion.Utility
+namespace Dominion.Utility
 {
     public class CircleMath
     {

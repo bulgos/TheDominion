@@ -5,9 +5,9 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using the_Dominion.Utility;
+using Dominion.Utility;
 
-namespace the_Dominion.Conics
+namespace Dominion.Conics
 {
     public class ConicSection
     {

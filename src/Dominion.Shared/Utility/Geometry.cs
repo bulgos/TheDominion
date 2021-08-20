@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace the_Dominion.Utility
+namespace Dominion.Utility
 {
     public static class Geometry
     {

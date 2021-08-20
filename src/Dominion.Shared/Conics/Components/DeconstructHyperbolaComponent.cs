@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using the_Dominion.Conics.Wrappers;
-using the_Dominion.Properties;
-using the_Dominion.Utility;
+using Dominion.Conics.Wrappers;
+using Dominion.Properties;
+using Dominion.Utility;
 
-namespace the_Dominion.Conics.Components
+namespace Dominion.Conics.Components
 {
     public class DeconstructHyperbolaComponent : GH_Component
     {

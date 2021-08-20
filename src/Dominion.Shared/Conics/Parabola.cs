@@ -4,9 +4,9 @@ using Rhino.Collections;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
-using the_Dominion.Utility;
+using Dominion.Utility;
 
-namespace the_Dominion.Conics
+namespace Dominion.Conics
 {
     public class Parabola : ConicSection
     {

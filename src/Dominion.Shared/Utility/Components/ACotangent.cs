@@ -1,9 +1,9 @@
 ﻿using Grasshopper.Kernel;
 using System;
 using System.Drawing;
-using the_Dominion.Properties;
+using Dominion.Properties;
 
-namespace the_Dominion.Utility.Components
+namespace Dominion.Utility.Components
 {
 #if DEBUG
     public class ACotangent : GH_Component
