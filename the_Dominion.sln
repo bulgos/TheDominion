@@ -5,7 +5,12 @@ VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "the_Dominion", "src\the_Dominion.csproj", "{38C8A2D1-008B-45A9-923F-8A247F9AAD61}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Dominion.Shared", "src\Dominion.Shared\Dominion.Shared.shproj", "{759AE17E-FD8D-4AB8-BF5B-604A78ECCBA1}"
+EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\Dominion.Shared\Dominion.Shared.projitems*{759ae17e-fd8d-4ab8-bf5b-604a78eccba1}*SharedItemsImports = 13
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
