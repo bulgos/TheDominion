@@ -1,8 +1,8 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<TargetFramework>net48</TargetFramework>
-		<Version>1.0</Version>
+		<Version>0.2.1.4</Version>
 		<Title>Dominion.V7</Title>
 		<Description>Provides components for building Mathematical Curves from Conic Equations</Description>
 		<TargetExt>.gha</TargetExt>
@@ -18,6 +18,10 @@
 
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);V7</DefineConstants>
+		<PackageId>TheDominion</PackageId>
+		<Authors>Daniel Christev</Authors>
+		<Product>Dominion</Product>
+		<AssemblyName>the_dominion</AssemblyName>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
