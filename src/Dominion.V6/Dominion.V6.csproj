@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<TargetFramework>net48</TargetFramework>
 		<Version>0.2.1.4</Version>
@@ -37,6 +36,8 @@
 		<LibraryDirectory>$(DistributionDirectory)dominion\</LibraryDirectory>
 		<SampleDirectory>$(DistributionDirectory)samples\</SampleDirectory>
 		<MiscellaneousDirectory>$(DistributionDirectory)misc\</MiscellaneousDirectory>
+
+		<Yak>C:\Program Files\Rhino 7\System\Yak.exe</Yak>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -52,11 +53,17 @@
 		<MakeDir Directories="$(LibraryDirectory)" Condition="!Exists($(LibraryDirectory))"/>
 		<MakeDir Directories="$(SampleDirectory)" Condition="!Exists($(SampleDirectory))"/>
 		<MakeDir Directories="$(MiscellaneousDirectory)" Condition="!Exists($(MiscellaneousDirectory))"/>
-		
+
 		<Copy SourceFiles="@(BuildFiles)" DestinationFolder="$(LibraryDirectory)"/>
 		<Copy SourceFiles="@(SampleFiles)" DestinationFolder="$(SampleDirectory)"/>
 		<Copy SourceFiles="@(MiscFiles)" DestinationFolder="$(MiscellaneousDirectory)"/>
 		<Copy SourceFiles="@(InstructionFile)" DestinationFolder="$(DistributionDirectory)"/>
-	</Target>
 
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DistributionDirectory)"/>
+		
+		<Exec Command="cd &quot;$(DistributionDirectory)&quot;
+			&quot;$(Yak)&quot; spec
+			del &quot;$(DistributionDirectory)$(TargetFileName)&quot;
+			&quot;$(Yak)&quot; build --platform win" Condition="Exists($(Yak))"/>
+	</Target>
 </Project>
