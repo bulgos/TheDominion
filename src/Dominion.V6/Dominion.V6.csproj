@@ -32,7 +32,8 @@
 	<Import Project="..\Dominion.Shared\Dominion.Shared.projitems" Label="Shared" />
 
 	<PropertyGroup>
-		<DistributionDirectory>$(SolutionDir)dist\</DistributionDirectory>
+		<DistributionFolder>dist</DistributionFolder>
+		<DistributionDirectory>$(SolutionDir)$(DistributionFolder)\</DistributionDirectory>
 		<LibraryDirectory>$(DistributionDirectory)dominion\</LibraryDirectory>
 		<SampleDirectory>$(DistributionDirectory)samples\</SampleDirectory>
 		<MiscellaneousDirectory>$(DistributionDirectory)misc\</MiscellaneousDirectory>
@@ -46,7 +47,7 @@
 		<SampleFiles Include="$(SolutionDir)samples\*.gh"/>
 		<MiscFiles Include="$(SolutionDir)*.md;$(SolutionDir)LICENSE;"/>
 		<InstructionFile Include="$(SolutionDir)install.txt"/>
-		<ZipFileName Include="$(DistributionDirectory)$(AssemblyName).zip"/>
+		<ArchiveFilename Include="$(AssemblyName).tar"/>
 		<GHAssemblyFile Include="$(DistributionDirectory)$(TargetFileName)"/>
 	</ItemGroup>
 
@@ -66,10 +67,8 @@
 		<Exec Command="cd &quot;$(DistributionDirectory)&quot;
 			&quot;$(Yak)&quot; spec
 			del &quot;@(GHAssemblyFile)&quot;
-			&quot;$(Yak)&quot; build --platform win" Condition="Exists($(Yak))"/>
-
-		<!--cannot zip while Exec command is running
-		<Copy SourceFiles="@(GHAssemblyFile)" DestinationFolder="$(DistributionDirectory)" RetryDelayMilliseconds="1000" Retries="5" Condition="Exists(@(GHAssemblyFile))"/>
-		<ZipDirectory SourceDirectory="$(DistributionDirectory)" DestinationFile="@(ZipFileName)" Overwrite="true"/>-->
+			&quot;$(Yak)&quot; build --platform win
+			tar.exe -vcf @(ArchiveFilename) --exclude *.tar -C ..\$(DistributionFolder) ."
+			  Condition="Exists($(Yak))"/>
 	</Target>
 </Project>
