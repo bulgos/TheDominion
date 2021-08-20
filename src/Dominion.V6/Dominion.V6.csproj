@@ -30,7 +30,7 @@
 	</PropertyGroup>
 
 	<Import Project="..\Dominion.Shared\Dominion.Shared.projitems" Label="Shared" />
-	
+
 	<PropertyGroup>
 		<DistributionDirectory>$(SolutionDir)dist\</DistributionDirectory>
 		<LibraryDirectory>$(DistributionDirectory)dominion\</LibraryDirectory>
@@ -46,6 +46,8 @@
 		<SampleFiles Include="$(SolutionDir)samples\*.gh"/>
 		<MiscFiles Include="$(SolutionDir)*.md;$(SolutionDir)LICENSE;"/>
 		<InstructionFile Include="$(SolutionDir)install.txt"/>
+		<ZipFileName Include="$(DistributionDirectory)$(AssemblyName).zip"/>
+		<GHAssemblyFile Include="$(DistributionDirectory)$(TargetFileName)"/>
 	</ItemGroup>
 
 	<Target Name="CustomAfterBuild" AfterTargets="Build" Condition="$(Configuration) == 'Release'">
@@ -60,10 +62,14 @@
 		<Copy SourceFiles="@(InstructionFile)" DestinationFolder="$(DistributionDirectory)"/>
 
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(DistributionDirectory)"/>
-		
+
 		<Exec Command="cd &quot;$(DistributionDirectory)&quot;
 			&quot;$(Yak)&quot; spec
-			del &quot;$(DistributionDirectory)$(TargetFileName)&quot;
+			del &quot;@(GHAssemblyFile)&quot;
 			&quot;$(Yak)&quot; build --platform win" Condition="Exists($(Yak))"/>
+
+		<!--cannot zip while Exec command is running
+		<Copy SourceFiles="@(GHAssemblyFile)" DestinationFolder="$(DistributionDirectory)" RetryDelayMilliseconds="1000" Retries="5" Condition="Exists(@(GHAssemblyFile))"/>
+		<ZipDirectory SourceDirectory="$(DistributionDirectory)" DestinationFile="@(ZipFileName)" Overwrite="true"/>-->
 	</Target>
 </Project>
