@@ -121,6 +121,9 @@
   <data name="acotangent" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\acotangent.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="conic_4_point" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\conic_4_point.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="conic_5_point" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\conic_5_point.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -147,6 +150,9 @@
   </data>
   <data name="hyperbola_deconstruct" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\hyperbola_deconstruct.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="natural_cubic_spline" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\natural_cubic_spline.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="parabola_3_point" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\parabola_3_point.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>

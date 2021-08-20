@@ -1,27 +1,31 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	
-  <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
-    <Version>1.0</Version>
-    <Title>Dominion.V7</Title>
-    <Description>Description of Dominion.V7</Description>
-    <TargetExt>.gha</TargetExt>
-    <RootNamespace>Dominion</RootNamespace>
-    <ApplicationIcon />
-    <Win32Resource></Win32Resource>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <PackageReference Include="Grasshopper" Version="7.4.21078.1001" IncludeAssets="compile;build" />
-    <PackageReference Include="MathNet.Numerics" Version="4.15.0" />
-  </ItemGroup>
-  
-  <PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
-    <StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
-    <StartArguments></StartArguments>
-    <StartAction>Program</StartAction>
-  </PropertyGroup>
-  
-  <Import Project="..\Dominion.Shared\Dominion.Shared.projitems" Label="Shared" />
+
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<Version>1.0</Version>
+		<Title>Dominion.V7</Title>
+		<Description>Provides components for building Mathematical Curves from Conic Equations</Description>
+		<TargetExt>.gha</TargetExt>
+		<RootNamespace>Dominion</RootNamespace>
+		<ApplicationIcon />
+		<Win32Resource></Win32Resource>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Grasshopper" Version="7.4.21078.1001" IncludeAssets="compile;build" />
+		<PackageReference Include="MathNet.Numerics" Version="4.15.0" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<DefineConstants>$(DefineConstants);V7</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
+		<StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
+		<StartArguments></StartArguments>
+		<StartAction>Program</StartAction>
+	</PropertyGroup>
+
+	<Import Project="..\Dominion.Shared\Dominion.Shared.projitems" Label="Shared" />
 
 </Project>

@@ -36,6 +36,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\ACotangent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\GetInnerTangents.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\GetOuterTangents.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\NatrualCubicSplineComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\SignedVectorAngleComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\VectorAngleInPlaneComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Geometry.cs" />
@@ -50,6 +51,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)Resources\acotangent.png" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\natural_cubic_spline.png" />
+    <None Include="$(MSBuildThisFileDirectory)Resources\conic_4_point.png" />
     <Content Include="$(MSBuildThisFileDirectory)Resources\conic_5_point.png" />
     <Content Include="$(MSBuildThisFileDirectory)Resources\conic_deconstruct.png" />
     <Content Include="$(MSBuildThisFileDirectory)Resources\conic_evaluate.png" />

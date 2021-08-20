@@ -69,17 +69,31 @@ namespace Dominion.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
+
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap conic_5_point {
-            get {
+        internal static System.Drawing.Bitmap conic_5_point
+        {
+            get
+            {
                 object obj = ResourceManager.GetObject("conic_5_point", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap conic_4_point
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("conic_4_point", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
@@ -159,7 +173,21 @@ namespace Dominion.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
-        
+
+
+
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap natural_cubic_spline
+        {
+            get
+            {
+                object obj = ResourceManager.GetObject("natural_cubic_spline", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>

@@ -3,6 +3,8 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 using Dominion.Conics.Wrappers;
+using Dominion.Properties;
+using System.Drawing;
 
 namespace Dominion.Conics.Components
 {
@@ -39,5 +41,7 @@ namespace Dominion.Conics.Components
         }
 
         public override Guid ComponentGuid => new Guid("2172aea6-b238-4afe-bf87-376bf38d20af");
+        
+        protected override Bitmap Icon => Resources.conic_4_point;
     }
 }
