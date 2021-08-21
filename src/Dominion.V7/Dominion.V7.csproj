@@ -26,10 +26,55 @@
 
 	<PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
 		<StartProgram>C:\Program Files\Rhino 7\System\Rhino.exe</StartProgram>
-		<StartArguments></StartArguments>
+		<StartArguments>/nosplash /runscript="_Grasshopper"</StartArguments>
 		<StartAction>Program</StartAction>
 	</PropertyGroup>
 
 	<Import Project="..\Dominion.Shared\Dominion.Shared.projitems" Label="Shared" />
 
+	<PropertyGroup>
+		<DistributionFolder>dist</DistributionFolder>
+		<VersionString>v7</VersionString>
+		<DistributionDirectory>$(SolutionDir)$(DistributionFolder)\</DistributionDirectory>
+		<VersionDirectory>$(DistributionDirectory)$(VersionString)\</VersionDirectory>
+		<LibraryDirectory>$(VersionDirectory)dominion\</LibraryDirectory>
+		<SampleDirectory>$(VersionDirectory)samples\</SampleDirectory>
+		<MiscellaneousDirectory>$(VersionDirectory)misc\</MiscellaneousDirectory>
+
+		<Yak>C:\Program Files\Rhino 7\System\Yak.exe</Yak>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<InstructionFile>$(SolutionDir)install.txt</InstructionFile>
+		<ArchiveFilename>$(AssemblyName).$(VersionString).tar</ArchiveFilename>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<BuildFiles Include="$(TargetDir)*.*"
+					Exclude="$(TargetDir)*.pdb"/>
+		<SampleFiles Include="$(SolutionDir)samples\*.gh"/>
+		<MiscFiles Include="$(SolutionDir)*.md;$(SolutionDir)LICENSE;"/>
+	</ItemGroup>
+
+	<Target Name="CustomAfterBuild" AfterTargets="Build" Condition="$(Configuration) == 'Release'">
+		<MakeDir Directories="$(DistributionDirectory)" Condition="!Exists($(DistributionDirectory))"/>
+		<MakeDir Directories="$(VersionDirectory)" Condition="!Exists($(VersionDirectory))"/>
+		<MakeDir Directories="$(LibraryDirectory)" Condition="!Exists($(LibraryDirectory))"/>
+		<MakeDir Directories="$(SampleDirectory)" Condition="!Exists($(SampleDirectory))"/>
+		<MakeDir Directories="$(MiscellaneousDirectory)" Condition="!Exists($(MiscellaneousDirectory))"/>
+
+		<Copy SourceFiles="@(BuildFiles)" DestinationFolder="$(LibraryDirectory)"/>
+		<Copy SourceFiles="@(SampleFiles)" DestinationFolder="$(SampleDirectory)"/>
+		<Copy SourceFiles="@(MiscFiles)" DestinationFolder="$(MiscellaneousDirectory)"/>
+		<Copy SourceFiles="$(InstructionFile)" DestinationFolder="$(VersionDirectory)"/>
+
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(VersionDirectory)"/>
+
+		<Exec Command="cd &quot;$(VersionDirectory)&quot;
+			&quot;$(Yak)&quot; spec
+			del &quot;$(TargetFileName)&quot;
+			&quot;$(Yak)&quot; build --platform win
+			tar.exe -vcf ..\$(ArchiveFilename) --exclude *.tar --exclude *.yak --exclude *.yml -C ..\$(VersionString) ."
+			  Condition="Exists($(Yak))"/>
+	</Target>
 </Project>
