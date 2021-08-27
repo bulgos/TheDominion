@@ -20,6 +20,6 @@ namespace Dominion
 
         public override string AuthorContact => "https://github.com/bulgos/TheDominion";
 
-        public override string AssemblyVersion => "0.2.1.4";
+        public override string AssemblyVersion => "0.2.1.5";
     }
 }
