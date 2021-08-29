@@ -36,10 +36,12 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\ACotangent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\GetInnerTangents.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\GetOuterTangents.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\LogoComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\NatrualCubicSplineComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\SignedVectorAngleComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Components\VectorAngleInPlaneComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utility\Geometry.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utility\Logo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)Properties\Resources.Designer.cs">

@@ -5,7 +5,7 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 
-namespace the_Dominion.Utility.Components
+namespace Dominion.Utility.Components
 {
     public class LogoComponent : GH_Component
     {

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Rhino.Collections;
 using Rhino.Geometry;
 
-namespace the_Dominion.Utility
+namespace Dominion.Utility
 {
     public class Logo
     {
