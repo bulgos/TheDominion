@@ -15,7 +15,7 @@ Run the sample files once loaded located in the samples folder.s
 ##### Option 2:
 1. Download the [latest version](https://www.food4rhino.com/en/app/dominion) from food4Rhino.
 2. Copy all unzipped contents into your component library, usually C:\Users\\($user)\AppData\Roaming\Grasshopper\Libraries
-3. Unblock all file
+3. Unblock all files
 
 ##### Option 3:  
 1. Navigate to Releases
