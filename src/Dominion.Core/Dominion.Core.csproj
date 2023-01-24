@@ -2,12 +2,15 @@
 
 	<PropertyGroup>
 		<TargetFramework>net48</TargetFramework>
+		<Version>0.2.1.5</Version>
+		<Title>TheDominion</Title>
+		<Description>Provides components for building Mathematical Curves from Conic Equations</Description>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<PackageReference Include="MathNet.Numerics" />
 		<PackageReference Include="Rhino3dm" Condition="'$(TargetFramework)' == 'net6.0'" />
-		<PackageReference Include="RhinoCommon" Condition="'$(TargetFramework)' == 'net48'" />
+		<PackageReference Include="RhinoCommon" Condition="'$(TargetFramework)' == 'net48'" IncludeAssets="compile;build"/>
 	    <PackageReference Include="System.Text.Json" />
 </ItemGroup>
 

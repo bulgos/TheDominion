@@ -1,11 +1,15 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net48</TargetFramework>
+	  <Version>0.2.1.5</Version>
+	  <Title>TheDominion</Title>
+	  <Description>Provides components for building Mathematical Curves from Conic Equations</Description>
+	  <TargetExt>.rhp</TargetExt>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="RhinoCommon" />
+    <PackageReference Include="RhinoCommon" IncludeAssets="compile;build"/>
   </ItemGroup>
 
   <ItemGroup>

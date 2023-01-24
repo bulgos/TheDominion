@@ -1,27 +1,85 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+		<Version>0.2.1.5</Version>
+		<Title>TheDominion</Title>
+		<Description>Provides components for building Mathematical Curves from Conic Equations</Description>
+		<TargetExt>.gha</TargetExt>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Grasshopper" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Grasshopper" IncludeAssets="compile;build"/>
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Dominion.Core\Dominion.Core.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\Dominion.Core\Dominion.Core.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Resources.Designer.cs">
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-  </ItemGroup>
+	<ItemGroup>
+		<Compile Update="Resources.Designer.cs">
+			<DependentUpon>Resources.resx</DependentUpon>
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+		</Compile>
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Assets\" />
-  </ItemGroup>
+	<PropertyGroup Condition="$(Configuration) == 'Debug' AND $([MSBuild]::IsOSPlatform(Windows))">
+		<StartProgram>C:\Program Files\Rhino 6\System\Rhino.exe</StartProgram>
+		<StartArguments>/nosplash /runscript="_Grasshopper"</StartArguments>
+		<StartAction>Program</StartAction>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Remove="Assets\acotangent.png" />
+		<None Remove="Assets\conic_4_point.png" />
+		<None Remove="Assets\conic_5_point.png" />
+		<None Remove="Assets\conic_deconstruct.png" />
+		<None Remove="Assets\conic_evaluate.png" />
+		<None Remove="Assets\conic_normalise.png" />
+		<None Remove="Assets\conic_param.png" />
+		<None Remove="Assets\conic_solver.png" />
+		<None Remove="Assets\conic_type.png" />
+		<None Remove="Assets\hyperbola_construct.png" />
+		<None Remove="Assets\hyperbola_deconstruct.png" />
+		<None Remove="Assets\natural_cubic_spline.png" />
+		<None Remove="Assets\parabola_3_point.png" />
+		<None Remove="Assets\parabola_4_point.png" />
+		<None Remove="Assets\parabola_construct.png" />
+		<None Remove="Assets\parabola_deconstruct.png" />
+		<None Remove="Assets\parabola_quadratic.png" />
+		<None Remove="Assets\parabola_rotated.png" />
+		<None Remove="Assets\tangents_inner.png" />
+		<None Remove="Assets\tangents_outer.png" />
+		<None Remove="Assets\the_dominion.png" />
+		<None Remove="Assets\vector_angle_plane.png" />
+		<None Remove="Assets\vector_angle_signed.png" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Include="Assets\acotangent.png" />
+		<Content Include="Assets\conic_4_point.png" />
+		<Content Include="Assets\conic_5_point.png" />
+		<Content Include="Assets\conic_deconstruct.png" />
+		<Content Include="Assets\conic_evaluate.png" />
+		<Content Include="Assets\conic_normalise.png" />
+		<Content Include="Assets\conic_param.png" />
+		<Content Include="Assets\conic_solver.png" />
+		<Content Include="Assets\conic_type.png" />
+		<Content Include="Assets\hyperbola_construct.png" />
+		<Content Include="Assets\hyperbola_deconstruct.png" />
+		<Content Include="Assets\natural_cubic_spline.png" />
+		<Content Include="Assets\parabola_3_point.png" />
+		<Content Include="Assets\parabola_4_point.png" />
+		<Content Include="Assets\parabola_construct.png" />
+		<Content Include="Assets\parabola_deconstruct.png" />
+		<Content Include="Assets\parabola_quadratic.png" />
+		<Content Include="Assets\parabola_rotated.png" />
+		<Content Include="Assets\tangents_inner.png" />
+		<Content Include="Assets\tangents_outer.png" />
+		<Content Include="Assets\the_dominion.png" />
+		<Content Include="Assets\vector_angle_plane.png" />
+		<Content Include="Assets\vector_angle_signed.png" />
+	</ItemGroup>
 
 </Project>
