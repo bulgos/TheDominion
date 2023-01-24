@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RhinoCommon" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dominion.Core\Dominion.Core.csproj" />
+  </ItemGroup>
+
+</Project>

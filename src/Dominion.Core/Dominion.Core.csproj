@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net48</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MathNet.Numerics" />
+		<PackageReference Include="Rhino3dm" Condition="'$(TargetFramework)' == 'net6.0'" />
+		<PackageReference Include="RhinoCommon" Condition="'$(TargetFramework)' == 'net48'" />
+	    <PackageReference Include="System.Text.Json" />
+</ItemGroup>
+
+</Project>

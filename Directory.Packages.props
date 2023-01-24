@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageVersion Include="Grasshopper">
+      <Version>6.12.19029.6381</Version>
+    </PackageVersion>
+    <PackageVersion Include="MathNet.Numerics" Version="5.0.0" />
+    <PackageVersion Include="Rhino3dm" Version="7.11.0" />
+    <PackageVersion Include="RhinoCommon" Version="6.12.19029.6381" />
+    <PackageVersion Include="System.Text.Json" Version="7.0.0" />
+  </ItemGroup>
+</Project>

@@ -1,33 +1,38 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30804.86
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Dominion.Shared", "src\Dominion.Shared\Dominion.Shared.shproj", "{759AE17E-FD8D-4AB8-BF5B-604A78ECCBA1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dominion.Core", "src\Dominion.Core\Dominion.Core.csproj", "{F6204596-E6DE-4B71-A110-B0AC2BC603A0}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dominion.V6", "src\Dominion.V6\Dominion.V6.csproj", "{71B21EDE-F01C-49CD-9205-1061F9FA53A5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{A50AD2E7-1615-4376-9E3F-4ADCEB7D5C1E}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Packages.props = Directory.Packages.props
+		nuget.config = nuget.config
+	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dominion.V7", "src\Dominion.V7\Dominion.V7.csproj", "{8AAE4CC2-FAD1-4F86-833B-8A81CD3BE22F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dominion.Grasshopper", "src\Dominion.Grasshopper\Dominion.Grasshopper.csproj", "{7CB33415-BDE3-4035-A254-354E3158E369}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dominion.Rhino", "src\Dominion.Rhino\Dominion.Rhino.csproj", "{B0A328C5-9923-4361-B6D7-5506756BCCE9}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		src\Dominion.Shared\Dominion.Shared.projitems*{71b21ede-f01c-49cd-9205-1061f9fa53a5}*SharedItemsImports = 5
-		src\Dominion.Shared\Dominion.Shared.projitems*{759ae17e-fd8d-4ab8-bf5b-604a78eccba1}*SharedItemsImports = 13
-		src\Dominion.Shared\Dominion.Shared.projitems*{8aae4cc2-fad1-4f86-833b-8a81cd3be22f}*SharedItemsImports = 5
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{71B21EDE-F01C-49CD-9205-1061F9FA53A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71B21EDE-F01C-49CD-9205-1061F9FA53A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71B21EDE-F01C-49CD-9205-1061F9FA53A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71B21EDE-F01C-49CD-9205-1061F9FA53A5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8AAE4CC2-FAD1-4F86-833B-8A81CD3BE22F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8AAE4CC2-FAD1-4F86-833B-8A81CD3BE22F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8AAE4CC2-FAD1-4F86-833B-8A81CD3BE22F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8AAE4CC2-FAD1-4F86-833B-8A81CD3BE22F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F6204596-E6DE-4B71-A110-B0AC2BC603A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F6204596-E6DE-4B71-A110-B0AC2BC603A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F6204596-E6DE-4B71-A110-B0AC2BC603A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F6204596-E6DE-4B71-A110-B0AC2BC603A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CB33415-BDE3-4035-A254-354E3158E369}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CB33415-BDE3-4035-A254-354E3158E369}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CB33415-BDE3-4035-A254-354E3158E369}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CB33415-BDE3-4035-A254-354E3158E369}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0A328C5-9923-4361-B6D7-5506756BCCE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0A328C5-9923-4361-B6D7-5506756BCCE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0A328C5-9923-4361-B6D7-5506756BCCE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0A328C5-9923-4361-B6D7-5506756BCCE9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
