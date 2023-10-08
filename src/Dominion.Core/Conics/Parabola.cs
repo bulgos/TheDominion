@@ -37,11 +37,6 @@ namespace Dominion.Core.Conics
         public Parabola(Parabola parabola)
             : base(parabola)
         {
-            Section = parabola.Section;
-
-            A = parabola.A;
-            D = parabola.D;
-            F = parabola.F;
             Domain = parabola.Domain;
             VertexPlane = parabola.VertexPlane;
         }

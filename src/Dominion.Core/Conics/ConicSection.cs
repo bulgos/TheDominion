@@ -51,14 +51,6 @@ namespace Dominion.Core.Conics
 
         public ConicSection(ConicSection conicSection)
         {
-            if (conicSection.IsValid)
-            {
-                foreach (var section in conicSection.Section)
-                {
-                    Section.Add((section.Duplicate() as Curve).ToNurbsCurve());
-                }
-            }
-
             BasePlane = conicSection.BasePlane;
             Focus1 = conicSection.Focus1;
             Focus2 = conicSection.Focus2;
@@ -74,6 +66,15 @@ namespace Dominion.Core.Conics
 
             AxisA = conicSection.AxisA;
             AxisB = conicSection.AxisB;
+
+            if (!conicSection.IsValid)
+                return;
+         
+            var curveList = conicSection.Section.Select(c => c.DuplicateCurve())
+                .Cast<Curve>()
+                .ToList();
+
+            Section.AddRange(curveList);
         }
 
         public double A { get; protected set; }
@@ -138,7 +139,7 @@ namespace Dominion.Core.Conics
             ? GetBoundingBox(TransformMatrix)
             : BoundingBox.Empty;
 
-        public CurveList Section { get; protected set; } = new CurveList();
+        public CurveList Section { get; } = new CurveList();
 
         public ConicSection WorldAlignedConic { get; private set; }
 
