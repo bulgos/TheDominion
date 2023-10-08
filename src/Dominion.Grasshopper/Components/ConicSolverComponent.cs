@@ -46,7 +46,7 @@ namespace Dominion.Conics.Components
             DA.GetData(4, ref e);
             DA.GetData(5, ref f);
 
-            ConicSection conicSection = ConicSection.FromConicEquation(a, b, c, d, e, f);
+            ConicSection conicSection = ConicFactory.FromConicEquation(a, b, c, d, e, f);
 
             DA.SetData(0, conicSection);
         }

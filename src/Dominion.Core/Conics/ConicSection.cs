@@ -1,23 +1,20 @@
-﻿using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Double;
-using Rhino.Collections;
+﻿using Rhino.Collections;
 using Rhino.Geometry;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Dominion.Core.Utility;
 
 namespace Dominion.Core.Conics
 {
-    public class ConicSection
+    public class ConicSection : ICloneable
     {
         private Transform _inverseTransformMatrix = Rhino.Geometry.Transform.Unset;
         private double discriminant = double.NaN;
 
-        protected ConicSection(double a, double b, double c, double d, double e, double f)
+        public ConicSection(double a, double b, double c, double d, double e, double f)
             : this(Plane.Unset, a, b, c, d, e, f) { }
 
-        protected ConicSection(Plane plane, double a, double b, double c, double d, double e, double f)
+        public ConicSection(Plane plane, double a, double b, double c, double d, double e, double f)
         {
             A = a;
             B = b;
@@ -69,7 +66,7 @@ namespace Dominion.Core.Conics
 
             if (!conicSection.IsValid)
                 return;
-         
+
             var curveList = conicSection.Section.Select(c => c.DuplicateCurve())
                 .Cast<Curve>()
                 .ToList();
@@ -142,104 +139,6 @@ namespace Dominion.Core.Conics
         public CurveList Section { get; } = new CurveList();
 
         public ConicSection WorldAlignedConic { get; private set; }
-
-        public static ConicSection From4Points(IEnumerable<Point3d> points)
-        {
-            return From4Points(points, Plane.WorldXY);
-        }
-
-        public static ConicSection From4Points(IEnumerable<Point3d> points, Plane plane)
-        {
-            Point3dList pts = new Point3dList(points);
-
-            Transform xform = Geometry.WorldXYToPlaneTransform(plane);
-            xform.TryGetInverse(out Transform xformInverse);
-            pts.Transform(xformInverse);
-
-            if (pts.Count != 4)
-                throw new ArgumentException("Incorrect number of points specified");
-
-            double[][] matrixValues = new double[4][];
-            Vector<double> vector = Vector.Build.Dense(4, 1);
-
-            for (int i = 0; i < pts.Count; i++)
-            {
-                matrixValues[i] = new[] { pts[i].X * pts[i].X, pts[i].Y * pts[i].Y, pts[i].X, pts[i].Y };
-            }
-
-            Matrix<double> matrix = DenseMatrix.OfRowArrays(matrixValues);
-
-            Vector<double> solution = matrix.Solve(vector);
-
-            double a = solution[0];
-            double c = solution[1];
-            double d = solution[2];
-            double e = solution[3];
-            double f = -1;
-
-            ConicSection conic = FromConicEquation(a, 0, c, d, e, f);
-
-            conic.Transform(xform);
-
-            return conic;
-        }
-
-        public static ConicSection From5Points(IEnumerable<Point3d> points)
-        {
-            // simplest solution we could find
-            // https://math.stackexchange.com/a/1987192/951797
-
-            var pts = points.ToArray();
-
-            if (pts.Length != 5)
-                throw new ArgumentException("Incorrect number of points specified");
-
-            double[][] matrixValues = new double[5][];
-            Vector<double> vector = Vector.Build.Dense(5, 1);
-
-            for (int i = 0; i < pts.Length; i++)
-            {
-                matrixValues[i] = new[] { pts[i].X * pts[i].X, pts[i].X * pts[i].Y, pts[i].Y * pts[i].Y, pts[i].X, pts[i].Y };
-            }
-
-            Matrix<double> matrix = DenseMatrix.OfRowArrays(matrixValues);
-
-            Vector<double> solution = matrix.Solve(vector);
-
-
-            double a = solution[0];
-            double b = solution[1];
-            double c = solution[2];
-            double d = solution[3];
-            double e = solution[4];
-            double f = -1;
-
-            return FromConicEquation(a, b, c, d, e, f);
-        }
-
-        public static ConicSection FromConicEquation(double a, double b, double c, double d, double e, double f)
-        {
-            return FromConicEquation(Plane.WorldXY, a, b, c, d, e, f);
-        }
-
-        public static ConicSection FromConicEquation(Plane plane, double a, double b, double c, double d, double e, double f)
-        {
-            ConicSection conicSection = new ConicSection(plane, a, b, c, d, e, f);
-
-            switch (conicSection.ConicSectionType)
-            {
-                case ConicSectionType.Circle:
-                    return new Ellipse(conicSection);
-                case ConicSectionType.Ellipse:
-                    return new Ellipse(conicSection);
-                case ConicSectionType.Hyperbola:
-                    return new Hyperbola(conicSection);
-                case ConicSectionType.Parabola:
-                    return new Parabola(conicSection);
-                default:
-                    return conicSection;
-            }
-        }
 
         public void ComputeAxes()
         {
@@ -316,9 +215,24 @@ namespace Dominion.Core.Conics
             return ConicSectionType.Unknown;
         }
 
-        public virtual double ComputeDerivative(Point3d pt)
+        public double ComputeDerivative(Point3d pt)
         {
-            throw new ArgumentException("Can only Compute Derivative for derived classes, not for base class.");
+            var conicType = ConicSectionType;
+
+            switch (conicType)
+            {
+                case ConicSectionType.Circle:
+                case ConicSectionType.Ellipse:
+                    return Math.Pow(AxisA, 2) * pt.Y / (Math.Pow(AxisB, 2) * pt.X);
+                case ConicSectionType.Hyperbola:
+                    return Math.Pow(AxisB, 2) * pt.X / (Math.Pow(AxisB, 2) * pt.Y);
+                case ConicSectionType.Parabola:
+                    return !UsesFlippedAxes
+                        ? 2 * WorldAlignedConic.A * pt.X + WorldAlignedConic.D
+                        : 2 * WorldAlignedConic.C * pt.Y + WorldAlignedConic.E;
+                default:
+                    throw new ArgumentException("Invalid Conic");
+            }
         }
 
         protected virtual void ComputeFoci()
@@ -546,7 +460,7 @@ namespace Dominion.Core.Conics
 
         private void GetWorldAlignedConic()
         {
-            ConicSection worldAlignedConic = Duplicate();
+            ConicSection worldAlignedConic = Clone() as ConicSection;
             worldAlignedConic.EliminateTransformationFromEquation();
 
             WorldAlignedConic = worldAlignedConic;
@@ -570,13 +484,6 @@ namespace Dominion.Core.Conics
             return formatString;
         }
 
-        #region GH_GeometricGoo tools
-
-        public virtual ConicSection Duplicate()
-        {
-            return new ConicSection(this);
-        }
-
         public BoundingBox GetBoundingBox(Transform xform)
         {
             if (!IsValid)
@@ -598,20 +505,12 @@ namespace Dominion.Core.Conics
             return bbox;
         }
 
-        public bool Morph(SpaceMorph xmorph)
-        {
-            //if (!IsValid)
-            //    return false;
-
-            //return xmorph.Morph(Section);
-            return false;
-        }
-
         public override string ToString()
         {
             return GetType().Name;
         }
 
-        #endregion
+        public virtual object Clone() 
+            => new ConicSection(this);
     }
 }

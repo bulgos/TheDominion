@@ -33,15 +33,8 @@ namespace Dominion.Core.Conics
             ComputeFoci();
         }
 
-        public override double ComputeDerivative(Point3d pt)
-        {
-            return Math.Pow(AxisA, 2) * pt.Y / (Math.Pow(AxisB, 2) * pt.X);
-        }
-
-        public override ConicSection Duplicate()
-        {
-            return new Ellipse(this);
-        }
+        public override object Clone() 
+            => new Ellipse(this);
 
         protected override void ComputeFoci()
         {

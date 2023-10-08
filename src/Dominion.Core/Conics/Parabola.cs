@@ -214,13 +214,6 @@ namespace Dominion.Core.Conics
             throw new NotImplementedException();
         }
 
-        public override double ComputeDerivative(Point3d pt)
-        {
-            return !UsesFlippedAxes
-                ? 2 * WorldAlignedConic.A * pt.X + WorldAlignedConic.D
-                : 2 * WorldAlignedConic.C * pt.Y + WorldAlignedConic.E;
-        }
-
         public override Line ComputeTangent(Point3d pt)
         {
             double derivative = ComputeDerivative(pt);
@@ -351,10 +344,8 @@ namespace Dominion.Core.Conics
             }
         }
 
-        public override ConicSection Duplicate()
-        {
-            return new Parabola(this);
-        }
+        public override object Clone() 
+            => new Parabola(this);
     }
 
     public enum ParabolaShape

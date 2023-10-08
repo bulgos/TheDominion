@@ -45,7 +45,7 @@ namespace Dominion.Conics.Components
             DA.GetData(4, ref p5);
 
             var pts = new[] { p1, p2, p3, p4, p5 };
-            ConicSection conicSection = ConicSection.From5Points(pts);
+            ConicSection conicSection = ConicFactory.From5Points(pts);
 
             DA.SetData(0, conicSection);
         }

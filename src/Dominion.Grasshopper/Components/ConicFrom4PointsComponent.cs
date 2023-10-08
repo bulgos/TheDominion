@@ -36,7 +36,7 @@ namespace Dominion.Conics.Components
             DA.GetData(0, ref plane);
             DA.GetDataList(1, pts);
 
-            ConicSection conic = ConicSection.From4Points(pts, plane);
+            ConicSection conic = ConicFactory.From4Points(pts, plane);
 
             DA.SetData(0, conic);
         }

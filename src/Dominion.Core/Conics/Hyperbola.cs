@@ -109,11 +109,6 @@ namespace Dominion.Core.Conics
             Section.Add(mirroredHyperbola);
         }
 
-        public override double ComputeDerivative(Point3d pt)
-        {
-            return Math.Pow(AxisB, 2) * pt.X / (Math.Pow(AxisB, 2) * pt.Y);
-        }
-
         private double ComputeApexWeight(Point3d p0)
         {
             return AxisA * AxisA / p0.X;
@@ -138,9 +133,7 @@ namespace Dominion.Core.Conics
             }
         }
 
-        public override ConicSection Duplicate()
-        {
-            return new Hyperbola(this);
-        }
+        public override object Clone() 
+            => new Hyperbola(this);
     }
 }

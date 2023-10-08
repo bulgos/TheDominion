@@ -118,11 +118,13 @@ namespace Dominion.Conics.Wrappers
             ConicSection conic = null;
 
             if (Value is Ellipse ellipse)
-                conic = ellipse.Duplicate();
+                conic = ellipse.Clone() as ConicSection;
+
             else if (Value is Hyperbola hyperbola)
-                conic = hyperbola.Duplicate();
+                conic = hyperbola.Clone() as ConicSection;
+
             else if (Value is Parabola parabola)
-                conic = parabola.Duplicate();
+                conic = parabola.Clone() as ConicSection;
 
             return conic;
         }
@@ -134,13 +136,7 @@ namespace Dominion.Conics.Wrappers
 
         public override IGH_GeometricGoo Morph(SpaceMorph xmorph)
         {
-            if (Value == null)
-                return null;
-
-            ConicSection morphedConic = DuplicateConic();
-            morphedConic.Morph(xmorph);
-
-            return new GH_Conic(morphedConic);
+            throw new NotImplementedException();
         }
 
         public override IGH_GeometricGoo Transform(Transform xform)
