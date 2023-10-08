@@ -65,7 +65,7 @@ namespace Dominion.Conics.Components
             DA.SetData(9, conicSection.F);
             DA.SetData(10, conicSection.AxisA);
             DA.SetData(11, conicSection.AxisB);
-            DA.SetData(12, conicSection.ConicDiscriminant);
+            DA.SetData(12, conicSection.Discriminant);
             DA.SetData(13, conicSection.TransformMatrix);
             DA.SetData(14, conicSection.FormatConicEquation());
         }

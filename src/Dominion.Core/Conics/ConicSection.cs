@@ -12,7 +12,7 @@ namespace Dominion.Core.Conics
     public class ConicSection
     {
         private Transform _inverseTransformMatrix = Rhino.Geometry.Transform.Unset;
-        private double _conicDiscriminant = double.NaN;
+        private double discriminant = double.NaN;
 
         protected ConicSection(double a, double b, double c, double d, double e, double f)
             : this(Plane.Unset, a, b, c, d, e, f) { }
@@ -60,7 +60,7 @@ namespace Dominion.Core.Conics
             D = conicSection.D;
             E = conicSection.E;
             F = conicSection.F;
-            ConicDiscriminant = conicSection.ConicDiscriminant;
+            Discriminant = conicSection.Discriminant;
             TransformMatrix = conicSection.TransformMatrix;
             WorldAlignedConic = conicSection.WorldAlignedConic;
 
@@ -93,16 +93,16 @@ namespace Dominion.Core.Conics
 
         public double AxisB { get; protected set; }
 
-        public double ConicDiscriminant
+        public double Discriminant
         {
             get
             {
-                if (double.IsNaN(_conicDiscriminant))
+                if (double.IsNaN(discriminant))
                     ComputeConicDiscriminant();
 
-                return _conicDiscriminant;
+                return discriminant;
             }
-            set => _conicDiscriminant = value;
+            set => discriminant = value;
         }
 
         public virtual bool IsValid => Section.Count > 0;
@@ -297,10 +297,10 @@ namespace Dominion.Core.Conics
 
         private ConicSectionType GetConicType()
         {
-            if (ConicDiscriminant > -Rhino.RhinoMath.ZeroTolerance && ConicDiscriminant < Rhino.RhinoMath.ZeroTolerance)
+            if (Math.Abs(Discriminant) < Rhino.RhinoMath.ZeroTolerance)
                 return ConicSectionType.Parabola;
 
-            if (ConicDiscriminant < 0)
+            if (Discriminant < 0)
             {
                 if (A == C)
                     return ConicSectionType.Circle;
@@ -308,7 +308,7 @@ namespace Dominion.Core.Conics
                 return ConicSectionType.Ellipse;
             }
 
-            if (ConicDiscriminant > 0)
+            if (Discriminant > 0)
             {
                 return ConicSectionType.Hyperbola;
             }
@@ -328,7 +328,7 @@ namespace Dominion.Core.Conics
 
         private void ComputeConicDiscriminant()
         {
-            ConicDiscriminant = Geometry.ComputeDiscriminant(A, B, C);
+            Discriminant = Geometry.ComputeDiscriminant(A, B, C);
         }
 
         #region transformation methods
@@ -376,8 +376,8 @@ namespace Dominion.Core.Conics
                 return Vector3d.Zero;
             }
 
-            double x = (2 * C * D - B * E) / ConicDiscriminant;
-            double y = (2 * A * E - B * D) / ConicDiscriminant;
+            double x = (2 * C * D - B * E) / Discriminant;
+            double y = (2 * A * E - B * D) / Discriminant;
 
             return new Vector3d(x, y, 0);
         }
