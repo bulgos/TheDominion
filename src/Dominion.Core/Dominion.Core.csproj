@@ -10,8 +10,7 @@
 	<ItemGroup>
 		<PackageReference Include="MathNet.Numerics" />
 		<PackageReference Include="Rhino3dm" Condition="'$(TargetFramework)' == 'net6.0'" />
-		<PackageReference Include="RhinoCommon" Condition="'$(TargetFramework)' == 'net48'" IncludeAssets="compile;build"/>
-	    <PackageReference Include="System.Text.Json" />
+		<PackageReference Include="RhinoCommon" Condition="'$(TargetFramework)' == 'net48'" IncludeAssets="compile;build" />
 </ItemGroup>
 
 </Project>
