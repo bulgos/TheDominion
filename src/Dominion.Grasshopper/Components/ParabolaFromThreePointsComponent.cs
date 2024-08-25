@@ -41,7 +41,7 @@ namespace Dominion.Conics.Components
             DA.GetData(2, ref p2);
             DA.GetData(3, ref p3);
 
-            var parabola = Parabola.From3Points(p1, p2, p3, plane, Interval.Unset);
+            var parabola = ConicFactory.ParabolaFrom3Points(p1, p2, p3, plane, Interval.Unset);
 
             DA.SetData(0, parabola);
         }

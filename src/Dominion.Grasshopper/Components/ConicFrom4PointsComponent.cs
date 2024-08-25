@@ -25,7 +25,7 @@ namespace Dominion.Conics.Components
 
         protected override void RegisterOutputParams(GH_OutputParamManager pManager)
         {
-            pManager.AddParameter(new Conic_Param(), "Conic", "C", "The conic section through 5 points", GH_ParamAccess.item);
+            pManager.AddParameter(new Conic_Param(), "Conic", "C", "The conic section through 4 points", GH_ParamAccess.item);
         }
 
         protected override void SolveInstance(IGH_DataAccess DA)
